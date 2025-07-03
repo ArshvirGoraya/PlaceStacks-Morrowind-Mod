@@ -39,9 +39,9 @@ return {
 
 	engineHandlers = {
 		onFrame = function(dt)
-			if input.isKeyPressed(input.KEY.G) then
-				print("notify: ", settingsNotify:get("PlaceStacksNotify"))
-			end
+			-- if input.isKeyPressed(input.KEY.G) then
+			-- 	print("notify: ", settingsNotify:get("PlaceStacksNotify"))
+			-- end
 			-- Hold Activate when in container:
 			if heldWhenOpening then
 				if not input.isActionPressed(input.ACTION.Activate) then
