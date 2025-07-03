@@ -4,6 +4,7 @@ Place Stacks is a mod for [OpenMW](https://github.com/OpenMW/openmw) that adds t
 
 <p align="center">
   <img width="80%" src="https://raw.githubusercontent.com/ArshvirGoraya/PlaceStacks-Morrowind-Mod/refs/heads/main/.github/Images/header-github.jpg" alt="Header Image for Place Stacks Mod" />
+  <img width="50%" src="https://raw.githubusercontent.com/ArshvirGoraya/PlaceStacks-Morrowind-Mod/refs/heads/main/.github/Images/valheimComparison.gif" alt="A gif showing the effects of the mod" />
 </p>
 
 ## What Does the Mod Do?
