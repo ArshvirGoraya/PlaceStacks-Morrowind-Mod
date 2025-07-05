@@ -98,12 +98,12 @@ return {
 
 	engineHandlers = {
 		onFrame = function(dt)
-			if input.isKeyPressed(input.KEY.G) then
-				DB.log(
-					"npc remaining space: ",
-					types.Actor.getCapacity(focusedContainer) - types.Actor.getEncumbrance(focusedContainer)
-				) -- may be actor or container so dont use type.Container
-			end
+			-- if input.isKeyPressed(input.KEY.G) then
+			-- 	DB.log(
+			-- 		"npc remaining space: ",
+			-- 		types.Actor.getCapacity(focusedContainer) - types.Actor.getEncumbrance(focusedContainer)
+			-- 	) -- may be actor or container so dont use type.Container
+			-- end
 			-- Hold Activate when in container:
 			if heldWhenOpening then
 				if not input.isActionPressed(input.ACTION.Activate) then
