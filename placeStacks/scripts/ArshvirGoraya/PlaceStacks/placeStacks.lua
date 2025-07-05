@@ -13,29 +13,37 @@ local moveableItemCount = 0
 local allItemsFit = true
 -- local trackedEncumbrance = 0
 
+local storage = require("openmw.storage")
+local settingsBehaviour = storage.globalSection("settingsPlaceStacksModBehaviour")
+
 return {
 	eventHandlers = {
 		PlaceStacks = function(args)
 			sourceInventory = types.Container.inventory(args.sourceContainer)
 			targetInventory = types.Container.inventory(args.targetContainer)
-			DB.log("sourceContainer: ", auxUtils.deepToString(sourceInventory))
-			DB.log("targetContainer: ", auxUtils.deepToString(targetInventory))
+			-- DB.log("sourceContainer: ", auxUtils.deepToString(sourceInventory))
+			-- DB.log("targetContainer: ", auxUtils.deepToString(targetInventory))
 
 			-- loop through all items of source container and make a list.
 			targetItemList = targetInventory:getAll() -- iterateable list of GameObjects
-			if #targetItemList == 0 then -- empty list
+			if #targetItemList == 0 then -- container is empty
 				return
 			end
 
 			movedItemsCount = 0
-			allItemsFit = false
+			allItemsFit = true
 			remainingCapacity = types.Container.getCapacity(args.targetContainer)
 				- types.Container.getEncumbrance(args.targetContainer)
 			-- trackedEncumbrance = types.Container.getEncumbrance(args.targetContainer)
 
 			for _, item in pairs(targetItemList) do -- pairs instead of ipairs = no need for it to be ordered
 				for _, sItem in pairs(sourceInventory:findAll(item.recordId)) do
-					-- args.sourceContainer.hasEquipped(sourceContainer, sItem) -- check if item is equipped!
+					-- if not settingsBehaviour:get("PlaceStacksDepositEquipped") then
+					-- 	-- args.sourceContainer.hasEquipped(sourceContainer, sItem) -- check if item is equipped!
+					-- 	DB.log("is actor: ", types.Actor.objectIsInstance(args.sourceContainer))
+					-- 	DB.log("is item: ", types.Item.objectIsInstance(args.sourceContainer))
+					-- 	DB.log("item equpped: ", types.Actor.hasEquipped(args.sourceContainer, sItem)) -- assumes sourceContaienr is player actor
+					-- end
 
 					-- Ensure to only place the amount of items that container can carry!
 					-- remainingCapacity = types.Container.getCapacity(args.targetContainer) - types.Container.getEncumbrance(args.targetContainer)
@@ -44,7 +52,7 @@ return {
 					stackWeight = sItem.count * itemWeight
 					moveableItemCount = math.floor(remainingCapacity / itemWeight) -- how many items of this weight can fit into this container?
 
-					if moveableItemCount > sItem.count then -- all items in item stack can fit
+					if moveableItemCount >= sItem.count then -- all items in item stack can fit
 						moveableItemCount = sItem.count
 					else
 						allItemsFit = false
