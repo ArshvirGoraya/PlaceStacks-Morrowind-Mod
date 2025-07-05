@@ -60,6 +60,8 @@ return {
 					itemWeight = sItem.type.record(sItem).weight
 					stackWeight = sItem.count * itemWeight
 					moveableItemCount = math.floor(remainingCapacity / itemWeight) -- how many items of this weight can fit into this container?
+					moveableItemCount = math.max(moveableItemCount, 0)
+					DB.log("moveable Item Count: ", moveableItemCount, " = ", remainingCapacity, "/", itemWeight)
 
 					if moveableItemCount >= sItem.count then -- all items in item stack can fit
 						moveableItemCount = sItem.count
@@ -83,6 +85,7 @@ return {
 					DB.log("Remaining = ", remainingCapacity)
 					DB.log("stackWeight: ", stackWeight)
 					DB.log("can fit", moveableItemCount, "of: ", sItem.count, "(", sItem.recordId, ")")
+					-- if moveableItemCount >= 0 then
 					if moveableItemCount ~= 0 then
 						sItem:split(moveableItemCount):moveInto(targetInventory)
 						movedItemsCount = movedItemsCount + moveableItemCount
