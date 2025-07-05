@@ -46,6 +46,8 @@ return {
 					if not args.depositEquipped then
 						DB.log("item equpped: ", types.Actor.hasEquipped(args.sourceContainer, sItem)) -- assumes sourceContaienr is player actor
 						if types.Actor.hasEquipped(args.sourceContainer, sItem) then
+							DB.log("player has item equipped: ", sItem)
+							DB.log("player has item equipped: ", sItem)
 							goto continue
 						end
 					end
@@ -83,8 +85,8 @@ return {
 						-- movedItemsCount = movedItemsCount + moveableItemCount
 					end
 					DB.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+					::continue::
 				end
-				::continue::
 			end
 			args.sourceContainer:sendEvent(
 				"PlaceStacksComplete",
