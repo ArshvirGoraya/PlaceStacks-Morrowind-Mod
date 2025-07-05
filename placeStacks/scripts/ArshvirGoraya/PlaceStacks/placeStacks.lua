@@ -4,6 +4,12 @@ local sourceInventory = nil
 local targetInventory = nil
 local targetItemList = nil
 local movedItemsCount = 0
+local stackWeight = 0
+local remainingCapacity = 0
+local itemWeight = 0
+local moveableItemCount = 0
+local allItemsFit = true
+-- local trackedEncumbrance = 0
 
 return {
 	eventHandlers = {
@@ -20,18 +26,58 @@ return {
 			end
 
 			movedItemsCount = 0
+			allItemsFit = false
+			remainingCapacity = types.Container.getCapacity(args.targetContainer)
+				- types.Container.getEncumbrance(args.targetContainer)
+			-- trackedEncumbrance = types.Container.getEncumbrance(args.targetContainer)
 
 			for _, item in pairs(targetItemList) do -- pairs instead of ipairs = no need for it to be ordered
-				-- print(item, ": ", targetInventory:countOf(item.recordId))
 				for _, sItem in pairs(sourceInventory:findAll(item.recordId)) do
-					-- gameobjectReference = sItem
-					movedItemsCount = movedItemsCount + sourceInventory:countOf(sItem.recordId)
-					-- print("source Inventory has: ", sItem.recordId, "->", sourceInventory:countOf(sItem.recordId))
-					sItem:moveInto(targetInventory)
+					-- args.sourceContainer.hasEquipped(sourceContainer, sItem) -- check if item is equipped!
+
+					-- Ensure to only place the amount of items that container can carry!
+					-- remainingCapacity = types.Container.getCapacity(args.targetContainer) - types.Container.getEncumbrance(args.targetContainer)
+
+					itemWeight = sItem.type.record(sItem).weight
+					stackWeight = sItem.count * itemWeight
+					moveableItemCount = math.floor(remainingCapacity / itemWeight) -- how many items of this weight can fit into this container?
+
+					if moveableItemCount > sItem.count then -- all items in item stack can fit
+						moveableItemCount = sItem.count
+					else
+						allItemsFit = false
+					end
+					-- trackedEncumbrance = trackedEncumbrance + moveableItemCount * itemWeight -- have to track encumbrance changes. cant use getEncumbrance because it doesn't actually change in value for some reason?
+					remainingCapacity = remainingCapacity - moveableItemCount * itemWeight
+
+					-- print(
+					-- 	"Container: ",
+					-- 	types.Container.getEncumbrance(args.targetContainer),
+					-- 	"/",
+					-- 	types.Container.getCapacity(args.targetContainer),
+					-- )
+					-- print("Encumbrance = ", trackedEncumbrance)
+					print("Remaining = ", remainingCapacity)
+					print("stackWeight: ", stackWeight)
+					print("can fit", moveableItemCount, "of: ", sItem.count, "(", sItem.recordId, ")")
+					if moveableItemCount ~= 0 then
+						-- sItem:split(moveableItemCount):moveInto(targetInventory)
+						-- movedItemsCount = movedItemsCount + moveableItemCount
+
+						local testItems = sItem:split(moveableItemCount)
+						testItems:moveInto(targetInventory)
+						movedItemsCount = movedItemsCount + moveableItemCount
+						print("moving Items: ", testItems.count)
+					end
+					-- sItem:split(moveableItemCount):moveInto(targetInventory)
+					print("")
 				end
 			end
 			if movedItemsCount > 0 then
-				args.sourceContainer:sendEvent("PlaceStacksComplete", movedItemsCount) -- send event to player
+				args.sourceContainer:sendEvent(
+					"PlaceStacksComplete",
+					{ movedItemsCount = movedItemsCount, allItemsFit = allItemsFit }
+				) -- send event to player
 			end
 		end,
 	},

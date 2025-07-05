@@ -6,6 +6,7 @@ local settingsHold = storage.playerSection("settingsPlaceStacksModHold")
 local settingsNotify = storage.playerSection("settingsPlaceStacksModNotification")
 local ui = require("openmw.ui")
 local I = require("openmw.interfaces")
+local types = require("openmw.types")
 
 local focusedContainer = nil
 local heldWhenOpening = false
@@ -28,20 +29,29 @@ return {
 			end
 		end,
 
-		PlaceStacksComplete = function(movedItemsCount)
+		PlaceStacksComplete = function(args)
 			if settingsNotify:get("PlaceStacksNotify") then
-				ui.showMessage("Placed Stacks: " .. tostring(movedItemsCount))
+				if not args.allItemsFit then
+					ui.showMessage("not all items fit")
+				end
+				ui.showMessage("Placed Stacks: " .. tostring(args.movedItemsCount))
 			end
 			-- ui.updateAll() -- doesnt seem to work
-			I.UI.setMode() -- exit container mode.
+			I.UI.setMode() -- exit container mode: must exit to avoid bugs since ui cant update right now!
 		end,
 	},
 
 	engineHandlers = {
 		onFrame = function(dt)
-			-- if input.isKeyPressed(input.KEY.G) then
-			-- 	print("notify: ", settingsNotify:get("PlaceStacksNotify"))
-			-- end
+			if input.isKeyPressed(input.KEY.G) then
+				-- print("notify: ", settingsNotify:get("PlaceStacksNotify"))
+				print(
+					"focused container: ",
+					types.Container.getEncumbrance(focusedContainer),
+					"/",
+					types.Container.getCapacity(focusedContainer)
+				)
+			end
 			-- Hold Activate when in container:
 			if heldWhenOpening then
 				if not input.isActionPressed(input.ACTION.Activate) then
