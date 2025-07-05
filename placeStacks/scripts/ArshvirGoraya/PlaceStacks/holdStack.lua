@@ -29,8 +29,14 @@ return {
 			if not settingsHold:get("PlaceStacksHold") then
 				return
 			end
+			if types.Actor.objectIsInstance(data.arg) then
+				-- disable stacking on alive NPCs
+				if not types.Actor.isDead(data.arg) then
+					DB.log("NPC is alive... no stacking.")
+					return
+				end
+			end
 			DB.log("focused container: ", data.arg)
-
 			focusedContainer = data.arg
 
 			if input.isActionPressed(input.ACTION.Activate) then -- depracted. says to use getBooleanActionValue instead, but there doesn't seem to be a registered action for Activate in input.actions yet... so can't?
@@ -42,7 +48,13 @@ return {
 		PlaceStacksComplete = function(args)
 			if not args.allItemsFit then
 				if settingsNotify:get("PlaceStacksNotifyNotAllItems") then
-					ui.showMessage("not all items fit")
+					ui.showMessage(
+						"Not all items fit: "
+							.. tostring(args.unfittableItemsCount)
+							.. "\n ["
+							.. args.nonFittingItemTypesListString
+							.. "]"
+					)
 				end
 			end
 			if settingsNotify:get("PlaceStacksNotify") then

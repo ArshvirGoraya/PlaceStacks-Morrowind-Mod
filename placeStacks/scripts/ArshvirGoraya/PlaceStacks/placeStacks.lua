@@ -11,6 +11,10 @@ local itemWeight = 0
 local moveableItemCount = 0
 local allItemsFit = true
 -- local trackedEncumbrance = 0
+local nonFittingItemTypesSet = {}
+local nonFittingItemTypesList = {}
+local nonFittingItemTypesListString = ""
+local unfittableItemsCount = 0
 
 return {
 	eventHandlers = {
@@ -27,14 +31,16 @@ return {
 				return
 			end
 
+			nonFittingItemTypesSet = {}
 			movedItemsCount = 0
 			allItemsFit = true
+			unfittableItemsCount = 0
 			-- trackedEncumbrance = types.Container.getEncumbrance(args.targetContainer)
 
 			-- getCapacity and getEncumbrance have to go through types.Actor and types.Container for some reason... cant just call it on args.targetContainer
 			if types.Actor.objectIsInstance(args.targetContainer) then
 				remainingCapacity = types.Actor.getCapacity(args.targetContainer)
-					- types.Actor.getEncumbrance(args.targetContainer) -- may be actor or container so dont use type.Container
+					- types.Actor.getEncumbrance(args.targetContainer)
 			else
 				remainingCapacity = types.Container.getCapacity(args.targetContainer)
 					- types.Container.getEncumbrance(args.targetContainer)
@@ -46,7 +52,6 @@ return {
 					if not args.depositEquipped then
 						DB.log("item equpped: ", types.Actor.hasEquipped(args.sourceContainer, sItem)) -- assumes sourceContaienr is player actor
 						if types.Actor.hasEquipped(args.sourceContainer, sItem) then
-							DB.log("player has item equipped: ", sItem)
 							DB.log("player has item equipped: ", sItem)
 							goto continue
 						end
@@ -60,6 +65,10 @@ return {
 					if moveableItemCount >= sItem.count then -- all items in item stack can fit
 						moveableItemCount = sItem.count
 					else
+						DB.log("unfittable item type: ", sItem.type)
+						nonFittingItemTypesSet[sItem.type] = true
+						DB.log("unfittable count: ", sItem.count - moveableItemCount)
+						unfittableItemsCount = unfittableItemsCount + (sItem.count - moveableItemCount)
 						allItemsFit = false
 					end
 					-- trackedEncumbrance = trackedEncumbrance + moveableItemCount * itemWeight -- have to track encumbrance changes. cant use getEncumbrance because it doesn't actually change in value for some reason?
@@ -88,10 +97,19 @@ return {
 					::continue::
 				end
 			end
-			args.sourceContainer:sendEvent(
-				"PlaceStacksComplete",
-				{ movedItemsCount = movedItemsCount, allItemsFit = allItemsFit }
-			) -- send event to player
+			nonFittingItemTypesListString = ""
+			for key in pairs(nonFittingItemTypesSet) do
+				nonFittingItemTypesListString = nonFittingItemTypesListString .. tostring(key) .. ", "
+			end
+			nonFittingItemTypesListString = string.sub(nonFittingItemTypesListString, 1, -3)
+
+			args.sourceContainer:sendEvent("PlaceStacksComplete", {
+				movedItemsCount = movedItemsCount,
+				allItemsFit = allItemsFit,
+				unfittableItemsCount = unfittableItemsCount,
+				-- nonFittingItemTypesSet = nonFittingItemTypesSet,
+				nonFittingItemTypesListString = nonFittingItemTypesListString,
+			}) -- send event to player
 		end,
 	},
 }

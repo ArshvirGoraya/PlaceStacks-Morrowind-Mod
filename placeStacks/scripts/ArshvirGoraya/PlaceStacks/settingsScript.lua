@@ -8,6 +8,28 @@ I.Settings.registerPage({
 })
 
 I.Settings.registerGroup({
+	key = "settingsPlaceStacksModBehaviour",
+	page = "PlaceStacksPage",
+	l10n = "PlaceStacks",
+	name = "Stack Behaviour",
+	description = "Settings that control stacking behaviour",
+	permanentStorage = true, -- false = placed in individual saves
+	settings = {
+		{
+			key = "PlaceStacksDepositEquipped",
+			name = "Deposit Equipped Items",
+			description = "If enabled, will also deposit equipped items.",
+			default = false,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+	},
+})
+
+I.Settings.registerGroup({
 	key = "settingsPlaceStacksModNotification",
 	page = "PlaceStacksPage",
 	l10n = "PlaceStacks",
@@ -63,7 +85,7 @@ I.Settings.registerGroup({
 			key = "PlaceStacksHoldMS",
 			name = "Milliseconds",
 			description = 'How many milliseonds you must hold "activate" key before placing stacks. Doesn\'t do anything if above setting is disabled.',
-			default = 500,
+			default = 250,
 			renderer = "number",
 			argument = {
 				integer = true, -- only allow integers,
@@ -76,28 +98,6 @@ I.Settings.registerGroup({
 			name = "Auto Close",
 			description = "Automatically close the container once stacks are placed.",
 			default = true,
-			renderer = "checkbox",
-			argument = {
-				trueLabel = "Enabled",
-				falseLabel = "Disabled",
-			},
-		},
-	},
-})
-
-I.Settings.registerGroup({
-	key = "settingsPlaceStacksModBehaviour",
-	page = "PlaceStacksPage",
-	l10n = "PlaceStacks",
-	name = "Stack Behaviour",
-	description = "Settings that control stacking behaviour",
-	permanentStorage = true, -- false = placed in individual saves
-	settings = {
-		{
-			key = "PlaceStacksDepositEquipped",
-			name = "Deposit Equipped Items",
-			description = "If enabled, will also deposit equipped items.",
-			default = false,
 			renderer = "checkbox",
 			argument = {
 				trueLabel = "Enabled",
