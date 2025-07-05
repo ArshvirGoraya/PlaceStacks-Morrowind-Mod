@@ -73,12 +73,10 @@ return {
 					print("")
 				end
 			end
-			if movedItemsCount > 0 then
-				args.sourceContainer:sendEvent(
-					"PlaceStacksComplete",
-					{ movedItemsCount = movedItemsCount, allItemsFit = allItemsFit }
-				) -- send event to player
-			end
+			args.sourceContainer:sendEvent(
+				"PlaceStacksComplete",
+				{ movedItemsCount = movedItemsCount, allItemsFit = allItemsFit }
+			) -- send event to player
 		end,
 	},
 }
