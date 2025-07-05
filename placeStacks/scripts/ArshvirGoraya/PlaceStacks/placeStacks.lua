@@ -1,6 +1,5 @@
 local types = require("openmw.types")
 local auxUtils = require("openmw_aux.util")
-
 local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 local sourceInventory = nil
 local targetInventory = nil
@@ -18,8 +17,9 @@ return {
 		PlaceStacks = function(args)
 			sourceInventory = types.Container.inventory(args.sourceContainer)
 			targetInventory = types.Container.inventory(args.targetContainer)
-			-- DB.log("sourceContainer: ", auxUtils.deepToString(sourceInventory))
-			-- DB.log("targetContainer: ", auxUtils.deepToString(targetInventory))
+			-- DB.log("sourceInventory: ", auxUtils.deepToString(sourceInventory))
+			-- DB.log("targetInventory: ", auxUtils.deepToString(targetInventory))
+			-- DB.log("targetContainer: ", auxUtils.deepToString(args.targetContainer))
 
 			-- loop through all items of source container and make a list.
 			targetItemList = targetInventory:getAll() -- iterateable list of GameObjects
@@ -29,9 +29,16 @@ return {
 
 			movedItemsCount = 0
 			allItemsFit = true
-			remainingCapacity = types.Container.getCapacity(args.targetContainer)
-				- types.Container.getEncumbrance(args.targetContainer)
 			-- trackedEncumbrance = types.Container.getEncumbrance(args.targetContainer)
+
+			-- getCapacity and getEncumbrance have to go through types.Actor and types.Container for some reason... cant just call it on args.targetContainer
+			if types.Actor.objectIsInstance(args.targetContainer) then
+				remainingCapacity = types.Actor.getCapacity(args.targetContainer)
+					- types.Actor.getEncumbrance(args.targetContainer) -- may be actor or container so dont use type.Container
+			else
+				remainingCapacity = types.Container.getCapacity(args.targetContainer)
+					- types.Container.getEncumbrance(args.targetContainer)
+			end
 
 			for _, item in pairs(targetItemList) do -- pairs instead of ipairs = no need for it to be ordered
 				for _, sItem in pairs(sourceInventory:findAll(item.recordId)) do

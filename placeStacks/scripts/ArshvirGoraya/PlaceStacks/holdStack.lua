@@ -29,6 +29,7 @@ return {
 			if not settingsHold:get("PlaceStacksHold") then
 				return
 			end
+			DB.log("focused container: ", data.arg)
 
 			focusedContainer = data.arg
 
@@ -58,8 +59,12 @@ return {
 
 	engineHandlers = {
 		onFrame = function(dt)
-			-- if input.isKeyPressed(input.KEY.G) then
-			-- end
+			if input.isKeyPressed(input.KEY.G) then
+				DB.log(
+					"npc remaining space: ",
+					types.Actor.getCapacity(focusedContainer) - types.Actor.getEncumbrance(focusedContainer)
+				) -- may be actor or container so dont use type.Container
+			end
 			-- Hold Activate when in container:
 			if heldWhenOpening then
 				if not input.isActionPressed(input.ACTION.Activate) then
@@ -69,14 +74,11 @@ return {
 				-- DB.log("time remaining: ", targetTime - core.getRealTime())
 				if core.getRealTime() >= targetTime then
 					heldWhenOpening = false
-					core.sendGlobalEvent(
-						"PlaceStacks",
-						{
-							sourceContainer = self,
-							targetContainer = focusedContainer,
-							depositEquipped = settingsBehaviour:get("PlaceStacksDepositEquipped"),
-						}
-					)
+					core.sendGlobalEvent("PlaceStacks", {
+						sourceContainer = self,
+						targetContainer = focusedContainer,
+						depositEquipped = settingsBehaviour:get("PlaceStacksDepositEquipped"),
+					})
 				end
 			end
 		end,
