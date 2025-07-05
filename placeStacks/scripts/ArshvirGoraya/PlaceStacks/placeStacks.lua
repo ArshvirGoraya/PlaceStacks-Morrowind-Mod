@@ -12,7 +12,6 @@ local moveableItemCount = 0
 local allItemsFit = true
 -- local trackedEncumbrance = 0
 local nonFittingItemTypesSet = {}
-local nonFittingItemTypesList = {}
 local nonFittingItemTypesListString = ""
 local unfittableItemsCount = 0
 
@@ -98,10 +97,13 @@ return {
 				end
 			end
 			nonFittingItemTypesListString = ""
-			for key in pairs(nonFittingItemTypesSet) do
-				nonFittingItemTypesListString = nonFittingItemTypesListString .. tostring(key) .. ", "
+			if args.PlaceStacksNotifyNotAllItemsTypes then
+				DB.log("doing type loop")
+				for key in pairs(nonFittingItemTypesSet) do
+					nonFittingItemTypesListString = nonFittingItemTypesListString .. tostring(key) .. ", "
+				end
+				nonFittingItemTypesListString = string.sub(nonFittingItemTypesListString, 1, -3)
 			end
-			nonFittingItemTypesListString = string.sub(nonFittingItemTypesListString, 1, -3)
 
 			args.sourceContainer:sendEvent("PlaceStacksComplete", {
 				movedItemsCount = movedItemsCount,

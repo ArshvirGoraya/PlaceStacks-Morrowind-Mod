@@ -14,6 +14,7 @@ local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 local focusedContainer = nil
 local heldWhenOpening = false
 local targetTime = 0
+local notificationString = ""
 
 return {
 	eventHandlers = {
@@ -46,20 +47,46 @@ return {
 		end,
 
 		PlaceStacksComplete = function(args)
-			if not args.allItemsFit then
-				if settingsNotify:get("PlaceStacksNotifyNotAllItems") then
-					ui.showMessage(
-						"Not all items fit: "
-							.. tostring(args.unfittableItemsCount)
-							.. "\n ["
-							.. args.nonFittingItemTypesListString
-							.. "]"
-					)
+			DB.log("any: ", settingsNotify:get("PlaceStacksNotify"))
+			DB.log("place stacks: ", settingsNotify:get("PlaceStacksNotifyPlaceStacks"))
+			DB.log("not all: ", settingsNotify:get("PlaceStacksNotifyNotAllItems"))
+			DB.log("not all types: ", settingsNotify:get("PlaceStacksNotifyNotAllItemsTypes"))
+
+			if settingsNotify:get("PlaceStacksNotify") then
+				notificationString = ""
+				if settingsNotify:get("PlaceStacksNotifyPlaceStacks") then
+					notificationString = notificationString .. "Placed Stacks: " .. tostring(args.movedItemsCount)
+					DB.log("notificationString: ", notificationString)
+				end
+				if not args.allItemsFit then
+					if settingsNotify:get("PlaceStacksNotifyPlaceStacks") then
+						notificationString = notificationString .. "\n"
+					end
+					if
+						settingsNotify:get("PlaceStacksNotifyNotAllItems")
+						or settingsNotify:get("PlaceStacksNotifyNotAllItemsTypes")
+					then
+						notificationString = notificationString .. "Did not fit:"
+					end
+					if settingsNotify:get("PlaceStacksNotifyNotAllItems") then
+						notificationString = notificationString .. " " .. tostring(args.unfittableItemsCount)
+						DB.log("notificationString: ", notificationString)
+					end
+					if settingsNotify:get("PlaceStacksNotifyNotAllItemsTypes") then
+						notificationString = notificationString .. " [" .. args.nonFittingItemTypesListString .. "]"
+						DB.log("notificationString: ", notificationString)
+					end
+				end
+				DB.log("notificationString: ", notificationString)
+				if notificationString ~= "" then
+					DB.log("show message: ", notificationString)
+					-- ui.showMessage(
+					-- 	notificationString .. "TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST"
+					-- )
+					ui.showMessage(notificationString)
 				end
 			end
-			if settingsNotify:get("PlaceStacksNotify") then
-				ui.showMessage("Placed Stacks: " .. tostring(args.movedItemsCount))
-			end
+
 			-- UI Behaviour
 			if settingsHold:get("PlaceStacksHoldAutoClose") then
 				I.UI.setMode()
@@ -90,6 +117,7 @@ return {
 						sourceContainer = self,
 						targetContainer = focusedContainer,
 						depositEquipped = settingsBehaviour:get("PlaceStacksDepositEquipped"),
+						PlaceStacksNotifyNotAllItemsTypes = settingsNotify:get("PlaceStacksNotifyNotAllItemsTypes"),
 					})
 				end
 			end

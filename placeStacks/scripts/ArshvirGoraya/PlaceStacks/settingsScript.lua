@@ -40,7 +40,18 @@ I.Settings.registerGroup({
 		{
 			key = "PlaceStacksNotify",
 			name = "Show Place Stacks Notification",
-			description = "If enabled, will display a notification that shows how many items were placed in the container.",
+			description = "If enabled, will show a notification each time place stacks is activated. Contents of the notification can be enabled below. If all content options are disabled, will not show any notification, even if this is enabled.",
+			default = true,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+		{
+			key = "PlaceStacksNotifyPlaceStacks",
+			name = "Show Place Stacks Notification",
+			description = "If enabled, adds number of items placed in container to notification",
 			default = true,
 			renderer = "checkbox",
 			argument = {
@@ -51,7 +62,18 @@ I.Settings.registerGroup({
 		{
 			key = "PlaceStacksNotifyNotAllItems",
 			name = "Show Not All Items Notification",
-			description = "If enabled, shows a notification if not all items could fit in the container.",
+			description = "If enabled, adds number of items that did not fit in the container to notification",
+			default = true,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+		{
+			key = "PlaceStacksNotifyNotAllItemsTypes",
+			name = "Show Item Types of Those That Did Not Fit",
+			description = "If enabled, adds list of types of items that did not fit to notification.",
 			default = true,
 			renderer = "checkbox",
 			argument = {
