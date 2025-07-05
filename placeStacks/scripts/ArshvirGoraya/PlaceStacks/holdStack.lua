@@ -34,14 +34,20 @@ return {
 		end,
 
 		PlaceStacksComplete = function(args)
-			if settingsNotify:get("PlaceStacksNotify") then
-				if not args.allItemsFit then
+			if not args.allItemsFit then
+				if settingsNotify:get("PlaceStacksNotifyNotAllItems") then
 					ui.showMessage("not all items fit")
 				end
+			end
+			if settingsNotify:get("PlaceStacksNotify") then
 				ui.showMessage("Placed Stacks: " .. tostring(args.movedItemsCount))
 			end
-			-- I.UI.setMode()
-			I.UI.setMode("Container", { target = focusedContainer }) -- will call uiModeChanged!
+			-- UI Behaviour
+			if settingsHold:get("PlaceStacksHoldAutoClose") then
+				I.UI.setMode()
+			else
+				I.UI.setMode("Container", { target = focusedContainer }) -- will call uiModeChanged!
+			end
 		end,
 	},
 

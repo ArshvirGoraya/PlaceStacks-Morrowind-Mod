@@ -1,14 +1,4 @@
 local I = require("openmw.interfaces")
-local input = require("openmw.input")
-
-input.registerAction({
-	type = input.ACTION_TYPE.Boolean,
-	defaultValue = false,
-	key = "PlaceStacksModifier",
-	l10n = "PlaceStacks",
-	name = "Place Stacks Modifier -> ",
-	description = 'Hold with "Activate" to Place Stacks on container.',
-})
 
 I.Settings.registerPage({
 	key = "PlaceStacksPage",
@@ -28,7 +18,18 @@ I.Settings.registerGroup({
 		{
 			key = "PlaceStacksNotify",
 			name = "Show Place Stacks Notification",
-			description = "If enabled, will display a notification that shows how many stacks were placed in the container.",
+			description = "If enabled, will display a notification that shows how many items were placed in the container.",
+			default = true,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+		{
+			key = "PlaceStacksNotifyNotAllItems",
+			name = "Show Not All Items Notification",
+			description = "If enabled, shows a notification if not all items could fit in the container.",
 			default = true,
 			renderer = "checkbox",
 			argument = {
@@ -68,6 +69,17 @@ I.Settings.registerGroup({
 				integer = true, -- only allow integers,
 				min = 0,
 				max = 3000,
+			},
+		},
+		{
+			key = "PlaceStacksHoldAutoClose",
+			name = "Auto Close",
+			description = "Automatically close the container once stacks are placed.",
+			default = false,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
 			},
 		},
 	},
