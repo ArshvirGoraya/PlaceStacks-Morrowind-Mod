@@ -18,10 +18,13 @@ return {
 			heldWhenOpening = false
 			-- print("UiModeChanged from", data.oldMode, "to", data.newMode, "(" .. tostring(data.arg) .. ")")
 			print("old mode: ", data.oldMode)
+			if data.newMode ~= "Container" then
+				return
+			end
 			if data.oldMode == "Container" then
 				return
 			end
-			if data.newMode ~= "Container" then
+			if not settingsHold:get("PlaceStacksHold") then
 				return
 			end
 
