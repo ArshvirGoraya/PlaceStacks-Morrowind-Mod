@@ -13,9 +13,6 @@ local moveableItemCount = 0
 local allItemsFit = true
 -- local trackedEncumbrance = 0
 
-local storage = require("openmw.storage")
-local settingsBehaviour = storage.globalSection("settingsPlaceStacksModBehaviour")
-
 return {
 	eventHandlers = {
 		PlaceStacks = function(args)
@@ -38,16 +35,15 @@ return {
 
 			for _, item in pairs(targetItemList) do -- pairs instead of ipairs = no need for it to be ordered
 				for _, sItem in pairs(sourceInventory:findAll(item.recordId)) do
-					-- if not settingsBehaviour:get("PlaceStacksDepositEquipped") then
-					-- 	-- args.sourceContainer.hasEquipped(sourceContainer, sItem) -- check if item is equipped!
-					-- 	DB.log("is actor: ", types.Actor.objectIsInstance(args.sourceContainer))
-					-- 	DB.log("is item: ", types.Item.objectIsInstance(args.sourceContainer))
-					-- 	DB.log("item equpped: ", types.Actor.hasEquipped(args.sourceContainer, sItem)) -- assumes sourceContaienr is player actor
-					-- end
+					DB.log("deposit equipped setting: ", args.depositEquipped)
+					if not args.depositEquipped then
+						DB.log("item equpped: ", types.Actor.hasEquipped(args.sourceContainer, sItem)) -- assumes sourceContaienr is player actor
+						if types.Actor.hasEquipped(args.sourceContainer, sItem) then
+							goto continue
+						end
+					end
 
 					-- Ensure to only place the amount of items that container can carry!
-					-- remainingCapacity = types.Container.getCapacity(args.targetContainer) - types.Container.getEncumbrance(args.targetContainer)
-
 					itemWeight = sItem.type.record(sItem).weight
 					stackWeight = sItem.count * itemWeight
 					moveableItemCount = math.floor(remainingCapacity / itemWeight) -- how many items of this weight can fit into this container?
@@ -66,21 +62,22 @@ return {
 					-- 	"/",
 					-- 	types.Container.getCapacity(args.targetContainer),
 					-- )
-					DB.log("Encumbrance = ", trackedEncumbrance)
+					-- DB.log("Encumbrance = ", trackedEncumbrance)
 					DB.log("Remaining = ", remainingCapacity)
 					DB.log("stackWeight: ", stackWeight)
 					DB.log("can fit", moveableItemCount, "of: ", sItem.count, "(", sItem.recordId, ")")
 					if moveableItemCount ~= 0 then
-						-- sItem:split(moveableItemCount):moveInto(targetInventory)
-						-- movedItemsCount = movedItemsCount + moveableItemCount
-
-						local testItems = sItem:split(moveableItemCount)
-						testItems:moveInto(targetInventory)
+						sItem:split(moveableItemCount):moveInto(targetInventory)
 						movedItemsCount = movedItemsCount + moveableItemCount
-						DB.log("moving Items: ", testItems.count)
+
+						-- local testItems = sItem:split(moveableItemCount)
+						-- DB.log("moving Items: ", testItems.count)
+						-- testItems:moveInto(targetInventory)
+						-- movedItemsCount = movedItemsCount + moveableItemCount
 					end
-					DB.log("")
+					DB.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
 				end
+				::continue::
 			end
 			args.sourceContainer:sendEvent(
 				"PlaceStacksComplete",

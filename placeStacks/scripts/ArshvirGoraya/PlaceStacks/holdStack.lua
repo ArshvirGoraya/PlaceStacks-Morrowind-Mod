@@ -4,6 +4,7 @@ local core = require("openmw.core")
 local storage = require("openmw.storage")
 local settingsHold = storage.playerSection("settingsPlaceStacksModHold")
 local settingsNotify = storage.playerSection("settingsPlaceStacksModNotification")
+local settingsBehaviour = storage.playerSection("settingsPlaceStacksModBehaviour")
 local ui = require("openmw.ui")
 local I = require("openmw.interfaces")
 local types = require("openmw.types")
@@ -68,7 +69,14 @@ return {
 				-- DB.log("time remaining: ", targetTime - core.getRealTime())
 				if core.getRealTime() >= targetTime then
 					heldWhenOpening = false
-					core.sendGlobalEvent("PlaceStacks", { sourceContainer = self, targetContainer = focusedContainer })
+					core.sendGlobalEvent(
+						"PlaceStacks",
+						{
+							sourceContainer = self,
+							targetContainer = focusedContainer,
+							depositEquipped = settingsBehaviour:get("PlaceStacksDepositEquipped"),
+						}
+					)
 				end
 			end
 		end,
