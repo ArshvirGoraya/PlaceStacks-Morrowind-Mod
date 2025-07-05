@@ -8,6 +8,8 @@ local ui = require("openmw.ui")
 local I = require("openmw.interfaces")
 local types = require("openmw.types")
 
+local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
+
 local focusedContainer = nil
 local heldWhenOpening = false
 local targetTime = 0
@@ -16,8 +18,7 @@ return {
 	eventHandlers = {
 		UiModeChanged = function(data)
 			heldWhenOpening = false
-			-- print("UiModeChanged from", data.oldMode, "to", data.newMode, "(" .. tostring(data.arg) .. ")")
-			print("old mode: ", data.oldMode)
+			-- DB.log("UiModeChanged from", data.oldMode, "to", data.newMode, "(" .. tostring(data.arg) .. ")")
 			if data.newMode ~= "Container" then
 				return
 			end
@@ -56,22 +57,15 @@ return {
 
 	engineHandlers = {
 		onFrame = function(dt)
-			if input.isKeyPressed(input.KEY.G) then
-				-- print("notify: ", settingsNotify:get("PlaceStacksNotify"))
-				print(
-					"focused container: ",
-					types.Container.getEncumbrance(focusedContainer),
-					"/",
-					types.Container.getCapacity(focusedContainer)
-				)
-			end
+			-- if input.isKeyPressed(input.KEY.G) then
+			-- end
 			-- Hold Activate when in container:
 			if heldWhenOpening then
 				if not input.isActionPressed(input.ACTION.Activate) then
 					heldWhenOpening = false
 					return
 				end
-				-- print("time remaining: ", targetTime - core.getRealTime())
+				-- DB.log("time remaining: ", targetTime - core.getRealTime())
 				if core.getRealTime() >= targetTime then
 					heldWhenOpening = false
 					core.sendGlobalEvent("PlaceStacks", { sourceContainer = self, targetContainer = focusedContainer })

@@ -1,4 +1,3 @@
 PLAYER: scripts/ArshvirGoraya/PlaceStacks/holdStack.lua
 GLOBAL: scripts/ArshvirGoraya/PlaceStacks/placeStacks.lua
 MENU: scripts/ArshvirGoraya/PlaceStacks/settingsScript.lua
-

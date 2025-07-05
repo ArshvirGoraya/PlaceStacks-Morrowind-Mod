@@ -1,5 +1,7 @@
 local types = require("openmw.types")
+local auxUtils = require("openmw_aux.util")
 
+local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 local sourceInventory = nil
 local targetInventory = nil
 local targetItemList = nil
@@ -16,8 +18,8 @@ return {
 		PlaceStacks = function(args)
 			sourceInventory = types.Container.inventory(args.sourceContainer)
 			targetInventory = types.Container.inventory(args.targetContainer)
-			-- print("sourceContainer: ", auxUtils.deepToString(sourceInventory))
-			-- print("targetContainer: ", auxUtils.deepToString(targetInventory))
+			DB.log("sourceContainer: ", auxUtils.deepToString(sourceInventory))
+			DB.log("targetContainer: ", auxUtils.deepToString(targetInventory))
 
 			-- loop through all items of source container and make a list.
 			targetItemList = targetInventory:getAll() -- iterateable list of GameObjects
@@ -50,16 +52,16 @@ return {
 					-- trackedEncumbrance = trackedEncumbrance + moveableItemCount * itemWeight -- have to track encumbrance changes. cant use getEncumbrance because it doesn't actually change in value for some reason?
 					remainingCapacity = remainingCapacity - moveableItemCount * itemWeight
 
-					-- print(
+					-- DB.log(
 					-- 	"Container: ",
 					-- 	types.Container.getEncumbrance(args.targetContainer),
 					-- 	"/",
 					-- 	types.Container.getCapacity(args.targetContainer),
 					-- )
-					-- print("Encumbrance = ", trackedEncumbrance)
-					print("Remaining = ", remainingCapacity)
-					print("stackWeight: ", stackWeight)
-					print("can fit", moveableItemCount, "of: ", sItem.count, "(", sItem.recordId, ")")
+					DB.log("Encumbrance = ", trackedEncumbrance)
+					DB.log("Remaining = ", remainingCapacity)
+					DB.log("stackWeight: ", stackWeight)
+					DB.log("can fit", moveableItemCount, "of: ", sItem.count, "(", sItem.recordId, ")")
 					if moveableItemCount ~= 0 then
 						-- sItem:split(moveableItemCount):moveInto(targetInventory)
 						-- movedItemsCount = movedItemsCount + moveableItemCount
@@ -67,10 +69,9 @@ return {
 						local testItems = sItem:split(moveableItemCount)
 						testItems:moveInto(targetInventory)
 						movedItemsCount = movedItemsCount + moveableItemCount
-						print("moving Items: ", testItems.count)
+						DB.log("moving Items: ", testItems.count)
 					end
-					-- sItem:split(moveableItemCount):moveInto(targetInventory)
-					print("")
+					DB.log("")
 				end
 			end
 			args.sourceContainer:sendEvent(
