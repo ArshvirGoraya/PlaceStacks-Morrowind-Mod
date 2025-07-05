@@ -17,13 +17,17 @@ return {
 		UiModeChanged = function(data)
 			heldWhenOpening = false
 			-- print("UiModeChanged from", data.oldMode, "to", data.newMode, "(" .. tostring(data.arg) .. ")")
+			print("old mode: ", data.oldMode)
+			if data.oldMode == "Container" then
+				return
+			end
 			if data.newMode ~= "Container" then
 				return
 			end
 
 			focusedContainer = data.arg
 
-			if input.isActionPressed(input.ACTION.Activate) then -- depracted. says to use getBooleanActionValue instead, but there doesn't seem to be a registered action for Activate in input.actions yes... so can't?
+			if input.isActionPressed(input.ACTION.Activate) then -- depracted. says to use getBooleanActionValue instead, but there doesn't seem to be a registered action for Activate in input.actions yet... so can't?
 				heldWhenOpening = true
 				targetTime = core.getRealTime() + settingsHold:get("PlaceStacksHoldMS") / 1000 -- convert ms to seconds
 			end
@@ -36,8 +40,8 @@ return {
 				end
 				ui.showMessage("Placed Stacks: " .. tostring(args.movedItemsCount))
 			end
-			-- ui.updateAll() -- doesnt seem to work
-			I.UI.setMode() -- exit container mode: must exit to avoid bugs since ui cant update right now!
+			-- I.UI.setMode()
+			I.UI.setMode("Container", { target = focusedContainer }) -- will call uiModeChanged!
 		end,
 	},
 
