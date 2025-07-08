@@ -20,12 +20,9 @@ return {
 		PlaceStacks = function(args)
 			sourceInventory = types.Container.inventory(args.sourceContainer)
 			targetInventory = types.Container.inventory(args.targetContainer)
-			-- DB.log("sourceInventory: ", auxUtils.deepToString(sourceInventory))
-			-- DB.log("targetInventory: ", auxUtils.deepToString(targetInventory))
-			-- DB.log("targetContainer: ", auxUtils.deepToString(args.targetContainer))
 
-			-- loop through all items of source container and make a list.
 			targetItemList = targetInventory:getAll() -- iterateable list of GameObjects
+
 			if #targetItemList == 0 then -- container is empty
 				return
 			end
@@ -47,11 +44,11 @@ return {
 
 			for _, item in pairs(targetItemList) do -- pairs instead of ipairs = no need for it to be ordered
 				for _, sItem in pairs(sourceInventory:findAll(item.recordId)) do
-					DB.log("deposit equipped setting: ", args.depositEquipped)
+					-- DB.log("deposit equipped setting: ", args.depositEquipped)
 					if not args.depositEquipped then
-						DB.log("item equpped: ", types.Actor.hasEquipped(args.sourceContainer, sItem)) -- assumes sourceContaienr is player actor
+						-- DB.log("item equpped: ", types.Actor.hasEquipped(args.sourceContainer, sItem)) -- assumes sourceContaienr is player actor
 						if types.Actor.hasEquipped(args.sourceContainer, sItem) then
-							DB.log("player has item equipped: ", sItem)
+							-- DB.log("player has item equipped: ", sItem)
 							goto continue
 						end
 					end
@@ -61,32 +58,35 @@ return {
 					stackWeight = sItem.count * itemWeight
 					moveableItemCount = math.floor(remainingCapacity / itemWeight) -- how many items of this weight can fit into this container?
 					moveableItemCount = math.max(moveableItemCount, 0)
-					DB.log("moveable Item Count: ", moveableItemCount, " = ", remainingCapacity, "/", itemWeight)
+					-- DB.log("moveable Item Count: ", moveableItemCount, " = ", remainingCapacity, "/", itemWeight)
 
 					if moveableItemCount >= sItem.count then -- all items in item stack can fit
 						moveableItemCount = sItem.count
 					else
-						DB.log("unfittable item type: ", sItem.type)
+						-- DB.log("unfittable item type: ", sItem.type)
 						nonFittingItemTypesSet[sItem.type] = true
-						DB.log("unfittable count: ", sItem.count - moveableItemCount)
+						-- DB.log("unfittable count: ", sItem.count - moveableItemCount)
 						unfittableItemsCount = unfittableItemsCount + (sItem.count - moveableItemCount)
 						allItemsFit = false
 					end
 					-- trackedEncumbrance = trackedEncumbrance + moveableItemCount * itemWeight -- have to track encumbrance changes. cant use getEncumbrance because it doesn't actually change in value for some reason?
+					DB.log("Remaining before = ", remainingCapacity)
 					remainingCapacity = remainingCapacity - moveableItemCount * itemWeight
-
-					-- DB.log(
-					-- 	"Container: ",
-					-- 	types.Container.getEncumbrance(args.targetContainer),
-					-- 	"/",
-					-- 	types.Container.getCapacity(args.targetContainer),
-					-- )
-					-- DB.log("Encumbrance = ", trackedEncumbrance)
-					DB.log("Remaining = ", remainingCapacity)
 					DB.log("stackWeight: ", stackWeight)
-					DB.log("can fit", moveableItemCount, "of: ", sItem.count, "(", sItem.recordId, ")")
-					-- if moveableItemCount >= 0 then
-					if moveableItemCount ~= 0 then
+					DB.log(
+						"can fit",
+						moveableItemCount
+							.. " of "
+							.. sItem.count
+							.. " ("
+							.. sItem.recordId
+							.. " )"
+							.. " ["
+							.. itemWeight
+							.. "]"
+					)
+					DB.log("Remaining after = ", remainingCapacity)
+					if moveableItemCount > 0 then
 						sItem:split(moveableItemCount):moveInto(targetInventory)
 						movedItemsCount = movedItemsCount + moveableItemCount
 
@@ -101,7 +101,7 @@ return {
 			end
 			nonFittingItemTypesListString = ""
 			if args.PlaceStacksNotifyNotAllItemsTypes then
-				DB.log("doing type loop")
+				-- DB.log("doing type loop")
 				for key in pairs(nonFittingItemTypesSet) do
 					nonFittingItemTypesListString = nonFittingItemTypesListString .. tostring(key) .. ", "
 				end
