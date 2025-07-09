@@ -4,6 +4,7 @@ local core = require("openmw.core")
 local I = require("openmw.interfaces")
 local self = require("openmw.self")
 local input = require("openmw.input")
+local storage = require("openmw.storage")
 
 local takingStacks = false
 local previousFrameTakeStacksActionValue = false
@@ -33,10 +34,10 @@ return {
 	},
 
 	eventHandlers = {
-		UiModeChanged = function(data)
-			if data.newMode ~= "Container" then
-			end
-		end,
+		-- UiModeChanged = function(data)
+		-- 	if data.newMode ~= "Container" then
+		-- 	end
+		-- end,
 
 		TakeStacksComplete = function(args)
 			DB.log("take stacks complete!")

@@ -8,7 +8,7 @@ local settingsBehaviour = storage.playerSection("settingsPlaceStacksModBehaviour
 local ui = require("openmw.ui")
 local I = require("openmw.interfaces")
 local types = require("openmw.types")
-
+local auxUtils = require("openmw_aux.util")
 local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 
 local focusedContainer = nil
@@ -114,8 +114,27 @@ return {
 				return
 			end
 			if key.symbol == "g" then
+				for k, v in pairs(input.actions) do
+					if k == "TakeStacksKey" then
+						print(
+							k
+								.. ": "
+								.. auxUtils.deepToString(
+									auxUtils.deepToString(
+										auxUtils.deepToString(auxUtils.deepToString(auxUtils.deepToString(v)))
+									)
+								)
+						)
+					end
+				end
+				-- DB.log(input.actions)
+				DB.log(
+					"take stacks mod to string: ",
+					storage.playerSection("settingsTakeStacksMod"):get("TakeStacksActionKey")
+				)
+
 				if focusedContainer == nil then
-					ui.showMessage("no focused container")
+					-- ui.showMessage("no focused container")
 					return
 				end
 				local remainingCapacity
