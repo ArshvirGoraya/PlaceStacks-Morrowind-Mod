@@ -114,19 +114,19 @@ return {
 				return
 			end
 			if key.symbol == "g" then
-				for k, v in pairs(input.actions) do
-					if k == "TakeStacksKey" then
-						print(
-							k
-								.. ": "
-								.. auxUtils.deepToString(
-									auxUtils.deepToString(
-										auxUtils.deepToString(auxUtils.deepToString(auxUtils.deepToString(v)))
-									)
-								)
-						)
-					end
-				end
+				-- for k, v in pairs(input.actions) do
+				-- 	if k == "TakeStacksKey" then
+				-- 		DB.log(
+				-- 			k
+				-- 				.. ": "
+				-- 				.. auxUtils.deepToString(
+				-- 					auxUtils.deepToString(
+				-- 						auxUtils.deepToString(auxUtils.deepToString(auxUtils.deepToString(v)))
+				-- 					)
+				-- 				)
+				-- 		)
+				-- 	end
+				-- end
 				-- DB.log(input.actions)
 				DB.log(
 					"take stacks mod to string: ",

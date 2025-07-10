@@ -1,6 +1,6 @@
-PLAYER: scripts/ArshvirGoraya/PlaceStacks/takeStacksTrigger.lua
-PLAYER: scripts/ArshvirGoraya/PlaceStacks/holdStack.lua
-GLOBAL: scripts/ArshvirGoraya/PlaceStacks/takeStacks.luA
-GLOBAL: scripts/ArshvirGoraya/PlaceStacks/placeStacks.lua
 MENU: scripts/ArshvirGoraya/PlaceStacks/settingsPlaceStacks.lua
 MENU: scripts/ArshvirGoraya/PlaceStacks/settingsTakeStacks.lua
+PLAYER: scripts/ArshvirGoraya/PlaceStacks/takeStacksTrigger.lua
+PLAYER: scripts/ArshvirGoraya/PlaceStacks/holdStack.lua
+GLOBAL: scripts/ArshvirGoraya/PlaceStacks/takeStacks.lua
+GLOBAL: scripts/ArshvirGoraya/PlaceStacks/placeStacks.lua

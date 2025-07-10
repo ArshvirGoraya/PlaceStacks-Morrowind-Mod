@@ -5,9 +5,11 @@ local I = require("openmw.interfaces")
 local self = require("openmw.self")
 local input = require("openmw.input")
 local storage = require("openmw.storage")
+local takeStacksSettings = storage.playerSection("settingsTakeStacksMod")
 
 local takingStacks = false
 local previousFrameTakeStacksActionValue = false
+local focusedContainer = nil
 
 input.registerAction({
 	key = "TakeStacksKey",
@@ -36,20 +38,46 @@ return {
 	eventHandlers = {
 		-- UiModeChanged = function(data)
 		-- 	if data.newMode ~= "Container" then
+		-- 		DB.log("not set to container")
+		-- 	else
+		-- 		DB.log("mode set to container")
 		-- 	end
 		-- end,
 
 		TakeStacksComplete = function(args)
 			DB.log("take stacks complete!")
+
+			-- UI Behaviour
+
+			local autoClose = takeStacksSettings:get("TakeStacksAutoClose")
+			DB.log("autoclose setting: ", autoClose)
+			DB.log("all items fit: ", args.allItemsFit)
+
+			if autoClose == "All Fit" then
+				if args.allItemsFit then
+					autoClose = "Always"
+				else
+					autoClose = "Never"
+				end
+			end
+			if autoClose == "Never" then
+				DB.log("set to container!")
+				I.UI.setMode("Container", { target = focusedContainer }) -- will call uiModeChanged!
+			else
+				I.UI.setMode()
+			end
 			takingStacks = false
 		end,
+
 		TakeStacksTriggerResponse = function(args)
 			if not args.inHeldOpenState and not takingStacks then -- dont take stacks if in held open state (when placing stacks from player into container)
+				focusedContainer = args.focusedContainer
 				takingStacks = true
 				core.sendGlobalEvent("TakeStacks", {
 					sourceContainer = args.focusedContainer,
 					targetContainer = self,
 					player = self,
+					allowOverEncumber = takeStacksSettings:get("TakeStacksOverEncumber"),
 				})
 			end
 		end,
