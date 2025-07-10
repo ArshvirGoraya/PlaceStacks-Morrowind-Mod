@@ -9,6 +9,28 @@ I.Settings.registerPage({
 })
 
 I.Settings.registerGroup({
+	key = "settingsTakeStacksModNotification",
+	page = "TakeStacksPage",
+	l10n = "PlaceStacks",
+	name = "Notification",
+	description = "Controls aspects of the take stacks notification",
+	permanentStorage = true,
+	settings = {
+		{
+			key = "TakeStacksNotify",
+			name = "Show Take Stacks Notification",
+			description = "If enabled, will show a notification each time take stacks is activated. Contents of the notification is how many items were taken.",
+			default = true,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+	},
+})
+
+I.Settings.registerGroup({
 	key = "settingsTakeStacksMod",
 	page = "TakeStacksPage",
 	l10n = "PlaceStacks",
@@ -55,7 +77,7 @@ I.Settings.registerGroup({
 			key = "TakeStacksAutoClose",
 			name = "Auto Close",
 			description = "- Never: never auto close the container.\n- All Fit: close if all items fit in your inventory. Leave open if over-encumbered or not all fit.\n- Always: will always auto close container.",
-			default = "Never",
+			default = "All Fit",
 			renderer = "select",
 			argument = {
 				items = { "Never", "All Fit", "Always" },

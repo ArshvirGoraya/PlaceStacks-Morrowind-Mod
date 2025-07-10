@@ -5,7 +5,8 @@ local I = require("openmw.interfaces")
 local self = require("openmw.self")
 local input = require("openmw.input")
 local storage = require("openmw.storage")
-local takeStacksSettings = storage.playerSection("settingsTakeStacksMod")
+local settingsTakeStacksMod = storage.playerSection("settingsTakeStacksMod")
+local settingsTakeStacksModNotification = storage.playerSection("settingsTakeStacksModNotification")
 
 local takingStacks = false
 local previousFrameTakeStacksActionValue = false
@@ -49,7 +50,7 @@ return {
 
 			-- UI Behaviour
 
-			local autoClose = takeStacksSettings:get("TakeStacksAutoClose")
+			local autoClose = settingsTakeStacksMod:get("TakeStacksAutoClose")
 			DB.log("autoclose setting: ", autoClose)
 			DB.log("all items fit: ", args.allItemsFit)
 
@@ -66,6 +67,10 @@ return {
 			else
 				I.UI.setMode()
 			end
+			if settingsTakeStacksModNotification:get("TakeStacksNotify") then
+				ui.showMessage("Take Stacks: " .. tostring(args.movedItemsCount))
+			end
+
 			takingStacks = false
 		end,
 
@@ -77,7 +82,7 @@ return {
 					sourceContainer = args.focusedContainer,
 					targetContainer = self,
 					player = self,
-					allowOverEncumber = takeStacksSettings:get("TakeStacksOverEncumber"),
+					allowOverEncumber = settingsTakeStacksMod:get("TakeStacksOverEncumber"),
 				})
 			end
 		end,

@@ -6,7 +6,6 @@ local targetInventory = nil
 local targetItemList = nil
 local sourceItemList = nil
 
-local settings = nil
 local remainingCapacity = nil
 local allowOverEnumber = false
 
@@ -14,15 +13,15 @@ local itemWeight = nil
 local stackWeight = nil
 local moveableItemCount = nil
 
-local moveableItems = nil
 local allItemsFit = true
+
+local movedItemsCount = 0
 
 return {
 	eventHandlers = {
 		TakeStacks = function(args)
 			sourceInventory = types.Container.inventory(args.sourceContainer)
 			targetInventory = types.Container.inventory(args.targetContainer)
-			settings = args.takeStacksSettings
 			allowOverEnumber = args.allowOverEncumber
 
 			DB.log("allowOverEncumber: ", allowOverEnumber)
@@ -34,7 +33,6 @@ return {
 				- types.Actor.getEncumbrance(args.targetContainer)
 
 			for _, sItem in pairs(sourceItemList) do
-				moveableItems = sItem
 				itemWeight = sItem.type.record(sItem).weight
 
 				if not allowOverEnumber then
@@ -60,6 +58,7 @@ return {
 					remainingCapacity = helpers.getRemainingCapacity(remainingCapacity, moveableItemCount * itemWeight)
 					allItemsFit = moveableItemCount >= sItem.count
 					if moveableItemCount > 0 then
+						movedItemsCount = movedItemsCount + moveableItemCount
 						sItem:split(moveableItemCount):moveInto(targetInventory)
 					end
 				else
@@ -68,12 +67,14 @@ return {
 						remainingCapacity = helpers.getRemainingCapacity(remainingCapacity, sItem.count * itemWeight)
 						allItemsFit = remainingCapacity > 0
 					end
+					movedItemsCount = movedItemsCount + sItem.count
 					sItem:moveInto(targetInventory)
 				end
 			end
 			--
 			args.player:sendEvent("TakeStacksComplete", {
 				allItemsFit = allItemsFit,
+				movedItemsCount = movedItemsCount,
 			})
 		end,
 	},
