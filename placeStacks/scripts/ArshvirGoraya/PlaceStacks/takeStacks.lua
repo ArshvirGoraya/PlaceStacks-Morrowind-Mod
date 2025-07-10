@@ -1,6 +1,7 @@
 local types = require("openmw.types")
 local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 local helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
+local auxUtils = require("openmw_aux.util")
 local sourceInventory = nil
 local targetInventory = nil
 local targetItemList = nil
@@ -10,12 +11,58 @@ local remainingCapacity = nil
 local allowOverEnumber = false
 
 local itemWeight = nil
-local stackWeight = nil
 local moveableItemCount = nil
 
 local allItemsFit = true
 
 local movedItemsCount = 0
+
+local takeStacksMoveType
+local matchingList = {}
+local nonMatchingList = {}
+
+local takeStacks = function(sourceList)
+	for _, sItem in pairs(sourceList) do
+		itemWeight = sItem.type.record(sItem).weight
+
+		if not allowOverEnumber then
+			if DB.logging then
+				local stackCount = sItem.count
+				moveableItemCount = helpers.getMoveableItemsCount(sItem, remainingCapacity)
+				if moveableItemCount ~= stackCount then
+					DB.log(
+						"can't take whole stack: ",
+						moveableItemCount
+							.. "["
+							.. moveableItemCount * itemWeight
+							.. "]"
+							.. " ~= "
+							.. stackCount
+							.. "["
+							.. stackCount * itemWeight
+							.. "]"
+					)
+				end
+			end
+			moveableItemCount = helpers.getMoveableItemsCount(sItem, remainingCapacity)
+			remainingCapacity = helpers.getRemainingCapacity(remainingCapacity, moveableItemCount * itemWeight)
+			allItemsFit = moveableItemCount >= sItem.count
+			if moveableItemCount > 0 then
+				movedItemsCount = movedItemsCount + moveableItemCount
+				sItem:split(moveableItemCount):moveInto(targetInventory)
+			end
+		else
+			-- allow overEncumber (still have to check if overEncumbered in the end)
+			if allItemsFit then
+				remainingCapacity = helpers.getRemainingCapacity(remainingCapacity, sItem.count * itemWeight)
+				allItemsFit = remainingCapacity > 0
+			end
+			movedItemsCount = movedItemsCount + sItem.count
+			DB.log("moving item: ", sItem)
+			sItem:moveInto(targetInventory)
+		end
+	end
+end
 
 return {
 	eventHandlers = {
@@ -23,6 +70,7 @@ return {
 			sourceInventory = types.Container.inventory(args.sourceContainer)
 			targetInventory = types.Container.inventory(args.targetContainer)
 			allowOverEnumber = args.allowOverEncumber
+			takeStacksMoveType = args.takeStacksMoveType
 
 			DB.log("allowOverEncumber: ", allowOverEnumber)
 
@@ -32,43 +80,29 @@ return {
 			remainingCapacity = types.Actor.getCapacity(args.targetContainer)
 				- types.Actor.getEncumbrance(args.targetContainer)
 
-			for _, sItem in pairs(sourceItemList) do
-				itemWeight = sItem.type.record(sItem).weight
+			movedItemsCount = 0
 
-				if not allowOverEnumber then
-					if DB.logging then
-						local stackCount = sItem.count
-						moveableItemCount = helpers.getMoveableItemsCount(sItem, remainingCapacity)
-						if moveableItemCount ~= stackCount then
-							DB.log(
-								"can't take whole stack: ",
-								moveableItemCount
-									.. "["
-									.. moveableItemCount * itemWeight
-									.. "]"
-									.. " ~= "
-									.. stackCount
-									.. "["
-									.. stackCount * itemWeight
-									.. "]"
-							)
+			if takeStacksMoveType == "Take All" then
+				takeStacks(sourceItemList)
+			else
+				matchingList = {}
+				nonMatchingList = {}
+
+				for _, item in pairs(sourceItemList) do
+					if targetInventory:find(item.recordId) then
+						table.insert(matchingList, item)
+					else
+						if takeStacksMoveType == "Matching First" then
+							table.insert(nonMatchingList, item)
 						end
 					end
-					moveableItemCount = helpers.getMoveableItemsCount(sItem, remainingCapacity)
-					remainingCapacity = helpers.getRemainingCapacity(remainingCapacity, moveableItemCount * itemWeight)
-					allItemsFit = moveableItemCount >= sItem.count
-					if moveableItemCount > 0 then
-						movedItemsCount = movedItemsCount + moveableItemCount
-						sItem:split(moveableItemCount):moveInto(targetInventory)
-					end
-				else
-					-- allow overEncumber (still have to check if overEncumbered in the end)
-					if allItemsFit then
-						remainingCapacity = helpers.getRemainingCapacity(remainingCapacity, sItem.count * itemWeight)
-						allItemsFit = remainingCapacity > 0
-					end
-					movedItemsCount = movedItemsCount + sItem.count
-					sItem:moveInto(targetInventory)
+				end
+
+				DB.log("MatchingList: ", auxUtils.deepToString(matchingList))
+				takeStacks(matchingList)
+				if takeStacksMoveType == "Matching First" then
+					DB.log("NonMatchingList: ", nonMatchingList)
+					takeStacks(nonMatchingList)
 				end
 			end
 			--

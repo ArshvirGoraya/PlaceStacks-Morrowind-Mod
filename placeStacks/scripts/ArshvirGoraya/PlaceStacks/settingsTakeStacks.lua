@@ -66,7 +66,7 @@ I.Settings.registerGroup({
 			key = "TakeStacksMoveType",
 			name = "Take Behaviour",
 			description = "- Take all: takes all items regardless of if they match or not.\n- Take Matching First: takes matching items first, and then all the rest.\n- Take Matching only: takes item if one of the same kind exists in your inventory (this works just like place stacks works).",
-			default = "Take All",
+			default = "Matching First",
 			renderer = "select",
 			argument = {
 				items = { "Take All", "Matching First", "Matching Only" },

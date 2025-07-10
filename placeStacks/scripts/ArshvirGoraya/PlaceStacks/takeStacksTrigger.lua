@@ -83,6 +83,7 @@ return {
 					targetContainer = self,
 					player = self,
 					allowOverEncumber = settingsTakeStacksMod:get("TakeStacksOverEncumber"),
+					takeStacksMoveType = settingsTakeStacksMod:get("TakeStacksMoveType"),
 				})
 			end
 		end,
