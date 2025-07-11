@@ -63,7 +63,7 @@ I.Settings.registerGroup({
 		{
 			key = "TakeStacksActionKey",
 			name = "Take Stacks Key",
-			description = "If set, press key when container is open to trigger the take stacks behaviour.",
+			description = "If set, press key when container is open to trigger the take all matching items.",
 			default = "R", -- openMW doesn't set the default as of 0.49... so players will have to set it in game manually.
 			-- default = input.getKeyName(input.KEY.R), -- openMW doesn't set the default as of 0.49... so players will have to set it in game manually.
 			renderer = "inputBinding",
@@ -71,6 +71,18 @@ I.Settings.registerGroup({
 				name = "Take Stacks key",
 				key = "TakeStacksKey",
 				type = "action",
+			},
+		},
+		{
+			key = "TakeStacksActionModifierKey",
+			name = "Take Stacks Modifier Key",
+			description = "Press with key to take all items.",
+			default = "Shift", -- openMW doesn't set the default as of 0.49... so players will have to set it in game manually.
+			-- default = input.getKeyName(input.KEY.R), -- openMW doesn't set the default as of 0.49... so players will have to set it in game manually.
+			renderer = "select",
+			argument = {
+				items = { "Ctrl", "Shift", "Alt", "Super" },
+				l10n = "PlaceStacks",
 			},
 		},
 		{
@@ -82,17 +94,6 @@ I.Settings.registerGroup({
 			argument = {
 				trueLabel = "Enabled",
 				falseLabel = "Disabled",
-			},
-		},
-		{
-			key = "TakeStacksMoveType",
-			name = "Take Behaviour",
-			description = "- Take all: takes all items regardless of if they match or not.\n- Take Matching First: takes matching items first, and then all the rest.\n- Take Matching only: takes item if one of the same kind exists in your inventory (this works just like place stacks works).",
-			default = "Matching First",
-			renderer = "select",
-			argument = {
-				items = { "Take All", "Matching First", "Matching Only" },
-				l10n = "PlaceStacks",
 			},
 		},
 		{

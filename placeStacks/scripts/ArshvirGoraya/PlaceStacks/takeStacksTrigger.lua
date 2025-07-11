@@ -1,4 +1,5 @@
 local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
+local helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 local ui = require("openmw.ui")
 local core = require("openmw.core")
 local I = require("openmw.interfaces")
@@ -28,9 +29,18 @@ return {
 		onFrame = function(dt)
 			if input.getBooleanActionValue("TakeStacksKey") ~= previousFrameTakeStacksActionValue then
 				if input.getBooleanActionValue("TakeStacksKey") then
+					local stackType = helpers.enumStackType.matching
+					if
+						helpers.isStackModifierKeyPressed(
+							input,
+							settingsTakeStacksMod:get("TakeStacksActionModifierKey")
+						)
+					then
+						stackType = helpers.enumStackType.all
+					end
 					-- just pressed
 					if I.UI.getMode() == "Container" then
-						self:sendEvent("TakeStacksTriggerCheck") -- leads to TakeStacksTriggerResponse
+						self:sendEvent("TakeStacksTriggerCheck", { stackType = stackType }) -- leads to TakeStacksTriggerResponse
 					end
 				end
 				previousFrameTakeStacksActionValue = input.getBooleanActionValue("TakeStacksKey")
@@ -97,7 +107,7 @@ return {
 					targetContainer = self,
 					player = self,
 					allowOverEncumber = settingsTakeStacksMod:get("TakeStacksOverEncumber"),
-					takeStacksMoveType = settingsTakeStacksMod:get("TakeStacksMoveType"),
+					stackType = args.stackType,
 				})
 			end
 		end,

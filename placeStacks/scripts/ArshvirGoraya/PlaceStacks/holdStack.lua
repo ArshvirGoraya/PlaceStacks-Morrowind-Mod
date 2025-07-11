@@ -52,7 +52,7 @@ return {
 		TakeStacksTriggerCheck = function(args)
 			self:sendEvent(
 				"TakeStacksTriggerResponse",
-				{ inHeldOpenState = inHeldOpenState, focusedContainer = focusedContainer }
+				{ inHeldOpenState = inHeldOpenState, focusedContainer = focusedContainer, stackType = args.stackType }
 			)
 		end,
 

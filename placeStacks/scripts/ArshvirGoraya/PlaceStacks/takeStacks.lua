@@ -18,7 +18,6 @@ local unfittableItemsCount = 0
 
 local movedItemsCount = 0
 
-local takeStacksMoveType
 local matchingList = {}
 local nonMatchingList = {}
 
@@ -72,7 +71,7 @@ return {
 			sourceInventory = types.Container.inventory(args.sourceContainer)
 			targetInventory = types.Container.inventory(args.targetContainer)
 			allowOverEnumber = args.allowOverEncumber
-			takeStacksMoveType = args.takeStacksMoveType
+			local stackType = args.stackType
 
 			DB.log("allowOverEncumber: ", allowOverEnumber)
 
@@ -86,29 +85,18 @@ return {
 			unfittableItemsCount = 0
 			allItemsFit = true
 
-			if takeStacksMoveType == "Take All" then
-				takeStacks(sourceItemList)
-			else
-				matchingList = {}
-				nonMatchingList = {}
+			local stackList = sourceItemList
 
+			if stackType == helpers.enumStackType.matching then
+				stackList = {}
 				for _, item in pairs(sourceItemList) do
 					if targetInventory:find(item.recordId) then
-						table.insert(matchingList, item)
-					else
-						if takeStacksMoveType == "Matching First" then
-							table.insert(nonMatchingList, item)
-						end
+						table.insert(stackList, item)
 					end
 				end
-
-				DB.log("MatchingList: ", auxUtils.deepToString(matchingList))
-				takeStacks(matchingList)
-				if takeStacksMoveType == "Matching First" then
-					DB.log("NonMatchingList: ", nonMatchingList)
-					takeStacks(nonMatchingList)
-				end
 			end
+
+			takeStacks(stackList)
 			--
 			args.player:sendEvent("TakeStacksComplete", {
 				allItemsFit = allItemsFit,
