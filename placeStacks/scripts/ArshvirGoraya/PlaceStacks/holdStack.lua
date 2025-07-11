@@ -97,13 +97,22 @@ return {
 				end
 			end
 
-			-- UI Behaviour
-			if settingsHold:get("PlaceStacksHoldAutoClose") then
-				I.UI.setMode()
-				-- inHeldOpenState = false
-			else
+			local autoClose = settingsBehaviour:get("PlaceStacksHoldAutoClose")
+			-- DB.log("autoclose setting: ", autoClose)
+			DB.log("all items fit: ", args.allItemsFit)
+
+			if autoClose == "All Fit" then
+				if args.allItemsFit then
+					autoClose = "Always"
+				else
+					autoClose = "Never"
+				end
+			end
+
+			if autoClose == "Never" then
 				I.UI.setMode("Container", { target = focusedContainer }) -- will call uiModeChanged!
-				-- inHeldOpenState = false
+			else
+				I.UI.setMode()
 			end
 		end,
 	},

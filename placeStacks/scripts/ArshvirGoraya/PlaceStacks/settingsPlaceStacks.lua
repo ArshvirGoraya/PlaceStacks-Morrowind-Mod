@@ -8,28 +8,6 @@ I.Settings.registerPage({
 })
 
 I.Settings.registerGroup({
-	key = "settingsPlaceStacksModBehaviour",
-	page = "PlaceStacksPage",
-	l10n = "PlaceStacks",
-	name = "Stack Behaviour",
-	description = "Settings that control stacking behaviour.",
-	permanentStorage = true, -- false = placed in individual saves
-	settings = {
-		{
-			key = "PlaceStacksDepositEquipped",
-			name = "Deposit Equipped Items",
-			description = "If enabled, will also deposit equipped items.",
-			default = false,
-			renderer = "checkbox",
-			argument = {
-				trueLabel = "Enabled",
-				falseLabel = "Disabled",
-			},
-		},
-	},
-})
-
-I.Settings.registerGroup({
 	key = "settingsPlaceStacksModNotification",
 	page = "PlaceStacksPage",
 	l10n = "PlaceStacks",
@@ -85,6 +63,39 @@ I.Settings.registerGroup({
 })
 
 I.Settings.registerGroup({
+	key = "settingsPlaceStacksModBehaviour",
+	page = "PlaceStacksPage",
+	l10n = "PlaceStacks",
+	name = "Stack Behaviour",
+	description = "Settings that control stacking behaviour.",
+	permanentStorage = true, -- false = placed in individual saves
+	settings = {
+		{
+			key = "PlaceStacksDepositEquipped",
+			name = "Deposit Equipped Items",
+			description = "If enabled, will also deposit equipped items.",
+			default = false,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+		{
+			key = "PlaceStacksHoldAutoClose",
+			name = "Auto Close",
+			description = "- Never: never auto close the container.\n- All Fit: close if all items fit in the container.\n- Always: will always auto close container.",
+			default = "All Fit",
+			renderer = "select",
+			argument = {
+				items = { "Never", "All Fit", "Always" },
+				l10n = "PlaceStacks",
+			},
+		},
+	},
+})
+
+I.Settings.registerGroup({
 	key = "settingsPlaceStacksModHold",
 	page = "PlaceStacksPage",
 	l10n = "PlaceStacks",
@@ -113,17 +124,6 @@ I.Settings.registerGroup({
 				integer = true, -- only allow integers,
 				min = 0,
 				max = 3000,
-			},
-		},
-		{
-			key = "PlaceStacksHoldAutoClose",
-			name = "Auto Close",
-			description = "Automatically close the container once stacks are placed.",
-			default = true,
-			renderer = "checkbox",
-			argument = {
-				trueLabel = "Enabled",
-				falseLabel = "Disabled",
 			},
 		},
 	},
