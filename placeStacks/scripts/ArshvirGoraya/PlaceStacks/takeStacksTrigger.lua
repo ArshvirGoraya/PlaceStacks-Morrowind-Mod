@@ -12,6 +12,8 @@ local takingStacks = false
 local previousFrameTakeStacksActionValue = false
 local focusedContainer = nil
 
+local notificationString = ""
+
 input.registerAction({
 	key = "TakeStacksKey",
 	type = input.ACTION_TYPE.Boolean,
@@ -51,7 +53,7 @@ return {
 			-- UI Behaviour
 
 			local autoClose = settingsTakeStacksMod:get("TakeStacksAutoClose")
-			DB.log("autoclose setting: ", autoClose)
+			-- DB.log("autoclose setting: ", autoClose)
 			DB.log("all items fit: ", args.allItemsFit)
 
 			if autoClose == "All Fit" then
@@ -68,7 +70,19 @@ return {
 				I.UI.setMode()
 			end
 			if settingsTakeStacksModNotification:get("TakeStacksNotify") then
-				ui.showMessage("Take Stacks: " .. tostring(args.movedItemsCount))
+				notificationString = ""
+				if settingsTakeStacksModNotification:get("TakeStacksNotifyTakeCount") then
+					notificationString = notificationString .. "Take Stacks: " .. tostring(args.movedItemsCount)
+				end
+				if not args.allItemsFit then
+					if settingsTakeStacksModNotification:get("TakeStacksNotifyNotTakenCount") then
+						if settingsTakeStacksModNotification:get("TakeStacksNotifyTakeCount") then
+							notificationString = notificationString .. "\n"
+						end
+						notificationString = notificationString .. "Not Taken: " .. tostring(args.unfittableItemsCount)
+					end
+				end
+				ui.showMessage(notificationString)
 			end
 
 			takingStacks = false

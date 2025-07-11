@@ -13,13 +13,35 @@ I.Settings.registerGroup({
 	page = "TakeStacksPage",
 	l10n = "PlaceStacks",
 	name = "Notification",
-	description = "Controls aspects of the take stacks notification",
+	description = "Controls aspects of the take stacks notification.",
 	permanentStorage = true,
 	settings = {
 		{
 			key = "TakeStacksNotify",
 			name = "Show Take Stacks Notification",
-			description = "If enabled, will show a notification each time take stacks is activated. Contents of the notification is how many items were taken.",
+			description = "If enabled, will show a notification each time take stacks is activated. Contents of the notification can be enabled below. If all content options are disabled, will not show any notification, even if this is enabled.",
+			default = true,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+		{
+			key = "TakeStacksNotifyTakeCount",
+			name = "Show Take Stacks Count",
+			description = "If enabled, adds number of items taken from container to notification.",
+			default = true,
+			renderer = "checkbox",
+			argument = {
+				trueLabel = "Enabled",
+				falseLabel = "Disabled",
+			},
+		},
+		{
+			key = "TakeStacksNotifyNotTakenCount",
+			name = "Show Take Stacks Notification",
+			description = "If enabled, adds number of items that could not be taken from container to notification if any could not be taken. Useful if have allow over encumber set to false.",
 			default = true,
 			renderer = "checkbox",
 			argument = {
@@ -35,7 +57,7 @@ I.Settings.registerGroup({
 	page = "TakeStacksPage",
 	l10n = "PlaceStacks",
 	name = "Take Stacks",
-	description = "Modify take stacks behaviour",
+	description = "Modify take stacks behaviour.",
 	permanentStorage = true,
 	settings = {
 		{

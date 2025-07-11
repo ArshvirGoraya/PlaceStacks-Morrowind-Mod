@@ -14,6 +14,7 @@ local itemWeight = nil
 local moveableItemCount = nil
 
 local allItemsFit = true
+local unfittableItemsCount = 0
 
 local movedItemsCount = 0
 
@@ -47,6 +48,7 @@ local takeStacks = function(sourceList)
 			moveableItemCount = helpers.getMoveableItemsCount(sItem, remainingCapacity)
 			remainingCapacity = helpers.getRemainingCapacity(remainingCapacity, moveableItemCount * itemWeight)
 			allItemsFit = moveableItemCount >= sItem.count
+			unfittableItemsCount = unfittableItemsCount + sItem.count - moveableItemCount
 			if moveableItemCount > 0 then
 				movedItemsCount = movedItemsCount + moveableItemCount
 				sItem:split(moveableItemCount):moveInto(targetInventory)
@@ -81,6 +83,8 @@ return {
 				- types.Actor.getEncumbrance(args.targetContainer)
 
 			movedItemsCount = 0
+			unfittableItemsCount = 0
+			allItemsFit = true
 
 			if takeStacksMoveType == "Take All" then
 				takeStacks(sourceItemList)
@@ -109,6 +113,7 @@ return {
 			args.player:sendEvent("TakeStacksComplete", {
 				allItemsFit = allItemsFit,
 				movedItemsCount = movedItemsCount,
+				unfittableItemsCount = unfittableItemsCount,
 			})
 		end,
 	},

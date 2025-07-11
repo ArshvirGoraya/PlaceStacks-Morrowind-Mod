@@ -12,7 +12,7 @@ I.Settings.registerGroup({
 	page = "PlaceStacksPage",
 	l10n = "PlaceStacks",
 	name = "Stack Behaviour",
-	description = "Settings that control stacking behaviour",
+	description = "Settings that control stacking behaviour.",
 	permanentStorage = true, -- false = placed in individual saves
 	settings = {
 		{
@@ -34,7 +34,7 @@ I.Settings.registerGroup({
 	page = "PlaceStacksPage",
 	l10n = "PlaceStacks",
 	name = "Notification",
-	description = "Control aspects of the place stacks notification",
+	description = "Control aspects of the place stacks notification.",
 	permanentStorage = true, -- false = placed in individual saves
 	settings = {
 		{
@@ -50,8 +50,8 @@ I.Settings.registerGroup({
 		},
 		{
 			key = "PlaceStacksNotifyPlaceStacks",
-			name = "Show Place Stacks Notification",
-			description = "If enabled, adds number of items placed in container to notification",
+			name = "Show Place Stacks Count",
+			description = "If enabled, adds number of items placed in container to notification.",
 			default = true,
 			renderer = "checkbox",
 			argument = {
@@ -62,7 +62,7 @@ I.Settings.registerGroup({
 		{
 			key = "PlaceStacksNotifyNotAllItems",
 			name = "Show Not All Items Notification",
-			description = "If enabled, adds number of items that did not fit in the container to notification",
+			description = "If enabled, adds number of items that did not fit in the container to notification if any could not be placed.",
 			default = true,
 			renderer = "checkbox",
 			argument = {
@@ -73,7 +73,7 @@ I.Settings.registerGroup({
 		{
 			key = "PlaceStacksNotifyNotAllItemsTypes",
 			name = "Show Item Types of Those That Did Not Fit",
-			description = "If enabled, adds list of types of items that did not fit to notification.",
+			description = "If enabled, adds list of types of items that did not fit to notification if any could not be placed.",
 			default = true,
 			renderer = "checkbox",
 			argument = {
@@ -89,7 +89,7 @@ I.Settings.registerGroup({
 	page = "PlaceStacksPage",
 	l10n = "PlaceStacks",
 	name = "Hold To Stack",
-	description = "Settings that control holding activate to place stacks",
+	description = "Settings that control holding activate to place stacks.",
 	permanentStorage = true, -- false = placed in individual saves
 	settings = {
 		{
