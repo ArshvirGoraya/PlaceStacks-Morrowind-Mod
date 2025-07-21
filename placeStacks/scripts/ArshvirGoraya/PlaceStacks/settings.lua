@@ -1,12 +1,13 @@
 local settings = require("openmw.interfaces").Settings
-
+local input = require("openmw.input")
+local helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 
 local modDescription = [[
 Initially inspired by Valheim's Place Stacks mechanic, this mod lets you quickly place/take matching items into or from containers.
 
 - Place: Place all items, or place only matching items where if the container has the item and you have the item the item goes into the container.
 - Take: Take all items, or take only matching items where if the container has the item and you have the item, the item goes into your inventory.
-- Options to take/place items in order: valuable, cheapest, heaviest, lightest. 
+    - Options to take items in order: valuable, cheapest, heaviest, lightest. 
 
 Mod Link: https://www.nexusmods.com/morrowind/mods/57067
 Author: Arshvir Goraya
@@ -26,8 +27,6 @@ Control what the modifier key does when pressing along with take/place stack key
 - If yes, press modifier along with key to transfer all items, and press key without modifier to transfer only matching. 
 - If no, press modifier along with key to transfer only matching, and press key without modifier to transfer all.
 ]]
-
-
 
 local l10n = "PlaceStacks"
 
@@ -61,7 +60,7 @@ local settingsCommonBehavior = {
 			key = "ModifierIsAll",
 			name = "Modifier Is All",
 			description = modifierIsAllDescription,
-			default = false,
+			default = true,
 			renderer = "checkbox",
 		},
 		{
@@ -75,7 +74,7 @@ local settingsCommonBehavior = {
 				l10n = l10n,
 			},
 		},
-	}
+	},
 }
 
 local settingsTakeStacks = {
@@ -106,31 +105,31 @@ local settingsTakeStacks = {
 			renderer = "checkbox",
 		},
 		{
-			key = "TakeFirst",
-			name = "Take First Type",
-			description = "Controls the order of which items are taken.\n- Valuable: take items from most valuable to least.\n- Lightness: take items from least heavy to most.",
+			key = "TakeOrder",
+			name = "Take Order",
+			description = "Controls the order in which items are taken.\n- Valuable: take items from most valuable to least.\n- Lightness: take items from least heavy to most.",
 			default = "Valuable",
 			renderer = "select",
 			argument = {
-				items = { "Any", "Valuable", "Lightest", "Cheapest", "Heaviest" },
+				items = helpers.enumStrings.TAKE_ORDER,
 				l10n = l10n,
 			},
-		},--
+		}, --
 		{
-			key = "NotifyCount",
+			key = "NotifyCountTransferred",
 			name = "Show amount taken in notification",
 			description = "Yes: adds number of items taken from container to a notification.",
 			default = true,
 			renderer = "checkbox",
 		},
 		{
-			key = "NotifyNotTaken",
+			key = "NotifyCountNotTransferred",
 			name = "Show amount not taken in notification",
-			description = "Yes: adds number of relevant items that could not be taken from container to notification. If taking matching, shows how many matching items could be taken. If taking all, shows total items that could not be taken.",
+			description = "Yes: adds number of relevant items that could not be taken from container to notification.\nIf taking matching, shows how many matching items could be taken.\nIf taking all, shows total items that could not be taken.",
 			default = true,
 			renderer = "checkbox",
 		},
-	}
+	},
 }
 
 local settingsPlaceStacks = {
@@ -148,15 +147,15 @@ local settingsPlaceStacks = {
 			default = "G",
 			renderer = "inputBinding",
 			argument = {
-				name = "Take Stacks key",
-				key = "TakeStacksKey",
+				name = "Place Stacks key",
+				key = "PlaceStacksKey",
 				type = "action",
 			},
 		},
 		{
 			key = "HoldMS",
 			name = "Hold to Place Stack Milliseconds",
-			description = 'Hover over a container and hold the "activate" key for these many milliseconds to place stacks (place matching by default).\nHold with modifier to trigger the modifier action (place all by default.)"\nIf set to 0, disables this method of placing stacks.',
+			description = 'Hover over a container and hold the "activate" key for these many milliseconds to place stacks (place matching by default).\nHold with modifier to trigger the modifier action (place all by default.)\nIf set to 0, disables this method of placing stacks.',
 			default = 250,
 			renderer = "number",
 			argument = {
@@ -173,30 +172,48 @@ local settingsPlaceStacks = {
 			renderer = "checkbox",
 		}, --
 		{
-			key = "NotifyCount",
+			key = "NotifyCountTransferred",
 			name = "Show amount placed in notification",
 			description = "Yes: adds number of items placed into container to a notification.",
 			default = true,
 			renderer = "checkbox",
 		},
 		{
-			key = "NotifyNotPlaced",
+			key = "NotifyCountNotTransferred",
 			name = "Show amount not taken in notification",
-			description = "Yes: adds number of relevant items that could not fit in container to notification. If placing matching, shows how many matching items could be placed. If taking all, shows total items that could not be placed.",
+			description = "Yes: adds number of relevant items that could not fit in container to notification.\nIf placing matching, shows how many matching items could be placed.\nIf taking all, shows total items that could not be placed.",
 			default = true,
 			renderer = "checkbox",
 		},
 		{
-			key = "NotifyNotPlacedTypes",
+			key = "NotifyTypesNotTransferred",
 			name = "Show item types of those that could not be placed",
 			description = "Yes: adds list of relevant items types that could not fit in container to notification.",
 			default = true,
 			renderer = "checkbox",
 		},
-	}
+	},
 }
 
 -- register in reverse order = the way it appears in the settings page.
 settings.registerGroup(settingsTakeStacks)
 settings.registerGroup(settingsPlaceStacks)
 settings.registerGroup(settingsCommonBehavior)
+
+input.registerAction({
+	key = "TakeStacksKey",
+	type = input.ACTION_TYPE.Boolean,
+	l10n = "PlaceStacks",
+	name = "Take Stacks Key",
+	description = "Triggers take stacks behavior",
+	defaultValue = false,
+})
+
+input.registerAction({
+	key = "PlaceStacksKey",
+	type = input.ACTION_TYPE.Boolean,
+	l10n = "PlaceStacks",
+	name = "Place Stacks Key",
+	description = "Triggers place stacks behavior",
+	defaultValue = false,
+})
