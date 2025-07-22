@@ -18,8 +18,10 @@ M.sharedVariables = {
 		sourceContainer = nil,
 		targetContainer = nil,
 		performOnAllItems = false,
-		depositEquipped = false,
+		transferOrder = nil,
 		player = nil,
+		items = nil,
+		depositEquipped = false,
 		notifyCountTransferred = false,
 		notifyCountNotTransferred = false,
 		notifyTypeNotTransferred = false,
@@ -29,9 +31,10 @@ M.sharedVariables = {
 		sourceContainer = nil,
 		targetContainer = nil,
 		performOnAllItems = false,
-		allowOverEncumbrance = false,
-		takeOrder = nil,
+		transferOrder = nil,
 		player = nil,
+		items = nil,
+		allowOverEncumbrance = false,
 		notifyCountTransferred = false,
 		notifyCountNotTransferred = false,
 	},
@@ -55,12 +58,12 @@ end
 
 -- if openMW API provides a better way to make enums (without explicitly setting the values) use that instead!
 M.enumNames = {
-	TAKE_ORDER = "TAKE_ORDER",
+	TRANSFER_ORDER = "TRANSFER_ORDER",
 	STACK_TYPE = "STACK_TYPE",
 }
 
 M.enumStrings = {
-	[M.enumNames.TAKE_ORDER] = { "Any", "Valuable", "Lightest", "Cheapest", "Heaviest" },
+	[M.enumNames.TRANSFER_ORDER] = { "Any", "Valuable", "Lightest", "Cheapest", "Heaviest" },
 	[M.enumNames.STACK_TYPE] = { "None", "Place", "Take" },
 }
 
@@ -140,6 +143,53 @@ function M.isContainerValid(container, types)
 
 	DB.log("Container is Valid")
 	return true
+end
+local function getItemsFromContainer(types, sourceContainer)
+	return types.Container.inventory(sourceContainer):getAll()
+end
+
+local function sortItemsToTransferOrder(items, transferOrder)
+	-- items = list of items that extend gameObject: https://openmw.readthedocs.io/en/openmw-0.49.0/reference/lua-scripting/openmw_core.html##(GameObject)
+	-- >: decending (greatest to smallest)
+	-- <: ascending (smallest to greatest)
+
+	if DB.logging then
+		DB.log("items before ordering")
+		for _, v in ipairs(items) do
+			DB.log("weight: " .. v.type.record.weight, "value: " .. v.type.record.value)
+		end
+	end
+
+	if transferOrder == M.enums.TRANSFER_ORDER.Heaviest then
+		table.sort(items, function(a, b)
+			return a.type.record(a).weight > b.type.record(b).weight
+		end)
+	elseif transferOrder == M.enums.TRANSFER_ORDER.Lightest then
+		table.sort(items, function(a, b)
+			return a.type.record(a).weight < b.type.record(b).weight
+		end)
+	elseif transferOrder == M.enums.TRANSFER_ORDER.Valuable then
+		table.sort(items, function(a, b)
+			return a.type.record(a).value > b.type.record(b).value
+		end)
+	elseif transferOrder == M.enums.TRANSFER_ORDER.Cheapest then
+		table.sort(items, function(a, b)
+			return a.type.record(a).value < b.type.record(b).value
+		end)
+	end
+
+	if DB.logging then
+		DB.log("items before ordering")
+		for _, v in ipairs(items) do
+			DB.log("weight: " .. v.type.record.weight, "value: " .. v.type.record.value)
+		end
+	end
+
+	return items
+end
+
+function M.getItemsFromContainerInTransferOredr(types, sourceContainer, transferOrder)
+	return sortItemsToTransferOrder(getItemsFromContainer(types, sourceContainer), transferOrder)
 end
 
 function M.isModifierKeyPressed(input, Modifier)

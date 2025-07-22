@@ -98,22 +98,22 @@ local settingsTakeStacks = {
 			},
 		},
 		{
-			key = "AllowOverEncumbrance",
-			name = "Allow Over Encumbrance",
-			description = "- No: only take as much items as you can carry and don't over encumber.\n- Yes: take matching/all items and allow over encumbering.",
-			default = false,
-			renderer = "checkbox",
-		},
-		{
-			key = "TakeOrder",
+			key = "TransferOrder",
 			name = "Take Order",
 			description = "Controls the order in which items are taken.\n- Valuable: take items from most valuable to least.\n- Lightness: take items from least heavy to most.",
 			default = "Valuable",
 			renderer = "select",
 			argument = {
-				items = helpers.enumStrings.TAKE_ORDER,
+				items = helpers.enumStrings.TRANSFER_ORDER,
 				l10n = l10n,
 			},
+		},
+		{
+			key = "AllowOverEncumbrance",
+			name = "Allow Over Encumbrance",
+			description = "- No: only take as much items as you can carry and don't over encumber.\n- Yes: take matching/all items and allow over encumbering.",
+			default = false,
+			renderer = "checkbox",
 		}, --
 		{
 			key = "NotifyCountTransferred",
@@ -162,6 +162,17 @@ local settingsPlaceStacks = {
 				integer = true, -- only allow integers,
 				min = 0,
 				max = 3000,
+			},
+		},
+		{
+			key = "TransferOrder",
+			name = "Place Order",
+			description = "Controls the order in which items are placed.\n- Cheapest: place items from least valuable to most.\n- Heaviest: take items from most heavy to least.",
+			default = "Valuable",
+			renderer = "select",
+			argument = {
+				items = helpers.enumStrings.TRANSFER_ORDER,
+				l10n = l10n,
 			},
 		},
 		{
