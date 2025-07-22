@@ -1,11 +1,20 @@
-local enableLogging = false
--- enableLogging = true -- comment this out in production builds!
+local M = {}
 
-return {
-	log = function(...)
-		if not enableLogging then
-			return
-		end
-		print(...)
-	end,
-}
+M.logging = false
+M.logging = true -- comment this out in production builds!
+
+function M.log(...)
+	if not M.logging then
+		return
+	end
+	print(...)
+end
+
+-- function M.uilog(...)
+-- 	if not M.logging then
+-- 		return
+-- 	end
+-- end
+
+return M
+

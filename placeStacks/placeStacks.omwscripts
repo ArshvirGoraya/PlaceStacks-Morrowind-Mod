@@ -1,3 +1,3 @@
-PLAYER: scripts/ArshvirGoraya/PlaceStacks/holdStack.lua
-GLOBAL: scripts/ArshvirGoraya/PlaceStacks/placeStacks.lua
-MENU: scripts/ArshvirGoraya/PlaceStacks/settingsScript.lua
+MENU: scripts/ArshvirGoraya/PlaceStacks/settings.lua
+PLAYER: scripts/ArshvirGoraya/PlaceStacks/actionDetector/actionDetector.lua
+#GLOBAL: scripts/ArshvirGoraya/PlaceStacks/takeStacks.lua
