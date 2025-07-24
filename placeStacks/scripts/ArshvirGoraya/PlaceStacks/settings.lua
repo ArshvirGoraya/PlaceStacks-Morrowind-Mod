@@ -1,6 +1,4 @@
-local settings = require("openmw.interfaces").Settings
-local input = require("openmw.input")
-local helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
+local settings = I.Settings
 
 local modDescription = [[
 Initially inspired by Valheim's Place Stacks mechanic, this mod lets you quickly place/take matching items into or from containers.
@@ -104,7 +102,7 @@ local settingsTakeStacks = {
 			default = "Valuable",
 			renderer = "select",
 			argument = {
-				items = helpers.enumStrings.TRANSFER_ORDER,
+				items = Helpers.enumStrings.TRANSFER_ORDER,
 				l10n = l10n,
 			},
 		},
@@ -171,7 +169,7 @@ local settingsPlaceStacks = {
 			default = "Valuable",
 			renderer = "select",
 			argument = {
-				items = helpers.enumStrings.TRANSFER_ORDER,
+				items = Helpers.enumStrings.TRANSFER_ORDER,
 				l10n = l10n,
 			},
 		},
@@ -211,18 +209,18 @@ settings.registerGroup(settingsTakeStacks)
 settings.registerGroup(settingsPlaceStacks)
 settings.registerGroup(settingsCommonBehavior)
 
-input.registerAction({
+Input.registerAction({
 	key = "TakeStacksKey",
-	type = input.ACTION_TYPE.Boolean,
+	type = Input.ACTION_TYPE.Boolean,
 	l10n = "PlaceStacks",
 	name = "Take Stacks Key",
 	description = "Triggers take stacks behavior",
 	defaultValue = false,
 })
 
-input.registerAction({
+Input.registerAction({
 	key = "PlaceStacksKey",
-	type = input.ACTION_TYPE.Boolean,
+	type = Input.ACTION_TYPE.Boolean,
 	l10n = "PlaceStacks",
 	name = "Place Stacks Key",
 	description = "Triggers place stacks behavior",

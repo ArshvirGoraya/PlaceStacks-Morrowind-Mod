@@ -1,5 +1,4 @@
-local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
-local helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
+local settingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
 
 local M = {}
 
@@ -10,16 +9,16 @@ local previousFramePress = false
 
 -- Local Functions
 
-local getCalculatedHoldTime = function(core, settingsHoldMS)
-	return core.getRealTime() + settingsHoldMS / 1000 -- convert ms to seconds
+local getCalculatedHoldTime = function(settingsHoldMS)
+	return Core.getRealTime() + settingsHoldMS / 1000 -- convert ms to seconds
 end
 
 M.stopDetectingPlaceStacksHold = function()
 	detectingPlaceStacksHold = false
 end
 
-local shouldCancelPlaceStacksHoldDetection = function(input, I)
-	if not input.isActionPressed(input.ACTION.Activate) then
+local shouldCancelPlaceStacksHoldDetection = function()
+	if not Input.isActionPressed(Input.ACTION.Activate) then
 		return true
 	end
 	if I.UI.getMode() ~= "Container" then
@@ -29,10 +28,10 @@ local shouldCancelPlaceStacksHoldDetection = function(input, I)
 	return false
 end
 
-M.detectPlaceStacksPress = function(input)
+M.detectPlaceStacksPress = function()
 	local detected = false
-	local currentFramePress = input.getBooleanActionValue("PlaceStacksKey")
-	if helpers.detectPress(previousFramePress, currentFramePress) then
+	local currentFramePress = Input.getBooleanActionValue("PlaceStacksKey")
+	if DetectorHelpers.detectPress(previousFramePress, currentFramePress) then
 		M.stopDetectingPlaceStacksHold()
 		detected = true
 	end
@@ -40,16 +39,16 @@ M.detectPlaceStacksPress = function(input)
 	return detected
 end
 
-M.detectPlaceStacksHold = function(core, input, I)
+M.detectPlaceStacksHold = function()
 	local detected = false
 
-	if detectingPlaceStacksHold and shouldCancelPlaceStacksHoldDetection(input, I) then
+	if detectingPlaceStacksHold and shouldCancelPlaceStacksHoldDetection() then
 		M.stopDetectingPlaceStacksHold()
 		DB.log("place stacks hold cancelled")
 		return detected
 	end
 	if detectingPlaceStacksHold then
-		if core.getRealTime() >= holdTime then
+		if Core.getRealTime() >= holdTime then
 			M.stopDetectingPlaceStacksHold()
 			detected = true
 		end
@@ -57,14 +56,17 @@ M.detectPlaceStacksHold = function(core, input, I)
 	return detected
 end
 
-M.startDetectingPlaceStacksHoldIfEnabled = function(core, storage)
-	local settingsPlaceStacks = storage.playerSection("settingsPlaceStacks")
+M.startDetectingPlaceStacksHoldIfEnabled = function(settingsPlaceStacks)
 	local settingsHoldMS = settingsPlaceStacks:get("HoldMS")
 	local placeStacksHoldEnabled = settingsHoldMS > 0
 	DB.log("placeStacksHoldEnabled: ", placeStacksHoldEnabled)
 
 	if placeStacksHoldEnabled then
-		holdTime = getCalculatedHoldTime(core, settingsHoldMS)
+		if not Helpers.isContainerValid(FocusedContainer, Types) then
+			return
+		end
+
+		holdTime = getCalculatedHoldTime(settingsHoldMS)
 		DB.log("place stacks hold started - time set to: ", holdTime)
 		detectingPlaceStacksHold = true
 	end

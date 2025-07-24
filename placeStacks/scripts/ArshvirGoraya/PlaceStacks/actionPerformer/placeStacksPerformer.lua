@@ -1,23 +1,20 @@
+local placeStacksArgs = {}
 local M = {}
 
-local function preparePlaceStacksArgs(types, input, player, settingsCommonBehavior, settingsPlaceStacks, helpers)
-	helpers.sharedVariables.placeStacksArgs.sourceContainer = self
-	helpers.sharedVariables.placeStacksArgs.targetContainer = helpers.sharedVariables.focusedContainer
-	helpers.sharedVariables.placeStacksArgs.performOnAllItems =
-		helpers.detectPerformOnAllItems(input, settingsCommonBehavior)
-	helpers.sharedVariables.placeStacksArgs.transferOrder = settingsPlaceStacks:get("TransferOrder")
-	helpers.sharedVariables.placeStacksArgs.player = player
-	helpers.sharedVariables.placeStacksArgs.items = helpers.getItemsFromContainerInTransferOrder(
-		types,
-		helpers.sharedVariables.placeStacksArgs.sourceContainer,
-		helpers.sharedVariables.placeStacksArgs.transferOrder
+local function preparePlaceStacksArgs(focusedContainer, player, performOnAllItems, settingsPlaceStacks)
+	placeStacksArgs.sourceContainer = player
+	placeStacksArgs.targetContainer = focusedContainer
+	placeStacksArgs.performOnAllItems = performOnAllItems
+	placeStacksArgs.transferOrder = settingsPlaceStacks.TransferOrder
+	placeStacksArgs.player = player
+	placeStacksArgs.items = PerformerHelpers.getItemsFromContainerInTransferOrder(
+		placeStacksArgs.sourceContainer,
+		placeStacksArgs.transferOrder
 	)
-	helpers.sharedVariables.placeStacksArgs.depositEquipped = settingsPlaceStacks:get("DepositEquipped")
-	helpers.sharedVariables.placeStacksArgs.notifyCountTransferred = settingsPlaceStacks:get("NotifyCountTransferred")
-	helpers.sharedVariables.placeStacksArgs.notifyCountNotTransferred =
-		settingsPlaceStacks:get("NotifyCountNotTransferred")
-	helpers.sharedVariables.placeStacksArgs.notifyTypeNotTransferred =
-		settingsPlaceStacks:get("NotifyTypeNotTransferred")
+	placeStacksArgs.depositEquipped = settingsPlaceStacks.DepositEquipped
+	placeStacksArgs.notifyCountTransferred = settingsPlaceStacks.NotifyCountTransferred
+	placeStacksArgs.notifyCountNotTransferred = settingsPlaceStacks.NotifyCountNotTransferred
+	placeStacksArgs.notifyTypeNotTransferred = settingsPlaceStacks.NotifyTypeNotTransferred
 end
 
 local function preparePlaceStacksNotification() end
@@ -28,20 +25,30 @@ end
 
 local function placeStacks() end
 
-M.performPlaceStacks = function(core, input, types, I, storage, player, helpers, DB)
-	DB.log("\n==\nperformPlaceStacks called")
-	if not helpers.canPerformStackAction(types, I, helpers.enums.STACK_TYPE.Place) then
+M.performPlaceStacks = function(args)
+	DB.log("\n==\nperformPlaceStacks called!")
+	Helpers.printTable(args)
+	local focusedContainer, player, uiMode, performOnAllItems, settingsCommonBehavior, settingsPlaceStacks =
+		table.unpack(args)
+
+	DB.log("player: ", player)
+	if
+		not PerformerHelpers.canPerformStackAction(
+			focusedContainer,
+			Types,
+			uiMode,
+			CurrentStackType,
+			PerformerHelpers.enums.STACK_TYPE.Place
+		)
+	then
 		return
 	end
-	local settingsPlaceStacks = storage.playerSection("settingsPlaceStacks")
-	local settingsCommonBehavior = storage.playerSection("settingsCommonBehavior")
-	helpers.sharedVariables.currentStackType = helpers.enums.STACK_TYPE.Place
-	preparePlaceStacksArgs(types, input, player, settingsCommonBehavior, settingsPlaceStacks, helpers)
+	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.Place
+	preparePlaceStacksArgs(focusedContainer, player, performOnAllItems, settingsPlaceStacks)
 	--
 	placeStacks()
 	performPlaceStacksNotification()
-	core.sendGlobalEvent("performContainerClose")
-	--
-	helpers.sharedVariables.currentStackType = helpers.enums.STACK_TYPE.None
+	PerformerHelpers.performAutoClose()
+	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.None
 end
 return M

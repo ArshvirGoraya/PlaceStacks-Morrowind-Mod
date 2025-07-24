@@ -1,12 +1,10 @@
-local helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
-
 local M = {}
 local previousFramePress = false
 
-M.detectTakeStacksPress = function(input, psd, DB)
+M.detectTakeStacksPress = function(psd)
 	local detected = false
-	local currentFramePress = input.getBooleanActionValue("TakeStacksKey")
-	if helpers.detectPress(previousFramePress, currentFramePress) then
+	local currentFramePress = Input.getBooleanActionValue("TakeStacksKey")
+	if DetectorHelpers.detectPress(previousFramePress, currentFramePress) then
 		psd.stopDetectingPlaceStacksHold()
 		detected = true
 	end

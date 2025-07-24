@@ -1,12 +1,23 @@
--- API
-local types = require("openmw.types")
-local core = require("openmw.core")
-local I = require("openmw.interfaces")
-local input = require("openmw.input")
-local storage = require("openmw.storage")
--- Custom
-local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
-local helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
+-- PLAYER SCRIPT
+--
+-- API Globals
+Types = require("openmw.types")
+Core = require("openmw.core")
+I = require("openmw.interfaces")
+Input = require("openmw.input")
+Storage = require("openmw.storage")
+local player = require("openmw.self")
+local settingsCommonBehavior = Storage.playerSection("settingsCommonBehavior")
+local settingsTakeStacks = Storage.playerSection("settingsTakeStacks")
+local settingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
+-- Custom API Globals
+DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
+Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
+DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.detectorHelpers")
+local _ = require("scripts.ArshvirGoraya.PlaceStacks.settings") -- settings
+-- Custom Var Globals
+FocusedContainer = nil
+-- Locals
 local psd = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.placeStacksDetector")
 local tsd = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.takeStacksDetector")
 
@@ -34,21 +45,32 @@ local onKeyPress = function(key)
 end
 
 local onFrame = function(_) --@ ENTRY
-	if psd.detectPlaceStacksHold(core, input, I) or psd.detectPlaceStacksPress(input) then
-		core.sendGlobalEvent("performPlaceStacks", core, input, types, I, storage, self, helpers, DB)
+	if psd.detectPlaceStacksHold() or psd.detectPlaceStacksPress() then
+		Core.sendGlobalEvent("performPlaceStacks", {
+			FocusedContainer,
+			player,
+			I.UI.getMode(),
+			DetectorHelpers.detectPerformOnAllItems(Input, settingsCommonBehavior),
+			DetectorHelpers.getSettingsCommonBehaviorAsTable(settingsCommonBehavior),
+			DetectorHelpers.getSettingsPlaceStacksAsTable(settingsPlaceStacks),
+		})
 	end
-	if tsd.detectTakeStacksPress(input, psd, DB) then
-		core.sendGlobalEvent("performTakeStacks", core, input, types, I, storage, self, helpers, DB)
+	if tsd.detectTakeStacksPress(psd) then
+		Core.sendGlobalEvent("performTakeStacks", {
+			FocusedContainer,
+			player,
+			I.UI.getMode(),
+			DetectorHelpers.detectPerformOnAllItems(Input, settingsCommonBehavior),
+			DetectorHelpers.getSettingsCommonBehaviorAsTable(settingsCommonBehavior),
+			DetectorHelpers.getSettingsTakeStacksAsTable(settingsTakeStacks),
+		})
 	end
 end
 
 local UIModeChanged = function(data) --@ ENTRY
-	if helpers.detectContainerOpened(data) then
-		helpers.sharedVariables.focusedContainer = data.arg
-		DB.log("Container Opened/Focused = ", helpers.sharedVariables.focusedContainer)
-		if helpers.isContainerValid(helpers.sharedVariables.focusedContainer, types) then
-			psd.startDetectingPlaceStacksHoldIfEnabled(core, storage)
-		end
+	if DetectorHelpers.detectContainerOpened(data) then
+		FocusedContainer = data.arg
+		psd.startDetectingPlaceStacksHoldIfEnabled(settingsPlaceStacks)
 	end
 end
 

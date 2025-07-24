@@ -1,21 +1,19 @@
+local takeStacksArgs = {}
 local M = {}
 
-local function prepareTakeStacksArgs(types, input, player, settingsCommonBehavior, settingsTakeStacks, helpers)
-	helpers.sharedVariables.takeStacksArgs.sourceContainer = helpers.sharedVariables.focusedContainer
-	helpers.sharedVariables.takeStacksArgs.targetContainer = self
-	helpers.sharedVariables.takeStacksArgs.performOnAllItems =
-		helpers.detectPerformOnAllItems(input, settingsCommonBehavior)
-	helpers.sharedVariables.takeStacksArgs.transferOrder = settingsTakeStacks:get("TransferOrder")
-	helpers.sharedVariables.takeStacksArgs.player = player
-	helpers.sharedVariables.takeStacksArgs.items = helpers.getItemsFromContainerInTransferOrder(
-		types,
-		helpers.sharedVariables.takeStacksArgs.sourceContainer,
-		helpers.sharedVariables.takeStacksArgs.transferOrder
+local function prepareTakeStacksArgs(focusedContainer, player, performOnAllItems, settingsTakeStacks)
+	takeStacksArgs.sourceContainer = focusedContainer
+	takeStacksArgs.targetContainer = player
+	takeStacksArgs.performOnAllItems = performOnAllItems
+	takeStacksArgs.transferOrder = settingsTakeStacks.TransferOrder
+	takeStacksArgs.player = player
+	takeStacksArgs.items = PerformerHelpers.getItemsFromContainerInTransferOrder(
+		takeStacksArgs.sourceContainer,
+		takeStacksArgs.transferOrder
 	)
-	helpers.sharedVariables.takeStacksArgs.allowOverEncumbrance = settingsTakeStacks:get("AllowOverEncumbrance")
-	helpers.sharedVariables.takeStacksArgs.notifyCountTransferred = settingsTakeStacks:get("NotifyCountTransferred")
-	helpers.sharedVariables.takeStacksArgs.notifyCountNotTransferred =
-		settingsTakeStacks:get("NotifyCountNotTransferred")
+	takeStacksArgs.allowOverEncumbrance = settingsTakeStacks.AllowOverEncumbrance
+	takeStacksArgs.notifyCountTransferred = settingsTakeStacks.NotifyCountTransferred
+	takeStacksArgs.notifyCountNotTransferred = settingsTakeStacks.NotifyCountNotTransferred
 end
 
 local function prepareTakeStacksNotification() end
@@ -26,21 +24,30 @@ end
 
 local function takeStacks() end
 
-M.performTakeStacks = function(core, input, types, I, storage, player, helpers, DB)
+M.performTakeStacks = function(args)
 	DB.log("\n==\nperformTakeStacks called!")
-	if not helpers.canPerformStackAction(types, I, helpers.enums.STACK_TYPE.Take) then
+	local focusedContainer, player, uiMode, performOnAllItems, settingsCommonBehavior, settingsTakeStacks =
+		table.unpack(args)
+
+	if
+		not PerformerHelpers.canPerformStackAction(
+			focusedContainer,
+			Types,
+			uiMode,
+			CurrentStackType,
+			PerformerHelpers.enums.STACK_TYPE.Take
+		)
+	then
 		return
 	end
-	local settingsTakeStacks = storage.playerSection("settingsTakeStacks")
-	local settingsCommonBehavior = storage.playerSection("settingsCommonBehavior")
-	helpers.sharedVariables.currentStackType = helpers.enums.STACK_TYPE.Take
-	prepareTakeStacksArgs(types, input, player, settingsCommonBehavior, settingsTakeStacks, helpers)
+	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.Take
+	prepareTakeStacksArgs(focusedContainer, player, performOnAllItems, settingsTakeStacks)
 	--
 	takeStacks()
 	performTakeStacksNotification()
-	core.sendGlobalEvent("performContainerClose")
+	PerformerHelpers.performAutoClose()
 	--
-	helpers.sharedVariables.currentStackType = helpers.enums.STACK_TYPE.None
+	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.None
 end
 
 return M
