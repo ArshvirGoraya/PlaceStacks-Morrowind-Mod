@@ -9,7 +9,9 @@ local function prepareTakeStacksArgs(focusedContainer, player, performOnAllItems
 	takeStacksArgs.player = player
 	takeStacksArgs.items = PerformerHelpers.getItemsFromContainerInTransferOrder(
 		takeStacksArgs.sourceContainer,
-		takeStacksArgs.transferOrder
+		takeStacksArgs.targetContainer,
+		takeStacksArgs.transferOrder,
+		performOnAllItems
 	)
 	takeStacksArgs.allowOverEncumbrance = settingsTakeStacks.AllowOverEncumbrance
 	takeStacksArgs.notifyCountTransferred = settingsTakeStacks.NotifyCountTransferred

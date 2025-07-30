@@ -9,7 +9,9 @@ local function preparePlaceStacksArgs(focusedContainer, player, performOnAllItem
 	placeStacksArgs.player = player
 	placeStacksArgs.items = PerformerHelpers.getItemsFromContainerInTransferOrder(
 		placeStacksArgs.sourceContainer,
-		placeStacksArgs.transferOrder
+		placeStacksArgs.targetContainer,
+		placeStacksArgs.transferOrder,
+		performOnAllItems
 	)
 	placeStacksArgs.depositEquipped = settingsPlaceStacks.DepositEquipped
 	placeStacksArgs.notifyCountTransferred = settingsPlaceStacks.NotifyCountTransferred
@@ -27,11 +29,11 @@ local function placeStacks() end
 
 M.performPlaceStacks = function(args)
 	DB.log("\n==\nperformPlaceStacks called!")
-	Helpers.printTable(args)
+	-- Helpers.printTable(args)
 	local focusedContainer, player, uiMode, performOnAllItems, settingsCommonBehavior, settingsPlaceStacks =
 		table.unpack(args)
 
-	DB.log("player: ", player)
+	-- DB.log("player: ", player)
 	if
 		not Helpers.canPerformStackAction(focusedContainer, Types, uiMode, PlaceStacksGlobals:get("CurrentStackType"))
 	then

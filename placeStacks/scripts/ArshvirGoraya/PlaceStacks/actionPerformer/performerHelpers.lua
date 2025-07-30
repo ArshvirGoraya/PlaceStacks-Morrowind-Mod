@@ -5,62 +5,84 @@ function M.sortItemsToTransferOrder(items, transferOrder)
 	-- >: decending (greatest to smallest)
 	-- <: ascending (smallest to greatest)
 
-	local sortedReferencesOfItems = {}
-
-	local length = #items
-
-	-- require making a proper table for table.sort -- is userdata. Could create custom sort function that handles userdata instead?
-	for i = 1, length do
-		sortedReferencesOfItems[i] = items[i]
-	end
-
 	transferOrder = EnumHelpers.stringToEnum(EnumHelpers.enumNames.TRANSFER_ORDER, transferOrder)
 
 	if DB.logging then
-		DB.log(
-			"sortedReferencesOfItems before ordering: ",
-			EnumHelpers.enumToString(EnumHelpers.enumNames.TRANSFER_ORDER, transferOrder)
-		)
-		for _, v in ipairs(sortedReferencesOfItems) do
+		DB.log("items before ordering: ", EnumHelpers.enumToString(EnumHelpers.enumNames.TRANSFER_ORDER, transferOrder))
+		for _, v in ipairs(items) do
 			DB.log("weight: " .. v.type.record(v).weight, "value: " .. v.type.record(v).value)
 		end
 	end
 
 	if transferOrder == Enums.TRANSFER_ORDER.Heaviest then
-		table.sort(sortedReferencesOfItems, function(a, b)
+		table.sort(items, function(a, b)
 			return a.type.record(a).weight > b.type.record(b).weight
 		end)
 	elseif transferOrder == Enums.TRANSFER_ORDER.Lightest then
-		table.sort(sortedReferencesOfItems, function(a, b)
+		table.sort(items, function(a, b)
 			return a.type.record(a).weight < b.type.record(b).weight
 		end)
 	elseif transferOrder == Enums.TRANSFER_ORDER.Valuable then
-		table.sort(sortedReferencesOfItems, function(a, b)
+		table.sort(items, function(a, b)
 			return a.type.record(a).value > b.type.record(b).value
 		end)
 	elseif transferOrder == Enums.TRANSFER_ORDER.Cheapest then
-		table.sort(sortedReferencesOfItems, function(a, b)
+		table.sort(items, function(a, b)
 			return a.type.record(a).value < b.type.record(b).value
 		end)
 	end
 
 	if DB.logging then
-		DB.log("sortedReferencesOfItems after ordering=====================")
-		for _, v in ipairs(sortedReferencesOfItems) do
+		DB.log("items after ordering=====================")
+		for _, v in ipairs(items) do
 			DB.log("weight: " .. v.type.record(v).weight, "value: " .. v.type.record(v).value)
 		end
 	end
 
-	return sortedReferencesOfItems
+	return items
 end
 
-local function getItemsFromContainer(sourceContainer)
-	DB.log("source container: ", sourceContainer)
-	return sourceContainer.type.inventory(sourceContainer):getAll()
+local function getMatchingItemsFromContainers(sourceContainer, targetContainer)
+	local matchingItems = {}
+	local searchedItems = {}
+	local source = sourceContainer.type.inventory(sourceContainer)
+	local target = targetContainer.type.inventory(targetContainer)
+	for _, tItem in pairs(target:getAll()) do
+		if searchedItems[tItem.recordId] == nil then
+			searchedItems[tItem.recordId] = true
+		else
+			goto continue
+		end
+		for _, sItem in pairs(source:findAll(tItem.recordId)) do
+			table.insert(matchingItems, sItem)
+		end
+		::continue::
+	end
+	return matchingItems
 end
 
-function M.getItemsFromContainerInTransferOrder(sourceContainer, transferOrder)
-	return M.sortItemsToTransferOrder(getItemsFromContainer(sourceContainer), transferOrder)
+local function getAllItemsFromContainer(container)
+	local items = {}
+	-- must convert item list to a table to be able to sort later
+	local userDataItems = container.type.inventory(container):getAll()
+	for _, item in pairs(userDataItems) do
+		table.insert(items, item)
+	end
+	return items
+end
+
+local function getItemsFromContainer(sourceContainer, targetContainer, allItems)
+	if allItems then
+		return getAllItemsFromContainer(sourceContainer)
+	end
+	return getMatchingItemsFromContainers(sourceContainer, targetContainer)
+end
+
+function M.getItemsFromContainerInTransferOrder(sourceContainer, targetContainer, transferOrder, performOnAllItems)
+	return M.sortItemsToTransferOrder(
+		getItemsFromContainer(sourceContainer, targetContainer, performOnAllItems),
+		transferOrder
+	)
 end
 
 function M.getRemainingCapacity(capacity, weight)
