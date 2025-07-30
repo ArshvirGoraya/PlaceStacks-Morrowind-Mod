@@ -7,9 +7,11 @@ I = require("openmw.interfaces")
 Input = require("openmw.input")
 Storage = require("openmw.storage")
 local player = require("openmw.self")
-local settingsCommonBehavior = Storage.playerSection("settingsCommonBehavior")
-local settingsTakeStacks = Storage.playerSection("settingsTakeStacks")
-local settingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
+local async = require("openmw.async")
+SettingsCommonBehavior = Storage.playerSection("settingsCommonBehavior")
+SettingsTakeStacks = Storage.playerSection("settingsTakeStacks")
+SettingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
+--
 PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
 -- Custom API Globals
 EnumHelpers = require("scripts.ArshvirGoraya.PlaceStacks.enumHelpers")
@@ -18,6 +20,13 @@ DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.detectorHelpers")
 local _ = require("scripts.ArshvirGoraya.PlaceStacks.settings") -- settings
+-- Convert settings to tables when changed (so they can pass in events to global script -> which cant access playersection storage)
+SettingsCommonBehaviorTable = DetectorHelpers.getSettingsCommonBehaviorAsTable()
+SettingsTakeStacksTable = DetectorHelpers.getSettingsTakeStacksAsTable()
+SettingsPlaceStacksTable = DetectorHelpers.getSettingsPlaceStacksAsTable()
+SettingsCommonBehavior:subscribe(async:callback(DetectorHelpers.settingsChanged))
+SettingsTakeStacks:subscribe(async:callback(DetectorHelpers.settingsChanged))
+SettingsPlaceStacks:subscribe(async:callback(DetectorHelpers.settingsChanged))
 -- Custom Var Globals
 FocusedContainer = nil
 -- Locals
@@ -65,9 +74,9 @@ local onFrame = function(_) --@ ENTRY
 			FocusedContainer,
 			player,
 			I.UI.getMode(),
-			DetectorHelpers.detectPerformOnAllItems(Input, settingsCommonBehavior),
-			DetectorHelpers.getSettingsCommonBehaviorAsTable(settingsCommonBehavior),
-			DetectorHelpers.getSettingsPlaceStacksAsTable(settingsPlaceStacks),
+			DetectorHelpers.detectPerformOnAllItems(Input),
+			SettingsCommonBehaviorTable,
+			SettingsPlaceStacksTable,
 		})
 	end
 	if tsd.detectTakeStacksPress(psd) then
@@ -75,9 +84,9 @@ local onFrame = function(_) --@ ENTRY
 			FocusedContainer,
 			player,
 			I.UI.getMode(),
-			DetectorHelpers.detectPerformOnAllItems(Input, settingsCommonBehavior),
-			DetectorHelpers.getSettingsCommonBehaviorAsTable(settingsCommonBehavior),
-			DetectorHelpers.getSettingsTakeStacksAsTable(settingsTakeStacks),
+			DetectorHelpers.detectPerformOnAllItems(Input),
+			SettingsCommonBehaviorTable,
+			SettingsTakeStacksTable,
 		})
 	end
 end
