@@ -30,24 +30,18 @@ M.performTakeStacks = function(args)
 		table.unpack(args)
 
 	if
-		not PerformerHelpers.canPerformStackAction(
-			focusedContainer,
-			Types,
-			uiMode,
-			CurrentStackType,
-			PerformerHelpers.enums.STACK_TYPE.Take
-		)
+		not Helpers.canPerformStackAction(focusedContainer, Types, uiMode, PlaceStacksGlobals:get("CurrentStackType"))
 	then
 		return
 	end
-	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.Take
+	PlaceStacksGlobals:set("CurrentStackType", Enums.STACK_TYPE.Take)
 	prepareTakeStacksArgs(focusedContainer, player, performOnAllItems, settingsTakeStacks)
 	--
 	takeStacks()
 	performTakeStacksNotification()
 	PerformerHelpers.performAutoClose()
 	--
-	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.None
+	PlaceStacksGlobals:set("CurrentStackType", Enums.STACK_TYPE.None)
 end
 
 return M

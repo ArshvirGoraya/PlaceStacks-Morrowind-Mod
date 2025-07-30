@@ -33,6 +33,14 @@ function M.detectPerformOnAllItems(input, settingsCommonBehavior)
 	end
 end
 
+function M.cancelDetectionThisFrame(focusedContainer, Types, uiMode, currentStackType, psd)
+	if not Helpers.canPerformStackAction(focusedContainer, Types, uiMode, currentStackType) then
+		psd.stopDetectingPlaceStacksHold()
+		return true
+	end
+	return false
+end
+
 function M.getSettingsCommonBehaviorAsTable(settingsCommonBehavior)
 	return {
 		AutoClose = settingsCommonBehavior:get("AutoClose"),

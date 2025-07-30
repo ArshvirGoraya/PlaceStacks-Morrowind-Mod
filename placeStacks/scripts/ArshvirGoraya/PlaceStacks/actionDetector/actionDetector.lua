@@ -10,7 +10,10 @@ local player = require("openmw.self")
 local settingsCommonBehavior = Storage.playerSection("settingsCommonBehavior")
 local settingsTakeStacks = Storage.playerSection("settingsTakeStacks")
 local settingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
+PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
 -- Custom API Globals
+EnumHelpers = require("scripts.ArshvirGoraya.PlaceStacks.enumHelpers")
+Enums = EnumHelpers.makeEnums()
 DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.detectorHelpers")
@@ -45,6 +48,18 @@ local onKeyPress = function(key)
 end
 
 local onFrame = function(_) --@ ENTRY
+	if
+		DetectorHelpers.cancelDetectionThisFrame(
+			FocusedContainer,
+			Types,
+			I.UI.getMode(),
+			PlaceStacksGlobals:get("CurrentStackType"),
+			psd
+		)
+	then
+		return
+	end
+	--
 	if psd.detectPlaceStacksHold() or psd.detectPlaceStacksPress() then
 		Core.sendGlobalEvent("performPlaceStacks", {
 			FocusedContainer,
@@ -70,7 +85,7 @@ end
 local UIModeChanged = function(data) --@ ENTRY
 	if DetectorHelpers.detectContainerOpened(data) then
 		FocusedContainer = data.arg
-		psd.startDetectingPlaceStacksHoldIfEnabled(settingsPlaceStacks)
+		psd.startDetectingPlaceStacksHoldIfEnabled()
 	end
 end
 

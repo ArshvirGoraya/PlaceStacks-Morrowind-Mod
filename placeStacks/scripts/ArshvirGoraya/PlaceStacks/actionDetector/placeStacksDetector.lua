@@ -1,5 +1,4 @@
 local settingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
-
 local M = {}
 
 -- Local Variables
@@ -21,10 +20,6 @@ local shouldCancelPlaceStacksHoldDetection = function()
 	if not Input.isActionPressed(Input.ACTION.Activate) then
 		return true
 	end
-	if I.UI.getMode() ~= "Container" then
-		return true
-	end
-
 	return false
 end
 
@@ -56,12 +51,12 @@ M.detectPlaceStacksHold = function()
 	return detected
 end
 
-M.startDetectingPlaceStacksHoldIfEnabled = function(settingsPlaceStacks)
+M.startDetectingPlaceStacksHoldIfEnabled = function()
 	local settingsHoldMS = settingsPlaceStacks:get("HoldMS")
-	local placeStacksHoldEnabled = settingsHoldMS > 0
-	DB.log("placeStacksHoldEnabled: ", placeStacksHoldEnabled)
+	local settingsPlaceStacksHoldEnabled = settingsHoldMS > 0
+	DB.log("placeStacksHoldEnabled: ", settingsPlaceStacksHoldEnabled)
 
-	if placeStacksHoldEnabled then
+	if settingsPlaceStacksHoldEnabled then
 		if not Helpers.isContainerValid(FocusedContainer, Types) then
 			return
 		end

@@ -33,22 +33,16 @@ M.performPlaceStacks = function(args)
 
 	DB.log("player: ", player)
 	if
-		not PerformerHelpers.canPerformStackAction(
-			focusedContainer,
-			Types,
-			uiMode,
-			CurrentStackType,
-			PerformerHelpers.enums.STACK_TYPE.Place
-		)
+		not Helpers.canPerformStackAction(focusedContainer, Types, uiMode, PlaceStacksGlobals:get("CurrentStackType"))
 	then
 		return
 	end
-	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.Place
+	PlaceStacksGlobals:set("CurrentStackType", Enums.STACK_TYPE.Place)
 	preparePlaceStacksArgs(focusedContainer, player, performOnAllItems, settingsPlaceStacks)
 	--
 	placeStacks()
 	performPlaceStacksNotification()
 	PerformerHelpers.performAutoClose()
-	CurrentStackType = PerformerHelpers.enums.STACK_TYPE.None
+	PlaceStacksGlobals:set("CurrentStackType", Enums.STACK_TYPE.None)
 end
 return M

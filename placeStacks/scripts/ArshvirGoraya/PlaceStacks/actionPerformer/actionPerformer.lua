@@ -8,14 +8,20 @@ Core = require("openmw.core")
 Storage = require("openmw.storage")
 -- Custom Globals
 DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
+EnumHelpers = require("scripts.ArshvirGoraya.PlaceStacks.enumHelpers")
+Enums = EnumHelpers.makeEnums()
 Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 PerformerHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.performerHelpers")
 -- Custom Var Globals
-CurrentStackType = PerformerHelpers.enums.STACK_TYPE.None
+-- CurrentStackType = PerformerHelpers.enums.STACK_TYPE.None
 -- Locals
 local tsp = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.takeStacksPerformer")
 local psp = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.placeStacksPerformer")
---
+-- Global Variables (read-only in local scripts)
+
+PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
+PlaceStacksGlobals:set("CurrentStackType", Enums.STACK_TYPE.None)
+PlaceStacksGlobals:setLifeTime(Storage.LIFE_TIME.Temporary) -- removed on exit / on load
 
 local M = {
 	eventHandlers = {
@@ -23,4 +29,24 @@ local M = {
 		performTakeStacks = tsp.performTakeStacks,
 	},
 }
+
+if DB.logging then
+	M.engineHandlers = {
+		onLoad = function(savedData, initData)
+			-- check stack type on load: does it need to reset to default value?
+			DB.log("on load: ")
+			DB.log(
+				"currentStackType: ",
+				PlaceStacksGlobals:get("CurrentStackType"),
+				"["
+					.. EnumHelpers.enumToString(
+						EnumHelpers.enumNames.STACK_TYPE,
+						PlaceStacksGlobals:get("CurrentStackType")
+					)
+					.. "]"
+			)
+		end,
+	}
+end
+
 return M

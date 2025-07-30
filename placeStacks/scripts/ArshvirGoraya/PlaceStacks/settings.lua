@@ -102,7 +102,7 @@ local settingsTakeStacks = {
 			default = "Valuable",
 			renderer = "select",
 			argument = {
-				items = Helpers.enumStrings.TRANSFER_ORDER,
+				items = EnumHelpers.enumStrings.TRANSFER_ORDER,
 				l10n = l10n,
 			},
 		},
@@ -169,7 +169,7 @@ local settingsPlaceStacks = {
 			default = "Valuable",
 			renderer = "select",
 			argument = {
-				items = Helpers.enumStrings.TRANSFER_ORDER,
+				items = EnumHelpers.enumStrings.TRANSFER_ORDER,
 				l10n = l10n,
 			},
 		},

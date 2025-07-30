@@ -20,6 +20,38 @@ function M.printTable(t, indent)
 end
 
 -- used in both performer and detector
+
+function M.canPerformStackAction(focusedContainer, types, uiMode, currentStackType)
+	if not M.isValidContainerOpen(focusedContainer, types, uiMode) then
+		-- DB.log("attempt to perform stack action while valid container is not open")
+		return false
+	end
+
+	if currentStackType ~= Enums.STACK_TYPE.None then
+		-- if DB.logging then
+		-- 	DB.log(
+		-- 		"attempt to do stack action"
+		-- 			.. " stacks while "
+		-- 			.. M.stackTypeToString(currentStackType)
+		-- 			.. " stacks is already running"
+		-- 	)
+		-- end
+		return false
+	end
+	return true
+end
+
+function M.isValidContainerOpen(focusedContainer, types, uiMode)
+	if uiMode ~= "Container" then
+		-- DB.log("ui mode does not equal container: ", uiMode)
+		return false
+	end
+	if not M.isContainerValid(focusedContainer, types) then
+		return false
+	end
+	return true
+end
+
 function M.isContainerValid(container, types)
 	if container == nil then
 		return false
@@ -31,18 +63,12 @@ function M.isContainerValid(container, types)
 		return false
 	end
 
-	DB.log("Container is Valid: ", container)
+	-- DB.log("Container is Valid: ", container)
 	return true
 end
 
--- if openMW API provides a better way to make enums (without explicitly setting the values) use that instead!
-M.enumNames = {
-	TRANSFER_ORDER = "TRANSFER_ORDER",
-	STACK_TYPE = "STACK_TYPE",
-}
-M.enumStrings = {
-	[M.enumNames.TRANSFER_ORDER] = { "Any", "Valuable", "Lightest", "Cheapest", "Heaviest" },
-	[M.enumNames.STACK_TYPE] = { "None", "Place", "Take" },
-}
+function M.stackTypeToString(stackType)
+	return EnumHelpers.enumToString(EnumHelpers.enumNames.STACK_TYPE, stackType)
+end
 
 return M
