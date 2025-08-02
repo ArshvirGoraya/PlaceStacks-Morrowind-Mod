@@ -1,4 +1,3 @@
-local settingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
 local M = {}
 
 -- Local Variables
@@ -51,8 +50,7 @@ M.detectPlaceStacksHold = function()
 	return detected
 end
 
-M.startDetectingPlaceStacksHoldIfEnabled = function()
-	local settingsHoldMS = settingsPlaceStacks:get("HoldMS")
+M.startDetectingPlaceStacksHoldIfEnabled = function(settingsHoldMS)
 	local settingsPlaceStacksHoldEnabled = settingsHoldMS > 0
 	DB.log("placeStacksHoldEnabled: ", settingsPlaceStacksHoldEnabled)
 
@@ -62,7 +60,7 @@ M.startDetectingPlaceStacksHoldIfEnabled = function()
 		end
 
 		holdTime = getCalculatedHoldTime(settingsHoldMS)
-		DB.log("place stacks hold started - time set to: ", holdTime)
+		DB.log("place stacks hold started with setting " .. settingsHoldMS .. " - time set to: " .. holdTime)
 		detectingPlaceStacksHold = true
 	end
 end

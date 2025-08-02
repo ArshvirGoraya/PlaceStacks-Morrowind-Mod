@@ -23,9 +23,9 @@ function M.isModifierKeyPressed(input, Modifier)
 		or (input.isSuperPressed() and Modifier == "Super")
 end
 
-function M.detectPerformOnAllItems(input)
-	local modifierPressed = M.isModifierKeyPressed(input, SettingsCommonBehavior:get("Modifier"))
-	local modifierIsAll = SettingsCommonBehavior:get("ModifierIsAll")
+function M.detectPerformOnAllItems(input, settingsCommonBehavior)
+	local modifierPressed = M.isModifierKeyPressed(input, settingsCommonBehavior.Modifier)
+	local modifierIsAll = settingsCommonBehavior.ModifierIsAll
 	if modifierIsAll then
 		return modifierPressed
 	else
@@ -39,50 +39,6 @@ function M.cancelDetectionThisFrame(focusedContainer, Types, uiMode, currentStac
 		return true
 	end
 	return false
-end
-
-function M.settingsChanged(section, key)
-	local resetAll = key == nil
-	if resetAll then -- 0.49: should be true if hit "reset" but this is never true.
-		DB.log("RESET ALL")
-	end
-	DB.log("settings changed: " .. section, key)
-	if section == "settingsCommonBehavior" then
-		SettingsCommonBehaviorTable[key] = SettingsCommonBehavior:get(key)
-	elseif section == "settingsTakeStacks" then
-		SettingsTakeStacksTable[key] = SettingsTakeStacks:get(key)
-	elseif section == "settingsPlaceStacks" then
-		SettingsPlaceStacksTable[key] = SettingsPlaceStacks:get(key)
-	end
-end
-
--- @refactor: this should be a loop of all keys instead of manually typing every one
-function M.getSettingsCommonBehaviorAsTable()
-	return {
-		AutoClose = SettingsCommonBehavior:get("AutoClose"),
-		ModifierIsAll = SettingsCommonBehavior:get("ModifierIsAll"),
-		Modifier = SettingsCommonBehavior:get("Modifier"),
-	}
-end
-function M.getSettingsPlaceStacksAsTable()
-	return {
-		Key = SettingsPlaceStacks:get("Key"),
-		TransferOrder = SettingsPlaceStacks:get("TransferOrder"),
-		AllowOverEncumbrance = SettingsPlaceStacks:get("AllowOverEncumbrance"),
-		NotifyCountTransferred = SettingsPlaceStacks:get("NotifyCountTransferred"),
-		NotifyCountNotTransferred = SettingsPlaceStacks:get("NotifyCountNotTransferred"),
-	}
-end
-function M.getSettingsTakeStacksAsTable()
-	return {
-		Key = SettingsTakeStacks:get("Key"),
-		HoldMS = SettingsTakeStacks:get("HoldMS"),
-		TransferOrder = SettingsTakeStacks:get("TransferOrder"),
-		DepositEquipped = SettingsTakeStacks:get("DepositEquipped"),
-		NotifyCountTransferred = SettingsTakeStacks:get("NotifyCountTransferred"),
-		NotifyCountNotTransferred = SettingsTakeStacks:get("NotifyCountNotTransferred"),
-		NotifyTypesNotTransferred = SettingsTakeStacks:get("NotifyTypesNotTransferred"),
-	}
 end
 
 return M

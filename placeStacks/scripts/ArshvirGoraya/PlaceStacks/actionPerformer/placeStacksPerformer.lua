@@ -29,7 +29,6 @@ local function placeStacks() end
 
 M.performPlaceStacks = function(args)
 	DB.log("\n==\nperformPlaceStacks called!")
-	-- Helpers.printTable(args)
 	local focusedContainer, player, uiMode, performOnAllItems, settingsCommonBehavior, settingsPlaceStacks =
 		table.unpack(args)
 

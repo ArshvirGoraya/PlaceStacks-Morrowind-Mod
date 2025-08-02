@@ -1,23 +1,4 @@
-local DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
--- local DB = require("dbug")
-
 local M = {}
-
-function M.printTable(t, indent)
-	indent = indent or 0
-	local spacing = string.rep("  ", indent)
-
-	for k, _ in pairs(t) do
-		local v = t[k]
-		if type(v) == "table" then
-			DB.log(spacing .. tostring(k) .. ": {")
-			M.printTable(v, indent + 1)
-			DB.log(spacing .. "}")
-		else
-			DB.log(spacing .. tostring(k) .. ": " .. tostring(v))
-		end
-	end
-end
 
 -- used in both performer and detector
 
@@ -63,7 +44,6 @@ function M.isContainerValid(container, types)
 		return false
 	end
 
-	-- DB.log("Container is Valid: ", container)
 	return true
 end
 

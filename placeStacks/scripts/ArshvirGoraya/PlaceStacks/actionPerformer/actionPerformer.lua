@@ -30,23 +30,4 @@ local M = {
 	},
 }
 
-if DB.logging then
-	M.engineHandlers = {
-		onLoad = function(savedData, initData)
-			-- check stack type on load: does it need to reset to default value?
-			DB.log("on load: ")
-			DB.log(
-				"currentStackType: ",
-				PlaceStacksGlobals:get("CurrentStackType"),
-				"["
-					.. EnumHelpers.enumToString(
-						EnumHelpers.enumNames.STACK_TYPE,
-						PlaceStacksGlobals:get("CurrentStackType")
-					)
-					.. "]"
-			)
-		end,
-	}
-end
-
 return M

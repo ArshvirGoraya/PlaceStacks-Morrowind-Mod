@@ -8,25 +8,23 @@ Input = require("openmw.input")
 Storage = require("openmw.storage")
 local player = require("openmw.self")
 local async = require("openmw.async")
-SettingsCommonBehavior = Storage.playerSection("settingsCommonBehavior")
-SettingsTakeStacks = Storage.playerSection("settingsTakeStacks")
-SettingsPlaceStacks = Storage.playerSection("settingsPlaceStacks")
 --
 PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
 -- Custom API Globals
+DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.detectorHelpers")
 EnumHelpers = require("scripts.ArshvirGoraya.PlaceStacks.enumHelpers")
 Enums = EnumHelpers.makeEnums()
 DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
 Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
-DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.detectorHelpers")
-local _ = require("scripts.ArshvirGoraya.PlaceStacks.settings") -- settings
--- Convert settings to tables when changed (so they can pass in events to global script -> which cant access playersection storage)
-SettingsCommonBehaviorTable = DetectorHelpers.getSettingsCommonBehaviorAsTable()
-SettingsTakeStacksTable = DetectorHelpers.getSettingsTakeStacksAsTable()
-SettingsPlaceStacksTable = DetectorHelpers.getSettingsPlaceStacksAsTable()
-SettingsCommonBehavior:subscribe(async:callback(DetectorHelpers.settingsChanged))
-SettingsTakeStacks:subscribe(async:callback(DetectorHelpers.settingsChanged))
-SettingsPlaceStacks:subscribe(async:callback(DetectorHelpers.settingsChanged))
+--- Settings stuff
+local settingsHelpers = require("scripts.ArshvirGoraya.PlaceStacks.settingsHelpers")
+SettingsKeys = settingsHelpers.keys
+local settings = require("scripts.ArshvirGoraya.PlaceStacks.settings")
+settingsHelpers.buildTableSettings(async, Storage, settings.defaultSettings) -- to pass to global script(s)
+Settings = settingsHelpers.settingValues
+local settingsTableCommonBehavior = Settings.tableSettings[SettingsKeys.sectionKeys.commonBehavior]
+local settingsTableTakeStacks = Settings.tableSettings[SettingsKeys.sectionKeys.takeStacks]
+local settingsTablePlaceStacks = Settings.tableSettings[SettingsKeys.sectionKeys.placeStacks]
 -- Custom Var Globals
 FocusedContainer = nil
 -- Locals
@@ -74,9 +72,9 @@ local onFrame = function(_) --@ ENTRY
 			FocusedContainer,
 			player,
 			I.UI.getMode(),
-			DetectorHelpers.detectPerformOnAllItems(Input),
-			SettingsCommonBehaviorTable,
-			SettingsPlaceStacksTable,
+			DetectorHelpers.detectPerformOnAllItems(Input, settingsTableCommonBehavior),
+			settingsTableCommonBehavior,
+			settingsTablePlaceStacks,
 		})
 	end
 	if tsd.detectTakeStacksPress(psd) then
@@ -84,9 +82,9 @@ local onFrame = function(_) --@ ENTRY
 			FocusedContainer,
 			player,
 			I.UI.getMode(),
-			DetectorHelpers.detectPerformOnAllItems(Input),
-			SettingsCommonBehaviorTable,
-			SettingsTakeStacksTable,
+			DetectorHelpers.detectPerformOnAllItems(Input, settingsTableCommonBehavior),
+			settingsTableCommonBehavior,
+			settingsTableTakeStacks,
 		})
 	end
 end
@@ -94,7 +92,14 @@ end
 local UIModeChanged = function(data) --@ ENTRY
 	if DetectorHelpers.detectContainerOpened(data) then
 		FocusedContainer = data.arg
-		psd.startDetectingPlaceStacksHoldIfEnabled()
+		DB.printTable(settingsTablePlaceStacks)
+		psd.startDetectingPlaceStacksHoldIfEnabled(settingsTablePlaceStacks.HoldMS)
+		--
+		-- DB.log(SettingsKeys.sectionKeys.placeStacks)
+		-- DB.printTable(Settings.tableSettings[SettingsKeys.sectionKeys.placeStacks])
+		-- psd.startDetectingPlaceStacksHoldIfEnabled(
+		-- 	Settings.tableSettings[SettingsKeys.sectionKeys.placeStacks][SettingsKeys.placeStacksKeys.HoldMS]
+		-- )
 	end
 end
 
