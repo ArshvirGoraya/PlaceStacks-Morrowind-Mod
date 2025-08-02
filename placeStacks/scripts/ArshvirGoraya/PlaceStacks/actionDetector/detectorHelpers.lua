@@ -16,21 +16,23 @@ function M.detectPress(previousFramePress, currentFramePress)
 	return (currentFramePress and not previousFramePress)
 end
 
-function M.isModifierKeyPressed(input, Modifier)
-	return (input.isCtrlPressed() and Modifier == "Ctrl")
-		or (input.isShiftPressed() and Modifier == "Shift")
-		or (input.isAltPressed() and Modifier == "Alt")
-		or (input.isSuperPressed() and Modifier == "Super")
+function M.isModifierKeyPressed(input, modifierKey)
+	return (input.isCtrlPressed() and modifierKey == "Ctrl")
+		or (input.isShiftPressed() and modifierKey == "Shift")
+		or (input.isAltPressed() and modifierKey == "Alt")
+		or (input.isSuperPressed() and modifierKey == "Super")
 end
 
-function M.detectPerformOnAllItems(input, settingsCommonBehavior)
-	local modifierPressed = M.isModifierKeyPressed(input, settingsCommonBehavior.Modifier)
-	local modifierIsAll = settingsCommonBehavior.ModifierIsAll
-	if modifierIsAll then
-		return modifierPressed
-	else
+function M.detectPerformOnAllItems(input, modifierKey, modifierSetting)
+	if modifierSetting == EnumHelpers.MODIFIER_SETTING.Disable then
+		return false
+	end
+	local modifierPressed = M.isModifierKeyPressed(input, modifierKey)
+	local modifierInverted = modifierSetting == EnumHelpers.MODIFIER_SETTING.Invert
+	if modifierInverted then
 		return not modifierPressed
 	end
+	return modifierPressed
 end
 
 function M.cancelDetectionThisFrame(focusedContainer, Types, uiMode, currentStackType, psd)

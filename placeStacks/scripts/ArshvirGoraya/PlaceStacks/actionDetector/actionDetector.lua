@@ -72,7 +72,11 @@ local onFrame = function(_) --@ ENTRY
 			FocusedContainer,
 			player,
 			I.UI.getMode(),
-			DetectorHelpers.detectPerformOnAllItems(Input, settingsTableCommonBehavior),
+			DetectorHelpers.detectPerformOnAllItems(
+				Input,
+				settingsTableCommonBehavior.Modifier,
+				settingsTablePlaceStacks.ModifierSetting
+			),
 			settingsTableCommonBehavior,
 			settingsTablePlaceStacks,
 		})
@@ -82,7 +86,11 @@ local onFrame = function(_) --@ ENTRY
 			FocusedContainer,
 			player,
 			I.UI.getMode(),
-			DetectorHelpers.detectPerformOnAllItems(Input, settingsTableCommonBehavior),
+			DetectorHelpers.detectPerformOnAllItems(
+				Input,
+				settingsTableCommonBehavior.Modifier,
+				settingsTableTakeStacks.ModifierSetting
+			),
 			settingsTableCommonBehavior,
 			settingsTableTakeStacks,
 		})
@@ -94,12 +102,6 @@ local UIModeChanged = function(data) --@ ENTRY
 		FocusedContainer = data.arg
 		DB.printTable(settingsTablePlaceStacks)
 		psd.startDetectingPlaceStacksHoldIfEnabled(settingsTablePlaceStacks.HoldMS)
-		--
-		-- DB.log(SettingsKeys.sectionKeys.placeStacks)
-		-- DB.printTable(Settings.tableSettings[SettingsKeys.sectionKeys.placeStacks])
-		-- psd.startDetectingPlaceStacksHoldIfEnabled(
-		-- 	Settings.tableSettings[SettingsKeys.sectionKeys.placeStacks][SettingsKeys.placeStacksKeys.HoldMS]
-		-- )
 	end
 end
 

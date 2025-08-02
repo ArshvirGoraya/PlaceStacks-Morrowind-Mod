@@ -19,11 +19,16 @@ Control common behavior between place stacks and take stacks mechanics.
 - AllFit: close when all relevant items are transferred. Will not close when items can't fit into a container without over encumbering it.
 ]]
 
-local modifierIsAllDescription = [[
-Control what the modifier key does when pressing along with take/place stack keys. 
-
-- If yes, press modifier along with key to transfer all items, and press key without modifier to transfer only matching. 
-- If no, press modifier along with key to transfer only matching, and press key without modifier to transfer all.
+local modifierSettingDescription = [[
+Control what the modifier key does when held along with the key.
+- Default: 
+  - Press with modifier = take/place ALL items
+  - Press without = take/place MATCHING items
+- Invert: Reverse of default
+  - Press with modifier = take/place MATCHING items 
+  - Press without = take/place ALL items
+- Disabled: Modifier key does nothing
+  - Always take/place MATCHING items
 ]]
 
 local l10n = "PlaceStacks"
@@ -56,17 +61,10 @@ local settingsDefinitions = {
 				},
 			},
 			{
-				key = SettingsKeys.commonBehaviorKeys.ModifierIsAll,
-				name = "Modifier Is All",
-				description = modifierIsAllDescription,
-				default = true,
-				renderer = "checkbox",
-			},
-			{
 				key = SettingsKeys.commonBehaviorKeys.Modifier,
 				name = "Modifier Key",
 				description = "Press along side take/place key to trigger modifier action.",
-				default = "Shift",
+				default = "Alt",
 				renderer = "select",
 				argument = {
 					items = { "Shift", "Ctrl", "Alt", "Super" },
@@ -113,7 +111,19 @@ local settingsDefinitions = {
 				description = "- No: only take as much items as you can carry and don't over encumber.\n- Yes: take matching/all items and allow over encumbering.",
 				default = false,
 				renderer = "checkbox",
-			}, --
+			},
+			{
+				key = SettingsKeys.takeStacksKeys.ModifierSetting,
+				name = "Modifier Setting",
+				description = modifierSettingDescription,
+				default = "Default",
+				renderer = "select",
+				argument = {
+					items = EnumHelpers.enumStrings.MODIFIER_SETTING,
+					l10n = l10n,
+				},
+			},
+			--
 			{
 				key = SettingsKeys.takeStacksKeys.NotifyCountTransferred,
 				name = "Show amount taken in notification",
@@ -180,7 +190,19 @@ local settingsDefinitions = {
 				description = "Yes: will also deposit equipped items.\nNo: will not deposit equipped items",
 				default = false,
 				renderer = "checkbox",
-			}, --
+			},
+			{
+				key = SettingsKeys.takeStacksKeys.ModifierSetting,
+				name = "Modifier Setting",
+				description = modifierSettingDescription,
+				default = "Default",
+				renderer = "select",
+				argument = {
+					items = EnumHelpers.enumStrings.MODIFIER_SETTING,
+					l10n = l10n,
+				},
+			},
+			--
 			{
 				key = SettingsKeys.placeStacksKeys.NotifyCountTransferred,
 				name = "Show amount placed in notification",

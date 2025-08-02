@@ -8,12 +8,12 @@ M.keys = {
 	},
 	commonBehaviorKeys = {
 		AutoClose = "AutoClose",
-		ModifierIsAll = "ModifierIsAll",
 		Modifier = "Modifier",
 	},
 	takeStacksKeys = {
 		Key = "Key",
 		TransferOrder = "TransferOrder",
+		ModifierSetting = "ModifierSetting",
 		AllowOverEncumbrance = "AllowOverEncumbrance",
 		NotifyCountTransferred = "NotifyCountTransferred",
 		NotifyCountNotTransferred = "NotifyCountNotTransferred",
@@ -23,23 +23,10 @@ M.keys = {
 		HoldMS = "HoldMS",
 		TransferOrder = "TransferOrder",
 		DepositEquipped = "DepositEquipped",
+		ModifierSetting = "ModifierSetting",
 		NotifyCountTransferred = "NotifyCountTransferred",
 		NotifyCountNotTransferred = "NotifyCountNotTransferred",
 		NotifyTypesNotTransferred = "NotifyTypesNotTransferred",
-	},
-}
-M.keys.outline = {
-	settingsCommonBehavior = {
-		sectionKey = M.keys.sectionKeys.commonBehavior,
-		settingsKeys = M.keys.commonBehaviorKeys,
-	},
-	settingsTakeStacks = {
-		sectionKey = M.keys.sectionKeys.takeStacks,
-		settingsKeys = M.keys.takeStacksKeys,
-	},
-	settingsPlaceStacks = {
-		sectionKey = M.keys.sectionKeys.placeStacks,
-		settingsKeys = M.keys.takeStacksKeys,
 	},
 }
 

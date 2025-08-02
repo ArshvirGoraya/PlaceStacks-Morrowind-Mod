@@ -5,11 +5,19 @@ local M = {}
 M.enumNames = {
 	TRANSFER_ORDER = "TRANSFER_ORDER",
 	STACK_TYPE = "STACK_TYPE",
+	MODIFIER_SETTING = "MODIFIER_SETTING",
 }
 
 M.enumStrings = {
-	[M.enumNames.TRANSFER_ORDER] = { "Any", "Valuable", "Lightest", "Cheapest", "Heaviest" },
-	[M.enumNames.STACK_TYPE] = { "None", "Place", "Take" },
+	TRANSFER_ORDER = { "Any", "Valuable", "Lightest", "Cheapest", "Heaviest" },
+	STACK_TYPE = { "None", "Place", "Take" },
+	MODIFIER_SETTING = { "Default", "Invert", "Disable" },
+}
+
+M.MODIFIER_SETTING = {
+	Default = "Default",
+	Invert = "Invert",
+	Disable = "Disable",
 }
 
 local enumsReverse = {}
