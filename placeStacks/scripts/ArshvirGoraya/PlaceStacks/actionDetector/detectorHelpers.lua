@@ -24,11 +24,11 @@ function M.isModifierKeyPressed(input, modifierKey)
 end
 
 function M.detectPerformOnAllItems(input, modifierKey, modifierSetting)
-	if modifierSetting == EnumHelpers.MODIFIER_SETTING.Disable then
+	if modifierSetting == SettingsOptions.ModifierSetting.Disable then
 		return false
 	end
 	local modifierPressed = M.isModifierKeyPressed(input, modifierKey)
-	local modifierInverted = modifierSetting == EnumHelpers.MODIFIER_SETTING.Invert
+	local modifierInverted = modifierSetting == SettingsOptions.ModifierSetting.Invert
 	if modifierInverted then
 		return not modifierPressed
 	end

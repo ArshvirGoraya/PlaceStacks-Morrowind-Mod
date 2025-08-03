@@ -8,12 +8,12 @@ function M.canPerformStackAction(focusedContainer, types, uiMode, currentStackTy
 		return false
 	end
 
-	if currentStackType ~= Enums.STACK_TYPE.None then
+	if currentStackType ~= AllOptions.StackType.None then
 		-- if DB.logging then
 		-- 	DB.log(
 		-- 		"attempt to do stack action"
 		-- 			.. " stacks while "
-		-- 			.. M.stackTypeToString(currentStackType)
+		-- 			.. currentStackType
 		-- 			.. " stacks is already running"
 		-- 	)
 		-- end
@@ -45,10 +45,6 @@ function M.isContainerValid(container, types)
 	end
 
 	return true
-end
-
-function M.stackTypeToString(stackType)
-	return EnumHelpers.enumToString(EnumHelpers.enumNames.STACK_TYPE, stackType)
 end
 
 return M

@@ -5,28 +5,26 @@ function M.sortItemsToTransferOrder(items, transferOrder)
 	-- >: decending (greatest to smallest)
 	-- <: ascending (smallest to greatest)
 
-	transferOrder = EnumHelpers.stringToEnum(EnumHelpers.enumNames.TRANSFER_ORDER, transferOrder)
-
 	if DB.logging then
-		DB.log("items before ordering: ", EnumHelpers.enumToString(EnumHelpers.enumNames.TRANSFER_ORDER, transferOrder))
+		DB.log("items before ordering: ", transferOrder)
 		for _, v in ipairs(items) do
 			DB.log("weight: " .. v.type.record(v).weight, "value: " .. v.type.record(v).value)
 		end
 	end
 
-	if transferOrder == Enums.TRANSFER_ORDER.Heaviest then
+	if transferOrder == SettingsOptions.TransferOrder.Heaviest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).weight > b.type.record(b).weight
 		end)
-	elseif transferOrder == Enums.TRANSFER_ORDER.Lightest then
+	elseif transferOrder == SettingsOptions.TransferOrder.Lightest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).weight < b.type.record(b).weight
 		end)
-	elseif transferOrder == Enums.TRANSFER_ORDER.Valuable then
+	elseif transferOrder == SettingsOptions.TransferOrder.Valuable then
 		table.sort(items, function(a, b)
 			return a.type.record(a).value > b.type.record(b).value
 		end)
-	elseif transferOrder == Enums.TRANSFER_ORDER.Cheapest then
+	elseif transferOrder == SettingsOptions.TransferOrder.Cheapest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).value < b.type.record(b).value
 		end)

@@ -19,10 +19,13 @@ end
 -- end
 
 function M.printTable(t, maxDepth)
+	if not M.logging then
+		return
+	end
 	maxDepth = maxDepth or 1
-	M.log("====")
-	M.log(util.deepToString(t, maxDepth))
-	M.log("====")
+	print("====")
+	print(util.deepToString(t, maxDepth))
+	print("====")
 end
 
 return M

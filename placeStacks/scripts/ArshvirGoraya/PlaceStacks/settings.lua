@@ -56,7 +56,7 @@ local settingsDefinitions = {
 				default = "All Fit",
 				renderer = "select",
 				argument = {
-					items = { "Never", "All Fit", "Always" },
+					items = SettingOptionList.AutoClose,
 					l10n = l10n,
 				},
 			},
@@ -67,7 +67,7 @@ local settingsDefinitions = {
 				default = "Alt",
 				renderer = "select",
 				argument = {
-					items = { "Shift", "Ctrl", "Alt", "Super" },
+					items = SettingOptionList.Modifier,
 					l10n = l10n,
 				},
 			},
@@ -101,7 +101,7 @@ local settingsDefinitions = {
 				default = "Valuable",
 				renderer = "select",
 				argument = {
-					items = EnumHelpers.enumStrings.TRANSFER_ORDER,
+					items = SettingOptionList.TransferOrder,
 					l10n = l10n,
 				},
 			},
@@ -119,7 +119,7 @@ local settingsDefinitions = {
 				default = "Default",
 				renderer = "select",
 				argument = {
-					items = EnumHelpers.enumStrings.MODIFIER_SETTING,
+					items = SettingOptionList.ModifierSetting,
 					l10n = l10n,
 				},
 			},
@@ -180,7 +180,7 @@ local settingsDefinitions = {
 				default = "Valuable",
 				renderer = "select",
 				argument = {
-					items = EnumHelpers.enumStrings.TRANSFER_ORDER,
+					items = SettingOptionList.TransferOrder,
 					l10n = l10n,
 				},
 			},
@@ -192,13 +192,13 @@ local settingsDefinitions = {
 				renderer = "checkbox",
 			},
 			{
-				key = SettingsKeys.takeStacksKeys.ModifierSetting,
+				key = SettingsKeys.placeStacksKeys.ModifierSetting,
 				name = "Modifier Setting",
 				description = modifierSettingDescription,
 				default = "Default",
 				renderer = "select",
 				argument = {
-					items = EnumHelpers.enumStrings.MODIFIER_SETTING,
+					items = SettingOptionList.ModifierSetting,
 					l10n = l10n,
 				},
 			},
