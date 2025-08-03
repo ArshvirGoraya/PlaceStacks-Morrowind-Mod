@@ -8,7 +8,7 @@ function M.canPerformStackAction(focusedContainer, types, uiMode, currentStackTy
 		return false
 	end
 
-	if currentStackType ~= AllOptions.StackType.None then
+	if currentStackType ~= AllOptions.options.StackType.None then
 		-- if DB.logging then
 		-- 	DB.log(
 		-- 		"attempt to do stack action"

@@ -16,7 +16,7 @@ Control common behavior between place stacks and take stacks mechanics.
 
 - Never: never close after taking/placing.
 - Always: always close after taking/placing.
-- AllFit: close when all relevant items are transferred. Will not close when items can't fit into a container without over encumbering it.
+- Fit: close when all relevant items are transferred. Will not close when items can't fit into a container without over encumbering it.
 ]]
 
 local modifierSettingDescription = [[
@@ -53,7 +53,7 @@ local settingsDefinitions = {
 				key = SettingsKeys.commonBehaviorKeys.AutoClose,
 				name = "Auto Close",
 				description = autoCloseDescription,
-				default = "All Fit",
+				default = "Fit",
 				renderer = "select",
 				argument = {
 					items = SettingOptionList.AutoClose,

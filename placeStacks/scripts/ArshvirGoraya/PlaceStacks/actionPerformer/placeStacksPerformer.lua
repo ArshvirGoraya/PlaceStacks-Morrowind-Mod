@@ -38,12 +38,12 @@ M.performPlaceStacks = function(args)
 	then
 		return
 	end
-	PlaceStacksGlobals:set("CurrentStackType", AllOptions.StackType.Place)
+	PlaceStacksGlobals:set("CurrentStackType", AllOptions.options.StackType.Place)
 	preparePlaceStacksArgs(focusedContainer, player, performOnAllItems, settingsPlaceStacks)
 	--
 	placeStacks()
 	performPlaceStacksNotification()
 	PerformerHelpers.performAutoClose()
-	PlaceStacksGlobals:set("CurrentStackType", AllOptions.StackType.None)
+	PlaceStacksGlobals:set("CurrentStackType", AllOptions.options.StackType.None)
 end
 return M

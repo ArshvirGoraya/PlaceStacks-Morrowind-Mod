@@ -17,13 +17,14 @@ function M.detectPress(previousFramePress, currentFramePress)
 end
 
 function M.isModifierKeyPressed(input, modifierKey)
-	return (input.isCtrlPressed() and modifierKey == "Ctrl")
-		or (input.isShiftPressed() and modifierKey == "Shift")
-		or (input.isAltPressed() and modifierKey == "Alt")
-		or (input.isSuperPressed() and modifierKey == "Super")
+	return (input.isCtrlPressed() and modifierKey == SettingsOptions.Modifier.Ctrl)
+		or (input.isShiftPressed() and modifierKey == SettingsOptions.Modifier.Shift)
+		or (input.isAltPressed() and modifierKey == SettingsOptions.Modifier.Alt)
+		or (input.isSuperPressed() and modifierKey == SettingsOptions.Modifier.Super)
 end
 
 function M.detectPerformOnAllItems(input, modifierKey, modifierSetting)
+	DB.log("modifierSetting: ", modifierSetting)
 	if modifierSetting == SettingsOptions.ModifierSetting.Disable then
 		return false
 	end

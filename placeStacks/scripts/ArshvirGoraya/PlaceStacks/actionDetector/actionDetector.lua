@@ -17,9 +17,9 @@ Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 --- Settings stuff
 local settingsHelpers = require("scripts.ArshvirGoraya.PlaceStacks.settingsHelpers")
 SettingsKeys = settingsHelpers.keys
-AllOptions = settingsHelpers.options
-SettingsOptions = AllOptions.SettingOptions
-SettingOptionList = settingsHelpers.createSettingOptionsLists()
+AllOptions = settingsHelpers.createOptionsTable()
+SettingsOptions = AllOptions.settingOptions
+SettingOptionList = settingsHelpers.allOptions.settingOptions
 local settings = require("scripts.ArshvirGoraya.PlaceStacks.settings")
 settingsHelpers.buildTableSettings(async, Storage, settings.defaultSettings) -- to pass to global script(s)
 local allSettings = settingsHelpers.allSettings

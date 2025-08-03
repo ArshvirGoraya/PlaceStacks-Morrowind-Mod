@@ -1,5 +1,6 @@
 local M = {}
 
+-- order doesn't matter:
 M.keys = {
 	sectionKeys = {
 		commonBehavior = "settingsCommonBehavior",
@@ -30,46 +31,47 @@ M.keys = {
 	},
 }
 
-M.options = {
-	StackType = { None = "None", Place = "Place", Take = "Take" },
-	SettingOptions = {
-		ModifierSetting = {
-			Default = "Default",
-			Invert = "Invert",
-			Disable = "Disable",
-		},
-		TransferOrder = {
-			Any = "Any",
-			Valuable = "Valuable",
-			Lightest = "Lightest",
-			Cheapest = "Cheapest",
-			Heaviest = "Heaviest",
-		},
-		AutoClose = {
-			Never = "Never",
-			AllFit = "All Fit",
-			Always = "Always",
-		},
-		Modifier = {
-			Shift = "Shift",
-			Ctrl = "Ctrl",
-			Alt = "Alt",
-			Super = "Super",
-		},
+-- Order matters: Make into list first and then table
+---@class OptionsTable
+---@field options {
+---StackType: {None:string, Place:string, Take:string},
+---}
+---@field settingOptions {
+---ModifierSetting: {Default:string, Invert:string, Disable:string},
+---TransferOrder: {Any:string, Valuable:string, Lightest:string, Cheapest:string, Heaviest:string},
+---AutoClose: {Never:string, Fit:string, Always:string},
+---Modifier: {Shift:string, Ctrl:string, Alt:string, Super:string},
+---}
+M.allOptions = {
+	options = {
+		StackType = { "None", "Place", "Take" },
+	},
+	settingOptions = {
+		ModifierSetting = { "Default", "Invert", "Disable" },
+		TransferOrder = { "Any", "Valuable", "Lightest", "Cheapest", "Heaviest" },
+		AutoClose = { "Never", "Fit", "Always" },
+		Modifier = { "Shift", "Ctrl", "Alt", "Super" },
 	},
 }
----@return { ModifierSetting: string[], TransferOrder: string[], AutoClose: string[], Modifier: string[] }
-function M.createSettingOptionsLists()
-	local optionList = {}
-	for k, optionTable in pairs(M.options.SettingOptions) do
-		-- DB.log("Key: ", k, "value:", optionTable)
-		optionList[k] = {}
-		for _, value in pairs(optionTable) do
-			table.insert(optionList[k], value)
+
+local function convertListToTable(list)
+	local tbl = {}
+	for _, v in ipairs(list) do
+		tbl[v] = v
+	end
+	return tbl
+end
+---@return OptionsTable
+function M.createOptionsTable()
+	local optionTable = {}
+	for tableName, tbl in pairs(M.allOptions) do
+		optionTable[tableName] = {}
+		for k, list in pairs(tbl) do
+			optionTable[tableName][k] = convertListToTable(list)
 		end
 	end
-	DB.printTable(optionList, 2)
-	return optionList
+	DB.printTable(optionTable, 3)
+	return optionTable
 end
 
 M.allSettings = {
