@@ -1,0 +1,10 @@
+---
+
+# Customize default configuration:
+# https://www.mankier.com/1/yamllint#Table_of_Contents-Default_configuration
+
+extends: default
+
+rules:
+  line-length:
+    level: warning

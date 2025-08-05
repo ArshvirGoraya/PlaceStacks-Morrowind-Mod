@@ -1,0 +1,45 @@
+---
+
+# Settings:
+#   Name: "Place Stacks"
+#   Description: |-
+#     Inspired by Valheim's Place Stacks mechanic.
+#
+#     - Quickly place items into containers.
+#       - Place All or place only Matching items.
+#
+#     - Quickly take items from containers.
+#       - Take All or take only Matching items.
+#
+#     - Place/Take items in Order: any, valuable, cheapest, heaviest, lightest.
+#
+#     Mod Link: https://www.nexusmods.com/morrowind/mods/57067
+#     Author: Arshvir Goraya
+#   CommonBehavior:
+#     Name: "Common Behavior"
+#     Description: "Control common behavior between place and take mechanics."
+#     AutoClose:
+#       Name: "Auto Close"
+#       Description: |-
+#         If container UI closes after Place/Take action.
+#         - Never: never close.
+#         - Always: always close.
+#         - Fit: close if all relevant items fit into the container.
+#       Select:
+#         Never: "Never"
+#         Fit: "Fit"
+#         Always: "Always"
+#       AutoCloseSelect: |-
+#         { ChoiceVar, Select,
+#           Never {Never} # TRANSLATE WHAT IS INSIDE OF {} HERE
+#           Fit {Fit}
+#           Always {Always}
+#           Other {Other}
+#         }
+AutoCloseSelect: |-
+  { ChoiceVar, Select,
+    Never {Never} # Translate what is in {} here
+    Fit {Fit}
+    Always {Always}
+    other {ERROR}
+  }
