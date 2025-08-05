@@ -1,45 +1,127 @@
 ---
 
-# Settings:
-#   Name: "Place Stacks"
-#   Description: |-
-#     Inspired by Valheim's Place Stacks mechanic.
+ModName: "Place Stacks"
+ModDescription: |-
+  Inspired by Valheim's Place Stacks mechanic.
+
+  - Quickly place matching or all items into containers.
+
+  - Quickly take matching or all items from containers.
+
+  - Place/Take items in any order: valuable, cheapest, heaviest, lightest.
+
+  Mod Link: https://nexusmods.com/morrowind/mods/57067
+  Author: Arshvir Goraya
+# CommonBehavior Section
+SectionName_CommonBehavior: "Common Behavior"
+SectionDescription_CommonBehavior: |-
+  Control common behavior of place and take stack actions.
+# AutoClose
+SettingsNames_AutoClose: "Auto Close"
+SettingsDescription_AutoClose: |-
+  Control if container UI closes after stack action is performed.
+
+  - Never: never close.
+  - Always: always close.
+  - Fit: close if all relevant items fit into the container.
+AutoClose_Never: "Never"
+AutoClose_Always: "Always"
+AutoClose_Fit: "Fit"
+# Modifier
+SettingsNames_Modifier: "Modifier Key"
+SettingsDescription_Modifier: |-
+  Press along side take/place key to trigger modifier action.
+Modifier_Shift: "Shift"
+Modifier_Ctrl: "Ctrl"
+Modifier_Alt: "Alt"
+Modifier_Super: "Super"
+# TakeStacks Section
+SectionName_TakeStacks: "Take Stacks"
+SectionDescription_TakeStacks: "Control behavior of the take stack action."
+# KeyBind
+SettingsNames_TakeStacksKeyBind: "Take Stacks Key Bind"
+SettingsDescription_TakeStacksKeyBind: |-
+  Press when container is open to trigger the take action.
+
+SettingsNames_PlaceStacksKeyBind: "Place Stacks Key Bind"
+SettingsDescription_PlaceStacksKeyBind: |-
+  Press when container is open to trigger the place action.
+
+SettingsNames_TransferOrder_Take: "Take Order"
+SettingsDescription_TransferOrder_Take: |-
+  Controls the order in which items are taken.
+  - Valuable: take items from most valuable to least.
+  - Lightness: take items from least heavy to most.
+
+SettingsNames_TransferOrder_Place: "Place Order"
+SettingsDescription_TransferOrder_Place: |-
+  Controls the order in which items are placed.
+  - Cheapest: place items from least valuable to most.
+  - Heaviest: take items from most heavy to least.
+
+TransferOrder_Any: "Any"
+TransferOrder_Valuable: "Valuable"
+TransferOrder_Lightest: "Lightest"
+TransferOrder_Cheapest: "Cheapest"
+TransferOrder_Heaviest: "Heaviest"
+
+SettingsNames_AllowOverEncumber: "Allow Over Encumber"
+SettingsDescription_AllowOverEncumber: |-
+  - No: take as many items as you can carry without over encumbering.
+  - Yes: take all relevant items and allow over encumbering.
+
+SettingsNames_NotifyCountTransferred_Take: |-
+  Show amount taken from container in notification.
+SettingsDescription_NotifyCountTransferred_Take: |-
+  - Yes: adds number of items taken from container to notification.
+
+SettingsNames_NotifyCountTransferred_Place: |-
+  Show amount placed into container in notification.
+SettingsDescription_NotifyCountTransferred_Place: |-
+  - Yes: adds number if items placed into container to notification.
+
+SettingsNames_NotifyCountNotTransferred_Take: |-
+  Show amount not taken from container in notification
+SettingsDescription_NotifyCountNotTransferred_Take: |-
+  - Yes: adds number of items not taken from container to notification.
+
+SettingsNames_NotifyCountNotTransferred_Place: |-
+  Show amount not placed into container in notification
+SettingsDescription_NotifyCountNotTransferred_Place: |-
+  - Yes: adds number of items not placed into container to notification.
+
+SettingsNames_NotifyTypesNotTransferred: |-
+  Show item types that could not be placed into container in notification.
+SettingsDescription_NotifyTypesNotTransferred: |-
+  - Yes: adds list of types that could not fir into container to notification.
+
 #
-#     - Quickly place items into containers.
-#       - Place All or place only Matching items.
-#
-#     - Quickly take items from containers.
-#       - Take All or take only Matching items.
-#
-#     - Place/Take items in Order: any, valuable, cheapest, heaviest, lightest.
-#
-#     Mod Link: https://www.nexusmods.com/morrowind/mods/57067
-#     Author: Arshvir Goraya
-#   CommonBehavior:
-#     Name: "Common Behavior"
-#     Description: "Control common behavior between place and take mechanics."
-#     AutoClose:
-#       Name: "Auto Close"
-#       Description: |-
-#         If container UI closes after Place/Take action.
-#         - Never: never close.
-#         - Always: always close.
-#         - Fit: close if all relevant items fit into the container.
-#       Select:
-#         Never: "Never"
-#         Fit: "Fit"
-#         Always: "Always"
-#       AutoCloseSelect: |-
-#         { ChoiceVar, Select,
-#           Never {Never} # TRANSLATE WHAT IS INSIDE OF {} HERE
-#           Fit {Fit}
-#           Always {Always}
-#           Other {Other}
-#         }
-AutoCloseSelect: |-
-  { ChoiceVar, Select,
-    Never {Never} # Translate what is in {} here
-    Fit {Fit}
-    Always {Always}
-    other {ERROR}
-  }
+SectionName_PlaceStacks: "Place Stacks"
+SectionDescription_PlaceStacks: "Control behavior of the place stack action."
+
+SettingsNames_HoldMS: "Place Stacks Hold Milliseconds"
+SettingsDescription_HoldMS: |-
+  - Trigger place stacks "activate" key held over container for this duration.
+  - Can press modifier along side this to trigger place stack modifier action.
+  - Set to 0 to disable.
+
+SettingsNames_DepositEquipped: "Deposit Equipped Items"
+SettingsDescription_DepositEquipped: |-
+  - No: won't deposit equipped items
+  - Yes: will deposit equipped items.
+
+SettingsNames_ModifierSetting: "Modifier Setting"
+SettingsDescription_ModifierSetting: |-
+  Control what the modifier key does when held along with place/take action key.
+  - Default:
+    - Press with modifier = take/place ALL items
+    - Press without = take/place MATCHING items
+  - Invert: Reverse of default
+    - Press with modifier = take/place MATCHING items
+    - Press without = take/place ALL items
+  - Disabled: Modifier key does nothing
+    - Always take/place MATCHING items
+
+ModifierSetting_Default: "Default"
+ModifierSetting_Invert: "Invert"
+ModifierSetting_Disable: "Disable"

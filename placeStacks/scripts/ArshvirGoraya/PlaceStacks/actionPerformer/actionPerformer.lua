@@ -8,9 +8,7 @@ Core = require("openmw.core")
 Storage = require("openmw.storage")
 -- Custom Globals
 DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
-local settingsHelpers = require("scripts.ArshvirGoraya.PlaceStacks.settingsHelpers")
-AllOptions = settingsHelpers.createOptionsTable()
-SettingsOptions = AllOptions.settingOptions
+Keys = require("scripts.ArshvirGoraya.PlaceStacks.keys")
 Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 PerformerHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.performerHelpers")
 -- Locals
@@ -19,7 +17,7 @@ local psp = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.placeStac
 -- Global Variables (read-only in local scripts)
 
 PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
-PlaceStacksGlobals:set("CurrentStackType", AllOptions.options.StackType.None)
+PlaceStacksGlobals:set("CurrentStackType", Keys.CONSTANT_KEYS.Options.StackType.None)
 PlaceStacksGlobals:setLifeTime(Storage.LIFE_TIME.Temporary) -- removed on exit / on load
 
 local M = {

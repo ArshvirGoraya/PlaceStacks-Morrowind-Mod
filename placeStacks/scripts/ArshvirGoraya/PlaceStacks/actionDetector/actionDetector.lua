@@ -11,21 +11,16 @@ local async = require("openmw.async")
 --
 PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
 -- Custom API Globals
-DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.detectorHelpers")
 DB = require("scripts.ArshvirGoraya.PlaceStacks.dbug")
+Keys = require("scripts.ArshvirGoraya.PlaceStacks.keys")
 Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
+DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.detectorHelpers")
 --- Settings stuff
-local settingsHelpers = require("scripts.ArshvirGoraya.PlaceStacks.settingsHelpers")
-SettingsKeys = settingsHelpers.keys
-AllOptions = settingsHelpers.createOptionsTable()
-SettingsOptions = AllOptions.settingOptions
-SettingOptionList = settingsHelpers.allOptions.settingOptions
 local settings = require("scripts.ArshvirGoraya.PlaceStacks.settings")
-settingsHelpers.buildTableSettings(async, Storage, settings.defaultSettings) -- to pass to global script(s)
-local allSettings = settingsHelpers.allSettings
-local settingsTableCommonBehavior = allSettings.tableSettings[SettingsKeys.sectionKeys.commonBehavior]
-local settingsTableTakeStacks = allSettings.tableSettings[SettingsKeys.sectionKeys.takeStacks]
-local settingsTablePlaceStacks = allSettings.tableSettings[SettingsKeys.sectionKeys.placeStacks]
+local tableSettings = settings.subscribeAndBuildTableSettings(async)
+local settingsTableCommonBehavior = tableSettings[Keys.CONSTANT_KEYS.Sections.CommonBehavior]
+local settingsTableTakeStacks = tableSettings[Keys.CONSTANT_KEYS.Sections.TakeStacks]
+local settingsTablePlaceStacks = tableSettings[Keys.CONSTANT_KEYS.Sections.PlaceStacks]
 -- Custom Var Globals
 FocusedContainer = nil
 -- Locals
@@ -101,7 +96,6 @@ end
 local UIModeChanged = function(data) --@ ENTRY
 	if DetectorHelpers.detectContainerOpened(data) then
 		FocusedContainer = data.arg
-		-- DB.printTable(settingsTablePlaceStacks)
 		psd.startDetectingPlaceStacksHoldIfEnabled(settingsTablePlaceStacks.HoldMS)
 	end
 end

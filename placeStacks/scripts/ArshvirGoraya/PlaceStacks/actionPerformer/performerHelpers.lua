@@ -12,19 +12,19 @@ function M.sortItemsToTransferOrder(items, transferOrder)
 		end
 	end
 
-	if transferOrder == SettingsOptions.TransferOrder.Heaviest then
+	if transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).weight > b.type.record(b).weight
 		end)
-	elseif transferOrder == SettingsOptions.TransferOrder.Lightest then
+	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest.Lightest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).weight < b.type.record(b).weight
 		end)
-	elseif transferOrder == SettingsOptions.TransferOrder.Valuable then
+	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest.Valuable then
 		table.sort(items, function(a, b)
 			return a.type.record(a).value > b.type.record(b).value
 		end)
-	elseif transferOrder == SettingsOptions.TransferOrder.Cheapest then
+	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest.Cheapest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).value < b.type.record(b).value
 		end)

@@ -3,7 +3,7 @@ local previousFramePress = false
 
 M.detectTakeStacksPress = function(psd)
 	local detected = false
-	local currentFramePress = Input.getBooleanActionValue("TakeStacksKey")
+	local currentFramePress = Input.getBooleanActionValue(Keys.CONSTANT_KEYS.CustomInputs.TakeStacks)
 	if DetectorHelpers.detectPress(previousFramePress, currentFramePress) then
 		psd.stopDetectingPlaceStacksHold()
 		detected = true

@@ -36,14 +36,14 @@ M.performTakeStacks = function(args)
 	then
 		return
 	end
-	PlaceStacksGlobals:set("CurrentStackType", AllOptions.options.StackType.Take)
+	PlaceStacksGlobals:set("CurrentStackType", Keys.CONSTANT_KEYS.Options.StackType.Take)
 	prepareTakeStacksArgs(focusedContainer, player, performOnAllItems, settingsTakeStacks)
 	--
 	takeStacks()
 	performTakeStacksNotification()
 	PerformerHelpers.performAutoClose()
 	--
-	PlaceStacksGlobals:set("CurrentStackType", AllOptions.options.StackType.None)
+	PlaceStacksGlobals:set("CurrentStackType", Keys.CONSTANT_KEYS.Options.StackType.None)
 end
 
 return M

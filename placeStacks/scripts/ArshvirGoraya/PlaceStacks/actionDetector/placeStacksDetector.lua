@@ -24,7 +24,7 @@ end
 
 M.detectPlaceStacksPress = function()
 	local detected = false
-	local currentFramePress = Input.getBooleanActionValue("PlaceStacksKey")
+	local currentFramePress = Input.getBooleanActionValue(Keys.CONSTANT_KEYS.CustomInputs.PlaceStacks)
 	if DetectorHelpers.detectPress(previousFramePress, currentFramePress) then
 		M.stopDetectingPlaceStacksHold()
 		detected = true

@@ -17,19 +17,20 @@ function M.detectPress(previousFramePress, currentFramePress)
 end
 
 function M.isModifierKeyPressed(input, modifierKey)
-	return (input.isCtrlPressed() and modifierKey == SettingsOptions.Modifier.Ctrl)
-		or (input.isShiftPressed() and modifierKey == SettingsOptions.Modifier.Shift)
-		or (input.isAltPressed() and modifierKey == SettingsOptions.Modifier.Alt)
-		or (input.isSuperPressed() and modifierKey == SettingsOptions.Modifier.Super)
+	return (input.isCtrlPressed() and modifierKey == Keys.LOCALIZED_KEYS.Options.Modifier.Ctrl)
+		or (input.isShiftPressed() and modifierKey == Keys.LOCALIZED_KEYS.Options.Modifier.Shift)
+		or (input.isAltPressed() and modifierKey == Keys.LOCALIZED_KEYS.Options.Modifier.Alt)
+		or (input.isSuperPressed() and modifierKey == Keys.LOCALIZED_KEYS.Options.Modifier.Super)
 end
 
 function M.detectPerformOnAllItems(input, modifierKey, modifierSetting)
 	DB.log("modifierSetting: ", modifierSetting)
-	if modifierSetting == SettingsOptions.ModifierSetting.Disable then
+
+	if modifierSetting == Keys.LOCALIZED_KEYS.Options.ModifierSetting.Disable then
 		return false
 	end
 	local modifierPressed = M.isModifierKeyPressed(input, modifierKey)
-	local modifierInverted = modifierSetting == SettingsOptions.ModifierSetting.Invert
+	local modifierInverted = modifierSetting == Keys.LOCALIZED_KEYS.Options.ModifierSetting.Invert
 	if modifierInverted then
 		return not modifierPressed
 	end
