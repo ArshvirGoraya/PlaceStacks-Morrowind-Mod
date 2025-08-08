@@ -1,5 +1,19 @@
 local M = {}
 
+local function printItem(item)
+	DB.log(
+		"weight: " .. item.type.record(item).weight,
+		"value: " .. item.type.record(item).value,
+		"id: " .. item.type.record(item).name .. "(" .. item.type.record(item).id .. ")"
+	)
+end
+
+local function printAllItems(items)
+	for _, v in ipairs(items) do
+		printItem(v)
+	end
+end
+
 function M.sortItemsToTransferOrder(items, transferOrder)
 	-- items = list of items that extend gameObject: https://openmw.readthedocs.io/en/openmw-0.49.0/reference/lua-scripting/openmw_core.html##(GameObject)
 	-- >: decending (greatest to smallest)
@@ -7,24 +21,38 @@ function M.sortItemsToTransferOrder(items, transferOrder)
 
 	if DB.logging then
 		DB.log("items before ordering: ", transferOrder)
-		for _, v in ipairs(items) do
-			DB.log("weight: " .. v.type.record(v).weight, "value: " .. v.type.record(v).value)
-		end
+		printAllItems(items)
 	end
 
-	if transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest then
+	if transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.ValuableByWeight then
+		-- 0/1 knapsack problem - greedy solution: does not guarantee best set of items:
+		-- - Can miss a lower value-weight ratio item that, when paired with others, gives a better total value
+		-- Dynamic programming approach is better but requires a hard decision of a weight interval in this case.
+		-- - Must loop through weight intervals up to the container capacity: how big the interval is depends on how granular you want to get.
+		-- - The more granular the more accurate but the longer it will take. The smallest items in Morrowind can be as low as 0.01?
+		-- - Other mods may also add items that are less than that.
+		-- - That much granularity is not optimal, but required for accuracy.
+		-- - A possible solution is treating items smaller than 1 as simply being 1.
+		--  - But treating a value of 100 by 0.01 the same as 100 by 1 has negative side effects of potentially not being able to take a bunch of the 0.01's.
+		-- For now just doing this greedy solution instead.
+		table.sort(items, function(a, b)
+			-- no tie breaker
+			return (a.type.record(a).value / a.type.record(a).weight)
+				> (b.type.record(b).value / b.type.record(b).weight)
+		end)
+	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).weight > b.type.record(b).weight
 		end)
-	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest.Lightest then
+	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Lightest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).weight < b.type.record(b).weight
 		end)
-	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest.Valuable then
+	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Valuable then
 		table.sort(items, function(a, b)
 			return a.type.record(a).value > b.type.record(b).value
 		end)
-	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest.Cheapest then
+	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Cheapest then
 		table.sort(items, function(a, b)
 			return a.type.record(a).value < b.type.record(b).value
 		end)
@@ -32,9 +60,7 @@ function M.sortItemsToTransferOrder(items, transferOrder)
 
 	if DB.logging then
 		DB.log("items after ordering=====================")
-		for _, v in ipairs(items) do
-			DB.log("weight: " .. v.type.record(v).weight, "value: " .. v.type.record(v).value)
-		end
+		printAllItems(items)
 	end
 
 	return items

@@ -67,7 +67,7 @@ local settingsDefinitions = {
 				key = Keys.CONSTANT_KEYS.CommonSettings.TransferOrder,
 				name = Keys.LOCALIZED_KEYS.Settings.TransferOrder.Take.Name,
 				description = Keys.LOCALIZED_KEYS.Settings.TransferOrder.Take.Description,
-				default = Keys.LOCALIZED_KEYS.Options.TransferOrder.Valuable,
+				default = Keys.LOCALIZED_KEYS.Options.TransferOrder.ValuableByWeight,
 				renderer = "select",
 				argument = {
 					items = Keys.LOCALIZED_KEYS.Settings.TransferOrder.List,
@@ -76,8 +76,8 @@ local settingsDefinitions = {
 			},
 			{
 				key = Keys.CONSTANT_KEYS.TakeStacks.AllowOverEncumbrance,
-				name = Keys.LOCALIZED_KEYS.Settings.TransferOrder.Take.Name,
-				description = Keys.LOCALIZED_KEYS.Settings.TransferOrder.Take.Description,
+				name = Keys.LOCALIZED_KEYS.Settings.AllowOverEncumber.Name,
+				description = Keys.LOCALIZED_KEYS.Settings.AllowOverEncumber.Description,
 				default = false,
 				renderer = "checkbox",
 			},
@@ -156,6 +156,13 @@ local settingsDefinitions = {
 				key = Keys.CONSTANT_KEYS.PlaceStacks.DepositEquipped,
 				name = Keys.LOCALIZED_KEYS.Settings.DepositEquipped.Name,
 				description = Keys.LOCALIZED_KEYS.Settings.DepositEquipped.Description,
+				default = false,
+				renderer = "checkbox",
+			},
+			{
+				key = Keys.CONSTANT_KEYS.PlaceStacks.DepositMoney,
+				name = Keys.LOCALIZED_KEYS.Settings.DepositMoney.Name,
+				description = Keys.LOCALIZED_KEYS.Settings.DepositMoney.Description,
 				default = false,
 				renderer = "checkbox",
 			},

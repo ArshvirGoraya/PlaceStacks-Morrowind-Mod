@@ -7,15 +7,15 @@ local function prepareTakeStacksArgs(focusedContainer, player, performOnAllItems
 	takeStacksArgs.performOnAllItems = performOnAllItems
 	takeStacksArgs.transferOrder = settingsTakeStacks.TransferOrder
 	takeStacksArgs.player = player
+	takeStacksArgs.allowOverEncumbrance = settingsTakeStacks.AllowOverEncumbrance
+	takeStacksArgs.notifyCountTransferred = settingsTakeStacks.NotifyCountTransferred
+	takeStacksArgs.notifyCountNotTransferred = settingsTakeStacks.NotifyCountNotTransferred
 	takeStacksArgs.items = PerformerHelpers.getItemsFromContainerInTransferOrder(
 		takeStacksArgs.sourceContainer,
 		takeStacksArgs.targetContainer,
 		takeStacksArgs.transferOrder,
 		performOnAllItems
 	)
-	takeStacksArgs.allowOverEncumbrance = settingsTakeStacks.AllowOverEncumbrance
-	takeStacksArgs.notifyCountTransferred = settingsTakeStacks.NotifyCountTransferred
-	takeStacksArgs.notifyCountNotTransferred = settingsTakeStacks.NotifyCountNotTransferred
 end
 
 local function prepareTakeStacksNotification() end

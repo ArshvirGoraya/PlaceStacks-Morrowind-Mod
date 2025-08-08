@@ -49,51 +49,62 @@ SettingsDescription_PlaceStacksKeyBind: |-
 
 SettingsNames_TransferOrder_Take: "Take Order"
 SettingsDescription_TransferOrder_Take: |-
-  Controls the order in which items are taken.
-  - Valuable: take items from most valuable to least.
-  - Lightness: take items from least heavy to most.
+  Controls the order in which items are taken:
+  - Valuable: most valuable items first.
+  - ValuableByWeight: largest value-weight ratio first.
+    - Will be a more valuable item set than the "Valuable" option.
+  - Cheapest: cheapest items first.
+  - Heaviest: As few items as possible by taking the heaviest items first.
+  - Lightest: As many items as possible by taking the lightest items first.
+    - Will be a heavier item set than the "Heaviest" option.
 
 SettingsNames_TransferOrder_Place: "Place Order"
 SettingsDescription_TransferOrder_Place: |-
-  Controls the order in which items are placed.
-  - Cheapest: place items from least valuable to most.
-  - Heaviest: take items from most heavy to least.
+  Controls the order in which items are placed:
+  - Valuable: most valuable items first.
+  - ValuableByWeight: largest value-weight ratio first.
+    - Will be a more valuable item set than the "Valuable" option.
+  - Cheapest: cheapest items first.
+  - Heaviest: as few items as possible by taking the heaviest items first.
+  - Lightest: as many items as possible by taking the lightest items first.
+    - Will be a heavier item set than the "Heaviest" option.
 
 TransferOrder_Any: "Any"
 TransferOrder_Valuable: "Valuable"
+TransferOrder_ValuableByWeight: "ValuableByWeight"
 TransferOrder_Lightest: "Lightest"
 TransferOrder_Cheapest: "Cheapest"
 TransferOrder_Heaviest: "Heaviest"
 
 SettingsNames_AllowOverEncumber: "Allow Over Encumber"
 SettingsDescription_AllowOverEncumber: |-
-  - No: take as many items as you can carry without over encumbering.
+  - No: take as many relevant items as you can carry without over encumbering.
   - Yes: take all relevant items and allow over encumbering.
 
 SettingsNames_NotifyCountTransferred_Take: |-
-  Show amount taken from container in notification.
+  Show amount taken
 SettingsDescription_NotifyCountTransferred_Take: |-
   - Yes: adds number of items taken from container to notification.
 
 SettingsNames_NotifyCountTransferred_Place: |-
-  Show amount placed into container in notification.
+  Show amount placed
 SettingsDescription_NotifyCountTransferred_Place: |-
   - Yes: adds number if items placed into container to notification.
 
 SettingsNames_NotifyCountNotTransferred_Take: |-
-  Show amount not taken from container in notification
+  Show amount not taken
 SettingsDescription_NotifyCountNotTransferred_Take: |-
   - Yes: adds number of items not taken from container to notification.
 
 SettingsNames_NotifyCountNotTransferred_Place: |-
-  Show amount not placed into container in notification
+  Show amount not placed
 SettingsDescription_NotifyCountNotTransferred_Place: |-
   - Yes: adds number of items not placed into container to notification.
 
 SettingsNames_NotifyTypesNotTransferred: |-
-  Show item types that could not be placed into container in notification.
+  Show item types not be placed
 SettingsDescription_NotifyTypesNotTransferred: |-
-  - Yes: adds list of types that could not fir into container to notification.
+  - Yes: adds list of types that could not for into container to notification.
 
 #
 SectionName_PlaceStacks: "Place Stacks"
@@ -101,14 +112,17 @@ SectionDescription_PlaceStacks: "Control behavior of the place stack action."
 
 SettingsNames_HoldMS: "Place Stacks Hold Milliseconds"
 SettingsDescription_HoldMS: |-
-  - Trigger place stacks "activate" key held over container for this duration.
+  - Hold "activate" key over container for MS to trigger place stack action.
   - Can press modifier along side this to trigger place stack modifier action.
   - Set to 0 to disable.
 
 SettingsNames_DepositEquipped: "Deposit Equipped Items"
 SettingsDescription_DepositEquipped: |-
-  - No: won't deposit equipped items
-  - Yes: will deposit equipped items.
+  - No: won't deposit equipped items.
+
+SettingsNames_DepositMoney: "Deposit Money"
+SettingsDescription_DepositMoney: |-
+  - No: won't deposit money.
 
 SettingsNames_ModifierSetting: "Modifier Setting"
 SettingsDescription_ModifierSetting: |-

@@ -33,6 +33,7 @@ M.CONSTANT_KEYS = {
 		KeyBind = "KeyBind",
 		HoldMS = "HoldMS",
 		DepositEquipped = "DepositEquipped",
+		DepositMoney = "DepositMoney",
 	},
 	CustomInputs = {
 		TakeStacks = "TakeStacksKeyBind",
@@ -40,6 +41,9 @@ M.CONSTANT_KEYS = {
 	},
 	Options = {
 		StackType = { None = "None", Place = "Place", Take = "Take" },
+	},
+	RecordIDs = {
+		gold = "gold_001",
 	},
 }
 
@@ -100,6 +104,10 @@ M.LOCALIZED_KEYS = {
 			Name = localized("SettingsNames_DepositEquipped"),
 			Description = localized("SettingsDescription_DepositEquipped"),
 		},
+		DepositMoney = {
+			Name = localized("SettingsNames_DepositMoney"),
+			Description = localized("SettingsDescription_DepositMoney"),
+		},
 		ModifierSetting = {
 			Name = localized("SettingsNames_ModifierSetting"),
 			Description = localized("SettingsDescription_ModifierSetting"),
@@ -121,6 +129,7 @@ M.LOCALIZED_KEYS = {
 			List = {
 				localized("TransferOrder_Any"),
 				localized("TransferOrder_Valuable"),
+				localized("TransferOrder_ValuableByWeight"),
 				localized("TransferOrder_Lightest"),
 				localized("TransferOrder_Cheapest"),
 				localized("TransferOrder_Heaviest"),
@@ -160,6 +169,7 @@ M.LOCALIZED_KEYS = {
 		TransferOrder = {
 			Any = localized("TransferOrder_Any"),
 			Valuable = localized("TransferOrder_Valuable"),
+			ValuableByWeight = localized("TransferOrder_ValuableByWeight"),
 			Lightest = localized("TransferOrder_Lightest"),
 			Cheapest = localized("TransferOrder_Cheapest"),
 			Heaviest = localized("TransferOrder_Heaviest"),

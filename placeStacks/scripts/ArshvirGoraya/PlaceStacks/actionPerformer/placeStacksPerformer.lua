@@ -7,16 +7,18 @@ local function preparePlaceStacksArgs(focusedContainer, player, performOnAllItem
 	placeStacksArgs.performOnAllItems = performOnAllItems
 	placeStacksArgs.transferOrder = settingsPlaceStacks.TransferOrder
 	placeStacksArgs.player = player
+	placeStacksArgs.depositMoney = settingsPlaceStacks.DepositMoney
+	placeStacksArgs.depositEquipped = settingsPlaceStacks.DepositEquipped
+	placeStacksArgs.notifyCountTransferred = settingsPlaceStacks.NotifyCountTransferred
+	placeStacksArgs.notifyCountNotTransferred = settingsPlaceStacks.NotifyCountNotTransferred
+	placeStacksArgs.notifyTypeNotTransferred = settingsPlaceStacks.NotifyTypeNotTransferred
+	--
 	placeStacksArgs.items = PerformerHelpers.getItemsFromContainerInTransferOrder(
 		placeStacksArgs.sourceContainer,
 		placeStacksArgs.targetContainer,
 		placeStacksArgs.transferOrder,
 		performOnAllItems
 	)
-	placeStacksArgs.depositEquipped = settingsPlaceStacks.DepositEquipped
-	placeStacksArgs.notifyCountTransferred = settingsPlaceStacks.NotifyCountTransferred
-	placeStacksArgs.notifyCountNotTransferred = settingsPlaceStacks.NotifyCountNotTransferred
-	placeStacksArgs.notifyTypeNotTransferred = settingsPlaceStacks.NotifyTypeNotTransferred
 end
 
 local function preparePlaceStacksNotification() end
