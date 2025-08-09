@@ -18,9 +18,11 @@ DetectorHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionDetector.dete
 --- Settings stuff
 local settings = require("scripts.ArshvirGoraya.PlaceStacks.settings")
 local tableSettings = settings.subscribeAndBuildTableSettings(async)
+
 local settingsTableCommonBehavior = tableSettings[Keys.CONSTANT_KEYS.Sections.CommonBehavior]
 local settingsTableTakeStacks = tableSettings[Keys.CONSTANT_KEYS.Sections.TakeStacks]
 local settingsTablePlaceStacks = tableSettings[Keys.CONSTANT_KEYS.Sections.PlaceStacks]
+
 -- Custom Var Globals
 FocusedContainer = nil
 -- Locals

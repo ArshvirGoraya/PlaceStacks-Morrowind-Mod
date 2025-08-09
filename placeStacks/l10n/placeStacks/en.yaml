@@ -82,34 +82,44 @@ SettingsDescription_AllowOverEncumber: |-
   - Yes: take all relevant items and allow over encumbering.
 
 SettingsNames_NotifyCountTransferred_Take: |-
-  Show amount taken
+  Show count taken
+SettingsNames_NotifyCountTransferred_Place: |-
+  Show count placed
 SettingsDescription_NotifyCountTransferred_Take: |-
   - Yes: adds number of items taken from container to notification.
-
-SettingsNames_NotifyCountTransferred_Place: |-
-  Show amount placed
 SettingsDescription_NotifyCountTransferred_Place: |-
   - Yes: adds number if items placed into container to notification.
 
-SettingsNames_NotifyCountNotTransferred_Take: |-
-  Show amount not taken
-SettingsDescription_NotifyCountNotTransferred_Take: |-
-  - Yes: adds number of items not taken from container to notification.
+SettingsNames_NotifyValueTransferred_Take: |-
+  Show value taken
+SettingsNames_NotifyValueTransferred_Place: |-
+  Show value placed
+SettingsDescription_NotifyValueTransferred_Take: |-
+  - Yes: adds value of items taken from container to notification.
+SettingsDescription_NotifyValueTransferred_Place: |-
+  - Yes: adds value of items placed into container to notification.
 
-SettingsNames_NotifyCountNotTransferred_Place: |-
-  Show amount not placed
-SettingsDescription_NotifyCountNotTransferred_Place: |-
-  - Yes: adds number of items not placed into container to notification.
+SettingsNames_NotifyWeightTransferred_Take: |-
+  Show weight taken
+SettingsNames_NotifyWeightTransferred_Place: |-
+  Show weight placed
+SettingsDescription_NotifyWeightTransferred_Take: |-
+  - Yes: adds weight of items taken from container to notification.
+SettingsDescription_NotifyWeightTransferred_Place: |-
+  - Yes: adds weight of items placed into container to notification.
 
-SettingsNames_NotifyTypesNotTransferred: |-
-  Show item types not be placed
-SettingsDescription_NotifyTypesNotTransferred: |-
-  - Yes: adds list of types that could not for into container to notification.
+SettingsNames_NotifyTypesNotAllTransferred_Take: |-
+  Show item types not taken
+SettingsNames_NotifyTypesNotAllTransferred_Place: |-
+  Show item types not placed
+SettingsDescription_NotifyTypesNotAllTransferred_Take: |-
+  - Yes: adds list of types of items that could not be taken to notification.
+SettingsDescription_NotifyTypesNotAllTransferred_Place: |-
+  - Yes: adds list of types of items that could not be placed to notification.
 
 #
 SectionName_PlaceStacks: "Place Stacks"
 SectionDescription_PlaceStacks: "Control behavior of the place stack action."
-
 SettingsNames_HoldMS: "Place Stacks Hold Milliseconds"
 SettingsDescription_HoldMS: |-
   - Hold "activate" key over container for MS to trigger place stack action.

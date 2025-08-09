@@ -14,7 +14,31 @@ local function printAllItems(items)
 	end
 end
 
-function M.sortItemsToTransferOrder(items, transferOrder)
+local function getItemWeight(item)
+	return item.type.record(item).weight
+end
+
+local function getItemValue(item)
+	return item.type.record(item).value
+end
+
+function M.getItemName(item)
+	return item.type.record(item).name
+end
+
+local function getItemRecordID(item)
+	return item.type.record(item).id
+end
+
+local function getItemType(item)
+	return tostring(item.type)
+end
+
+local function getItemValueWeightRatio(item)
+	return getItemValue(item) / getItemWeight(item)
+end
+
+function M.sortItemsIntoTransferOrder(items, transferOrder)
 	-- items = list of items that extend gameObject: https://openmw.readthedocs.io/en/openmw-0.49.0/reference/lua-scripting/openmw_core.html##(GameObject)
 	-- >: decending (greatest to smallest)
 	-- <: ascending (smallest to greatest)
@@ -37,24 +61,23 @@ function M.sortItemsToTransferOrder(items, transferOrder)
 		-- For now just doing this greedy solution instead.
 		table.sort(items, function(a, b)
 			-- no tie breaker
-			return (a.type.record(a).value / a.type.record(a).weight)
-				> (b.type.record(b).value / b.type.record(b).weight)
+			return getItemValueWeightRatio(a) > getItemValueWeightRatio(b)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest then
 		table.sort(items, function(a, b)
-			return a.type.record(a).weight > b.type.record(b).weight
+			return getItemWeight(a) > getItemWeight(b)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Lightest then
 		table.sort(items, function(a, b)
-			return a.type.record(a).weight < b.type.record(b).weight
+			return getItemWeight(a) < getItemWeight(b)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Valuable then
 		table.sort(items, function(a, b)
-			return a.type.record(a).value > b.type.record(b).value
+			return getItemValue(a) > getItemValue(b)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Cheapest then
 		table.sort(items, function(a, b)
-			return a.type.record(a).value < b.type.record(b).value
+			return getItemValue(a) < getItemValue(b)
 		end)
 	end
 
@@ -66,47 +89,180 @@ function M.sortItemsToTransferOrder(items, transferOrder)
 	return items
 end
 
-local function getMatchingItemsFromContainers(sourceContainer, targetContainer)
-	local matchingItems = {}
-	local searchedItems = {}
-	local source = sourceContainer.type.inventory(sourceContainer)
-	local target = targetContainer.type.inventory(targetContainer)
-	for _, tItem in pairs(target:getAll()) do
-		if searchedItems[tItem.recordId] == nil then
-			searchedItems[tItem.recordId] = true
-		else
-			goto continue
-		end
-		for _, sItem in pairs(source:findAll(tItem.recordId)) do
-			table.insert(matchingItems, sItem)
-		end
-		::continue::
-	end
-	return matchingItems
+local function isItemEquipped(item, player, Types)
+	return Types.Actor.hasEquipped(player, item)
 end
 
-local function getAllItemsFromContainer(container)
-	local items = {}
-	-- must convert item list to a table to be able to sort later
-	local userDataItems = container.type.inventory(container):getAll()
+local function isItemMoney(item)
+	return getItemRecordID(item) == Keys.CONSTANT_KEYS.RecordIDs.gold
+end
+
+local function isItemConsidered(item, stackActionArgs, stackType, Types)
+	if stackType == Keys.CONSTANT_KEYS.Options.StackType.Place then
+		---@cast stackActionArgs PlaceStacksArgs
+		if not stackActionArgs.depositEquipped then
+			return not isItemEquipped(item, stackActionArgs.player, Types)
+		end
+		if not stackActionArgs.depositMoney then
+			return not isItemMoney(item)
+		end
+	else
+		---@cast stackActionArgs TakeStacksArgs
+		return true
+	end
+end
+
+function M.getStartingContainerCapacity(container, Types)
+	if Types.Actor.objectIsInstance(container) then
+		DB.log("target is player")
+		return Types.Actor.getCapacity(container) - Types.Actor.getEncumbrance(container)
+	else
+		DB.log("target is container")
+		return Types.Container.getCapacity(container) - Types.Container.getEncumbrance(container)
+	end
+end
+
+function M.allItemsFitIntoContainer(containerCapacity, totalWeight)
+	if DB.logging then
+		DB.log(
+			"container Capacity {"
+				.. containerCapacity
+				.. "} >= "
+				.. "total items weight {"
+				.. totalWeight
+				.. "}: "
+				.. tostring(containerCapacity >= totalWeight)
+		)
+	end
+	return containerCapacity >= totalWeight
+end
+
+local function itemFitsCapacity(capacity, item)
+	-- if DB.logging then
+	-- 	DB.log(
+	-- 		"container Capacity {"
+	-- 			.. capacity
+	-- 			.. "} >= "
+	-- 			.. "item weight {"
+	-- 			.. getItemWeight(item)
+	-- 			.. "}: "
+	-- 			.. tostring(capacity >= getItemWeight(item))
+	-- 	)
+	-- end
+	return capacity >= getItemWeight(item)
+end
+
+---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
+---@param notificationStruct NotificationStruct
+local function filterUserDataItemsIntoTable(tbl, userDataItems, stackActionArgs, notificationStruct, stackType, Types)
 	for _, item in pairs(userDataItems) do
-		table.insert(items, item)
+		if isItemConsidered(item, stackActionArgs, stackType, Types) then
+			if
+				(stackType == Keys.CONSTANT_KEYS.Options.StackType.Take and stackActionArgs.allowOverEncumbrance)
+				or itemFitsCapacity(stackActionArgs.startingTargetCapacity, item)
+			then
+				-- DB.log("transferable Item: ", M.getItemName(item))
+				table.insert(tbl, item)
+				-- else
+				-- 	DB.log("item not transferable: ", M.getItemName(item))
+			end
+			M.updateNotificationStruct(notificationStruct, item, stackActionArgs)
+		end
+	end
+	return tbl
+end
+
+---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
+---@param notificationStruct NotificationStruct
+function M.updateNotificationStruct(notificationStruct, item, stackActionArgs, stackSize)
+	stackSize = stackSize or item.count
+
+	if stackActionArgs.notifyTypesNotAllTransferred then
+		notificationStruct.tableOfNotAllTransferredTypes[getItemType(item)] = true
+	end
+	if stackActionArgs.notifyCountTransferred then
+		notificationStruct.totalConsidered.count = notificationStruct.totalConsidered.count + stackSize
+	end
+	if stackActionArgs.notifyValueTransferred then
+		notificationStruct.totalConsidered.value = notificationStruct.totalConsidered.value
+			+ getItemValue(item) * stackSize
+	end
+
+	-- weight value is used regardless of weight notifications setting
+	notificationStruct.totalConsidered.weight = notificationStruct.totalConsidered.weight
+		+ getItemWeight(item) * stackSize
+end
+
+---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
+---@param notificationStruct NotificationStruct
+function M.filterItemsIntoTable(stackActionArgs, notificationStruct, stackType, Types)
+	local items = {}
+	local userDataItems = nil
+
+	---@diagnostic disable: undefined-field
+	local sourceInventory = stackActionArgs.sourceContainer.type.inventory(stackActionArgs.sourceContainer)
+	local targetInventory = stackActionArgs.targetContainer.type.inventory(stackActionArgs.targetContainer)
+	---@diagnostic enable: undefined-field
+	---
+	if stackActionArgs.performOnAllItems then
+		-- filter in all items
+		userDataItems = sourceInventory:getAll()
+		items =
+			filterUserDataItemsIntoTable(items, userDataItems, stackActionArgs, notificationStruct, stackType, Types)
+	else
+		-- filter in only matching items
+		local searchedItems = {}
+		for _, item in pairs(targetInventory:getAll()) do
+			if searchedItems[item.recordId] == nil then
+				searchedItems[item.recordId] = true
+				userDataItems = sourceInventory:findAll(item.recordId)
+				items = filterUserDataItemsIntoTable(
+					items,
+					userDataItems,
+					stackActionArgs,
+					notificationStruct,
+					stackType,
+					Types
+				)
+			end
+		end
 	end
 	return items
 end
 
-local function getItemsFromContainer(sourceContainer, targetContainer, allItems)
-	if allItems then
-		return getAllItemsFromContainer(sourceContainer)
-	end
-	return getMatchingItemsFromContainers(sourceContainer, targetContainer)
-end
+---@param notificationStruct NotificationStruct | nil
+---@return NotificationStruct
+function M.getCleanNotificationStruct(notificationStruct)
+	if notificationStruct == nil then
+		---@class NotificationStruct
+		notificationStruct = {
+			totalConsidered = {
+				count = 0,
+				value = 0,
+				weight = 0,
+			},
+			totalTransferred = {
+				count = 0,
+				value = 0,
+				weight = 0,
+			},
+			tableOfNotAllTransferredTypes = {},
+			listOfNotAllTransferredTypes = {},
+		}
+	else
+		---@cast notificationStruct NotificationStruct
+		notificationStruct.totalConsidered.count = 0
+		notificationStruct.totalConsidered.value = 0
+		notificationStruct.totalConsidered.weight = 0
 
-function M.getItemsFromContainerInTransferOrder(sourceContainer, targetContainer, transferOrder, performOnAllItems)
-	return M.sortItemsToTransferOrder(
-		getItemsFromContainer(sourceContainer, targetContainer, performOnAllItems),
-		transferOrder
-	)
+		notificationStruct.totalTransferred.count = 0
+		notificationStruct.totalTransferred.value = 0
+		notificationStruct.totalTransferred.weight = 0
+
+		notificationStruct.tableOfNotAllTransferredTypes = {}
+		notificationStruct.listOfNotAllTransferredTypes = {}
+	end
+	return notificationStruct
 end
 
 function M.getRemainingCapacity(capacity, weight)

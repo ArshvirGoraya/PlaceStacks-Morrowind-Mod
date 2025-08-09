@@ -12,18 +12,19 @@ Keys = require("scripts.ArshvirGoraya.PlaceStacks.keys")
 Helpers = require("scripts.ArshvirGoraya.PlaceStacks.helpers")
 PerformerHelpers = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.performerHelpers")
 -- Locals
-local tsp = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.takeStacksPerformer")
-local psp = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.placeStacksPerformer")
+local stackActionPerformer = require("scripts.ArshvirGoraya.PlaceStacks.actionPerformer.stackActionPerformer")
 -- Global Variables (read-only in local scripts)
 
 PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
 PlaceStacksGlobals:set("CurrentStackType", Keys.CONSTANT_KEYS.Options.StackType.None)
 PlaceStacksGlobals:setLifeTime(Storage.LIFE_TIME.Temporary) -- removed on exit / on load
 
+NotificationStruct = PerformerHelpers.getCleanNotificationStruct(nil)
+
 local M = {
 	eventHandlers = {
-		performPlaceStacks = psp.performPlaceStacks,
-		performTakeStacks = tsp.performTakeStacks,
+		performPlaceStacks = stackActionPerformer.performPlaceStacks,
+		performTakeStacks = stackActionPerformer.performTakeStacks,
 	},
 }
 

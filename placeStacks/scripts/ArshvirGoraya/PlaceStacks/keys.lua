@@ -22,8 +22,9 @@ M.CONSTANT_KEYS = {
 		TransferOrder = "TransferOrder",
 		ModifierSetting = "ModifierSetting",
 		NotifyCountTransferred = "NotifyCountTransferred",
-		NotifyCountNotTransferred = "NotifyCountNotTransferred",
-		NotifyTypesNotTransferred = "NotifyTypesNotTransferred",
+		NotifyValueTransferred = "NotifyValueTransferred",
+		NotifyWeightTransferred = "NotifyWeightTransferred",
+		NotifyTypesNotAllTransferred = "NotifyTypesNotAllTransferred",
 	},
 	TakeStacks = {
 		KeyBind = "KeyBind",
@@ -145,19 +146,35 @@ M.LOCALIZED_KEYS = {
 				Description = localized("SettingsDescription_NotifyCountTransferred_Place"),
 			},
 		},
-		NotifyCountNotTransferred = {
+		NotifyValueTransferred = {
 			Take = {
-				Name = localized("SettingsNames_NotifyCountNotTransferred_Take"),
-				Description = localized("SettingsDescription_NotifyCountNotTransferred_Take"),
+				Name = localized("SettingsNames_NotifyValueTransferred_Take"),
+				Description = localized("SettingsDescription_NotifyValueTransferred_Take"),
 			},
 			Place = {
-				Name = localized("SettingsNames_NotifyCountNotTransferred_Place"),
-				Description = localized("SettingsDescription_NotifyCountNotTransferred_Place"),
+				Name = localized("SettingsNames_NotifyValueTransferred_Place"),
+				Description = localized("SettingsDescription_NotifyValueTransferred_Place"),
 			},
 		},
-		NotifyTypesNotTransferred = {
-			Name = localized("SettingsNames_NotifyTypesNotTransferred"),
-			Description = localized("SettingsDescription_NotifyTypesNotTransferred"),
+		NotifyWeightTransferred = {
+			Take = {
+				Name = localized("SettingsNames_NotifyWeightTransferred_Take"),
+				Description = localized("SettingsDescription_NotifyWeightTransferred_Take"),
+			},
+			Place = {
+				Name = localized("SettingsNames_NotifyWeightTransferred_Place"),
+				Description = localized("SettingsDescription_NotifyWeightTransferred_Place"),
+			},
+		},
+		NotifyTypesNotAllTransferred = {
+			Take = {
+				Name = localized("SettingsNames_NotifyTypesNotAllTransferred_Take"),
+				Description = localized("SettingsDescription_NotifyTypesNotAllTransferred_Take"),
+			},
+			Place = {
+				Name = localized("SettingsNames_NotifyTypesNotAllTransferred_Place"),
+				Description = localized("SettingsDescription_NotifyTypesNotAllTransferred_Place"),
+			},
 		},
 	},
 	Options = {
@@ -166,6 +183,7 @@ M.LOCALIZED_KEYS = {
 			Always = localized("AutoClose_Always"),
 			Fit = localized("AutoClose_Fit"),
 		},
+		---@class TransferOrder
 		TransferOrder = {
 			Any = localized("TransferOrder_Any"),
 			Valuable = localized("TransferOrder_Valuable"),
@@ -187,8 +205,5 @@ M.LOCALIZED_KEYS = {
 		},
 	},
 }
---
--- DB.log("Localized Keys: ")
--- DB.printTable(M.LOCALIZED_KEYS, 4)
 
 return M
