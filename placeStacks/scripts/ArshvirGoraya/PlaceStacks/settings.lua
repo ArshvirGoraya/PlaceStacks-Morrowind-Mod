@@ -230,7 +230,7 @@ Input.registerAction({
 	type = Input.ACTION_TYPE.Boolean,
 	l10n = l10n,
 	name = Keys.LOCALIZED_KEYS.Settings.TakeStacksKeyBind.Name,
-	description = Keys.LOCALIZED_KEYS.Settings.TakeStacksKeyBind.Description,
+	description = Keys.LOCALIZED_KEYS.Settings.TakeStacksKeyBind.KeyDescription,
 	defaultValue = false,
 })
 Input.registerAction({
@@ -238,7 +238,7 @@ Input.registerAction({
 	type = Input.ACTION_TYPE.Boolean,
 	l10n = l10n,
 	name = Keys.LOCALIZED_KEYS.Settings.PlaceStacksKeyBind.Name,
-	description = Keys.LOCALIZED_KEYS.Settings.PlaceStacksKeyBind.Description,
+	description = Keys.LOCALIZED_KEYS.Settings.PlaceStacksKeyBind.KeyDescription,
 	defaultValue = false,
 })
 

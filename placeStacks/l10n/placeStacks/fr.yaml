@@ -1,0 +1,178 @@
+---
+
+ModName: "Placer des piles"
+ModDescription: |-
+  Inspiré du mécanisme de placement des piles de Valheim.
+
+  - Placez rapidement les objets correspondants ou tous les objets dans des conteneurs.
+
+  - Retirez rapidement les objets correspondants ou tous les objets des conteneurs.
+
+  - Placez/Prenez les objets dans n'importe quel ordre : précieux, moins cher, plus lourd, plus léger.
+
+  Lien du mod: https://nexusmods.com/morrowind/mods/57067
+  Auteur: Arshvir Gorya
+  Traduction: Google Translate. Contact author on nexus page if you can help make it better.
+# CommonBehavior Section
+SectionName_CommonBehavior: "Comportement commun"
+SectionDescription_CommonBehavior: |-
+  Contrôlez le comportement commun du lieu et effectuez des actions de pile.
+# AutoClose
+SettingsNames_AutoClose: "Fermeture automatique"
+SettingsDescription_AutoClose: |-
+  Contrôler si l'interface utilisateur du conteneur se ferme après l'exécution de l'action de la pile.
+
+  - Jamais : ne jamais fermer.
+  - Toujours : toujours fermer.
+  - Ajuster : fermer si tous les éléments pertinents tiennent dans le conteneur.
+AutoClose_Never: "Jamais"
+AutoClose_Always: "Tourjours"
+AutoClose_Fit: "Ajuster"
+# Modifier
+SettingsNames_Modifier: "Touche de modification"
+SettingsDescription_Modifier: |-
+  Appuyez sur la touche Prendre/Placer à côté pour déclencher l'action de modification.
+Modifier_Shift: "Maj"
+Modifier_Ctrl: "Ctrl"
+Modifier_Alt: "Alt"
+Modifier_Super: "Super"
+# TakeStacks Section
+SectionName_TakeStacks: "Prendre des piles"
+SectionDescription_TakeStacks: "Contrôler le comportement de l'action de prise de pile."
+# KeyBind
+SettingsNames_TakeStacksKeyBind: "Prendre le raccourci clavier Stacks"
+SettingsDescription_TakeStacksKeyBind: |-
+  Appuyez lorsque le conteneur est ouvert pour déclencher l'action.
+KeyDescription_TakeStacksKeyBind: |-
+  Passer à l'action
+
+SettingsNames_PlaceStacksKeyBind: "Raccourci clavier Place Stacks"
+SettingsDescription_PlaceStacksKeyBind: |-
+  Appuyez lorsque le conteneur est ouvert pour déclencher l'action de placement.
+KeysDescription_PlaceStacksKeyBind: |-
+  Placer l'action
+
+SettingsNames_TransferOrder_Take: "Prendre la commande"
+SettingsDescription_TransferOrder_Take: |-
+  Contrôle l'ordre de prise des objets:
+  - Valeur : les objets les plus précieux en premier.
+  - ValeurParPoids : le rapport valeur/poids le plus élevé en premier.
+    - Ensemble d'objets de plus grande valeur que l'option « Valeur ».
+  - Moins cher : les objets les moins chers en premier.
+  - Plus lourd : le moins d'objets possible en prenant d'abord les objets les plus lourds.
+  - Plus léger : le plus d'objets possible en prenant d'abord les objets les plus légers.
+    - Ensemble d'objets plus lourd que l'option « Plus lourd ».
+
+SettingsNames_TransferOrder_Place: "Passer une commande"
+SettingsDescription_TransferOrder_Place: |-
+  Contrôle l'ordre de placement des objets :
+  - Valeur : les objets les plus précieux en premier.
+  - ValeurParPoids : le rapport valeur/poids le plus élevé en premier.
+    - L'ensemble d'objets aura une valeur supérieure à celle de l'option « Valeur ».
+  - Moins cher : les objets les moins chers en premier.
+  - Plus lourd : le moins d'objets possible en commençant par les plus lourds.
+  - Plus léger : le plus d'objets possible en commençant par les plus légers.
+    - L'ensemble d'objets aura une valeur supérieure à celle de l'option « Plus lourd ».
+
+TransferOrder_Any: "N'importe lequel"
+TransferOrder_Valuable: "Précieux"
+TransferOrder_ValuableByWeight: "ValeurAuPoids"
+TransferOrder_Lightest: "Le plus léger"
+TransferOrder_Cheapest: "Le moins cher"
+TransferOrder_Heaviest: "Le plus lourd"
+
+SettingsNames_AllowOverEncumber: "Autoriser le surencombrement"
+SettingsDescription_AllowOverEncumber: |-
+  - Non : prenez autant d’articles pertinents que vous pouvez transporter sans les encombrer.
+  - Oui : prenez tous les articles pertinents et autorisez le surencombrement.
+
+SettingsNames_NotifyCountTransferred_Take: |-
+  Afficher le nombre de prises
+SettingsNames_NotifyCountTransferred_Place: |-
+  Afficher le nombre de personnes placées
+SettingsDescription_NotifyCountTransferred_Take: |-
+  - Oui : ajoute le nombre d'éléments retirés du conteneur à la notification.
+SettingsDescription_NotifyCountTransferred_Place: |-
+  - Oui : ajoute le nombre d'éléments placés dans le conteneur à la notification.
+
+SettingsNames_NotifyValueTransferred_Take: |-
+  Afficher la valeur prise
+SettingsNames_NotifyValueTransferred_Place: |-
+  Afficher la valeur placée
+SettingsDescription_NotifyValueTransferred_Take: |-
+  - Oui : ajoute la valeur des éléments retirés du conteneur à la notification.
+SettingsDescription_NotifyValueTransferred_Place: |-
+  - Oui : ajoute la valeur des éléments placés dans le conteneur à la notification.
+
+SettingsNames_NotifyWeightTransferred_Take: |-
+  Afficher le poids pris
+SettingsNames_NotifyWeightTransferred_Place: |-
+  Afficher le poids placé
+SettingsDescription_NotifyWeightTransferred_Take: |-
+  - Oui : ajoute le poids des articles retirés du conteneur à la notification.
+SettingsDescription_NotifyWeightTransferred_Place: |-
+  - Oui : ajoute le poids des articles placés dans le conteneur à la notification.
+
+SettingsNames_NotifyTypesNotAllTransferred_Take: |-
+  Afficher les types d'articles non pris
+SettingsNames_NotifyTypesNotAllTransferred_Place: |-
+  Afficher les types d'éléments non placés
+SettingsDescription_NotifyTypesNotAllTransferred_Take: |-
+  - Oui : ajoute une liste de types d'éléments qui n'ont pas pu être pris en compte dans la notification.
+SettingsDescription_NotifyTypesNotAllTransferred_Place: |-
+  - Oui : ajoute une liste de types d'éléments qui n'ont pas pu être placés dans la notification.
+
+#
+SectionName_PlaceStacks: "Placer des piles"
+SectionDescription_PlaceStacks: "Contrôler le comportement de l'action de pile de lieux."
+SettingsNames_HoldMS: "Les piles de lieux contiennent des millisecondes"
+SettingsDescription_HoldMS: |-
+  - Maintenez la touche « Activer » enfoncée au-dessus du conteneur pour que Microsoft déclenche l'action de placement de la pile.
+  - Appuyez sur le bouton de modification à côté pour déclencher l'action de modification de placement de la pile.
+  - Réglez sur 0 pour désactiver.
+
+SettingsNames_DepositEquipped: "Déposer des objets équipés"
+SettingsDescription_DepositEquipped: |-
+  - Non : ne déposera pas les objets équipés.
+
+SettingsNames_DepositMoney: "Deposit Money"
+SettingsDescription_DepositMoney: |-
+  Déposer de l'argent
+
+SettingsNames_ModifierSetting: "Réglage du modificateur"
+SettingsDescription_ModifierSetting: |-
+  Contrôle l'action de la touche de modification lorsqu'elle est maintenue enfoncée en même temps que la touche d'action.
+  - Par défaut :
+    - Appuyer avec la touche de modification = prendre/placer TOUS les éléments
+    - Appuyer sans la touche de modification = prendre/placer les éléments correspondants
+  - Inverser : Inverse la valeur par défaut
+    - Appuyer avec la touche de modification = prendre/placer les éléments correspondants
+    - Appuyer sans la touche de modification = prendre/placer TOUS les éléments
+  - Désactivé : La touche de modification ne fait rien
+  - Toujours prendre/placer les éléments correspondants
+
+ModifierSetting_Default: "Défaut"
+ModifierSetting_Invert: "Inverser"
+ModifierSetting_Disable: "Désactiver"
+
+Notification_Count_Take_All: |-
+  Pris: {transferred}
+Notification_Count_Place_All: |-
+  Mis: {transferred}
+Notification_Value_All: |-
+  ${transferred}
+Notification_Weight_All: |-
+  {transferred}kg
+
+Notification_Count_Take: |-
+  Pris: {transferred}/{considered}
+Notification_Count_Place: |-
+  Mis: {transferred}/{considered}
+Notification_Value: |-
+  ${transferred}/${considered}
+Notification_Weight: |-
+  {transferred}kg/{considered}kg
+Notification_NotAllTransferredPrepend_Take: |-
+  Peux pas:
+Notification_NotAllTransferredPrepend_Place: |-
+  Peux pas:

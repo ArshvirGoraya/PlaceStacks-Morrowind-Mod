@@ -42,10 +42,14 @@ SectionDescription_TakeStacks: "Control behavior of the take stack action."
 SettingsNames_TakeStacksKeyBind: "Take Stacks Key Bind"
 SettingsDescription_TakeStacksKeyBind: |-
   Press when container is open to trigger the take action.
+KeyDescription_TakeStacksKeyBind: |-
+  Take action
 
 SettingsNames_PlaceStacksKeyBind: "Place Stacks Key Bind"
 SettingsDescription_PlaceStacksKeyBind: |-
   Press when container is open to trigger the place action.
+KeyDescription_PlaceStacksKeyBind: |-
+  Place action
 
 SettingsNames_TransferOrder_Take: "Take Order"
 SettingsDescription_TransferOrder_Take: |-
@@ -88,7 +92,7 @@ SettingsNames_NotifyCountTransferred_Place: |-
 SettingsDescription_NotifyCountTransferred_Take: |-
   - Yes: adds number of items taken from container to notification.
 SettingsDescription_NotifyCountTransferred_Place: |-
-  - Yes: adds number if items placed into container to notification.
+  - Yes: adds number of items placed into container to notification.
 
 SettingsNames_NotifyValueTransferred_Take: |-
   Show value taken
@@ -168,6 +172,6 @@ Notification_Value: |-
 Notification_Weight: |-
   {transferred}kg/{considered}kg
 Notification_NotAllTransferredPrepend_Take: |-
-  No fit:
+  Can't:
 Notification_NotAllTransferredPrepend_Place: |-
-  No fit:
+  Can't:

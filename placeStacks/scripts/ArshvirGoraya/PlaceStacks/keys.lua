@@ -4,6 +4,9 @@ local l10n = "placeStacks"
 
 local localized = core.l10n(l10n, "en") -- English is the fallback language
 
+-- local vfs = require("openmw.vfs")
+-- local localizedPath = "l10n\\placeStacks"
+
 local M = {}
 
 M.CONSTANT_KEYS = {
@@ -97,10 +100,12 @@ M.LOCALIZED_KEYS = {
 		TakeStacksKeyBind = {
 			Name = localized("SettingsNames_TakeStacksKeyBind"),
 			Description = localized("SettingsDescription_TakeStacksKeyBind"),
+			KeyDescription = localized("KeyDescription_TakeStacksKeyBind"),
 		},
 		PlaceStacksKeyBind = {
 			Name = localized("SettingsNames_PlaceStacksKeyBind"),
 			Description = localized("SettingsDescription_PlaceStacksKeyBind"),
+			KeyDescription = localized("KeyDescription_PlaceStacksKeyBind"),
 		},
 		AllowOverEncumber = {
 			Name = localized("SettingsNames_AllowOverEncumber"),
@@ -187,11 +192,6 @@ M.LOCALIZED_KEYS = {
 		},
 	},
 	Options = {
-		AutoClose = {
-			Never = localized("AutoClose_Never"),
-			Always = localized("AutoClose_Always"),
-			Fit = localized("AutoClose_Fit"),
-		},
 		---@class TransferOrder
 		TransferOrder = {
 			Any = localized("TransferOrder_Any"),
@@ -200,6 +200,11 @@ M.LOCALIZED_KEYS = {
 			Lightest = localized("TransferOrder_Lightest"),
 			Cheapest = localized("TransferOrder_Cheapest"),
 			Heaviest = localized("TransferOrder_Heaviest"),
+		},
+		AutoClose = {
+			Never = localized("AutoClose_Never"),
+			Always = localized("AutoClose_Always"),
+			Fit = localized("AutoClose_Fit"),
 		},
 		ModifierSetting = {
 			Default = localized("ModifierSetting_Default"),
