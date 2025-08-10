@@ -98,6 +98,7 @@ end
 
 local UIModeChanged = function(data) --@ ENTRY
 	if DetectorHelpers.detectContainerOpened(data) then
+		DB.log("container opened")
 		FocusedContainer = data.arg
 		psd.startDetectingPlaceStacksHoldIfEnabled(settingsTablePlaceStacks.HoldMS)
 	end

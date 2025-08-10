@@ -157,13 +157,27 @@ local function itemStackFitsCapacity(capacity, item)
 	return capacity >= (M.getItemWeight(item) * item.count)
 end
 
+local function containerIsDeadActor(container, Types)
+	return Types.Actor.objectIsInstance(container) and Types.Actor.isDead(container)
+end
+
+---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
+function M.canTreatTargetContainerAsInfinite(stackActionArgs, stackType, Types)
+	if stackType == Keys.CONSTANT_KEYS.Options.StackType.Take then
+		return stackActionArgs.allowOverEncumbrance
+	end
+	if stackType == Keys.CONSTANT_KEYS.Options.StackType.Place then
+		return containerIsDeadActor(stackActionArgs.targetContainer, Types)
+	end
+end
+
 ---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
 ---@param notificationStruct NotificationStruct
 local function filterUserDataItemsIntoTable(tbl, userDataItems, stackActionArgs, notificationStruct, stackType, Types)
 	for _, item in pairs(userDataItems) do
 		if isItemConsidered(item, stackActionArgs, stackType, Types) then
 			if
-				(stackType == Keys.CONSTANT_KEYS.Options.StackType.Take and stackActionArgs.allowOverEncumbrance)
+				M.canTreatTargetContainerAsInfinite(stackActionArgs, stackType, Types)
 				or itemFitsCapacity(stackActionArgs.startingTargetCapacity, item)
 			then
 				-- DB.log("transferable Item: ", M.getItemName(item))
@@ -296,9 +310,9 @@ function M.getMoveableItemCountFromStack(capacity, item)
 	if itemStackFitsCapacity(capacity, item) then
 		return item.count
 	else
-		local stackWeight = PerformerHelpers.getItemWeight(item) * item.count
-		local moveableItemCount = math.floor(capacity / stackWeight)
-		moveableItemCount = math.max(moveableItemCount, 0)
+		local moveableItemCount = math.floor(capacity / PerformerHelpers.getItemWeight(item))
+		moveableItemCount = math.min(item.count, moveableItemCount)
+		moveableItemCount = math.max(moveableItemCount, 0) -- just in case the capacity is negative?
 		return moveableItemCount
 	end
 end

@@ -67,7 +67,7 @@ local function stackAction(stackType)
 	---@diagnostic disable-next-line: undefined-field
 	local targetInventory = stackActionArgs.targetContainer.type.inventory(stackActionArgs.targetContainer)
 	if
-		(stackType == Keys.CONSTANT_KEYS.Options.StackType.Take and stackActionArgs.allowOverEncumbrance)
+		PerformerHelpers.canTreatTargetContainerAsInfinite(stackActionArgs, stackType, Types)
 		or PerformerHelpers.allItemsFitIntoContainer(
 			stackActionArgs.startingTargetCapacity,
 			NotificationStruct.totalConsidered.weight
@@ -93,7 +93,6 @@ local function stackAction(stackType)
 
 	for _, item in ipairs(stackActionArgs.items) do
 		local moveableItemCount = PerformerHelpers.getMoveableItemCountFromStack(workingCapacity, item)
-		workingCapacity = workingCapacity - PerformerHelpers.getItemWeight(item) * moveableItemCount
 		if moveableItemCount > 0 then
 			item:split(moveableItemCount):moveInto(targetInventory) ---@diagnostic disable-line: undefined-field
 			PerformerHelpers.updateNotificationStructTransferred(
@@ -103,6 +102,7 @@ local function stackAction(stackType)
 				moveableItemCount
 			)
 		end
+		workingCapacity = workingCapacity - PerformerHelpers.getItemWeight(item) * moveableItemCount
 	end
 end
 

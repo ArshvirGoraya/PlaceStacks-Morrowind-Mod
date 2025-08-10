@@ -23,6 +23,7 @@ function M.isValidContainerOpen(focusedContainer, types, uiMode)
 		return false
 	end
 	if not M.isContainerValid(focusedContainer, types) then
+		-- DB.log("valid copntainer not open")
 		return false
 	end
 	return true
@@ -33,7 +34,8 @@ function M.isContainerValid(container, types)
 		return false
 	end
 	if types.Actor.objectIsInstance(container) then
-		return not types.Actor.isDead(container)
+		-- DB.log("container is actor:")
+		return types.Actor.isDead(container)
 	end
 	if not types.Container.objectIsInstance(container) then
 		return false
