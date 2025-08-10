@@ -14,11 +14,11 @@ local function printAllItems(items)
 	end
 end
 
-local function getItemWeight(item)
+function M.getItemWeight(item)
 	return item.type.record(item).weight
 end
 
-local function getItemValue(item)
+function M.getItemValue(item)
 	return item.type.record(item).value
 end
 
@@ -30,12 +30,12 @@ local function getItemRecordID(item)
 	return item.type.record(item).id
 end
 
-local function getItemType(item)
+function M.getItemType(item)
 	return tostring(item.type)
 end
 
 local function getItemValueWeightRatio(item)
-	return getItemValue(item) / getItemWeight(item)
+	return M.getItemValue(item) / M.getItemWeight(item)
 end
 
 function M.sortItemsIntoTransferOrder(items, transferOrder)
@@ -43,10 +43,10 @@ function M.sortItemsIntoTransferOrder(items, transferOrder)
 	-- >: decending (greatest to smallest)
 	-- <: ascending (smallest to greatest)
 
-	if DB.logging then
-		DB.log("items before ordering: ", transferOrder)
-		printAllItems(items)
-	end
+	-- if DB.logging then
+	-- 	DB.log("items before ordering: ", transferOrder)
+	-- 	printAllItems(items)
+	-- end
 
 	if transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.ValuableByWeight then
 		-- 0/1 knapsack problem - greedy solution: does not guarantee best set of items:
@@ -65,26 +65,26 @@ function M.sortItemsIntoTransferOrder(items, transferOrder)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Heaviest then
 		table.sort(items, function(a, b)
-			return getItemWeight(a) > getItemWeight(b)
+			return M.getItemWeight(a) > M.getItemWeight(b)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Lightest then
 		table.sort(items, function(a, b)
-			return getItemWeight(a) < getItemWeight(b)
+			return M.getItemWeight(a) < M.getItemWeight(b)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Valuable then
 		table.sort(items, function(a, b)
-			return getItemValue(a) > getItemValue(b)
+			return M.getItemValue(a) > M.getItemValue(b)
 		end)
 	elseif transferOrder == Keys.LOCALIZED_KEYS.Options.TransferOrder.Cheapest then
 		table.sort(items, function(a, b)
-			return getItemValue(a) < getItemValue(b)
+			return M.getItemValue(a) < M.getItemValue(b)
 		end)
 	end
 
-	if DB.logging then
-		DB.log("items after ordering=====================")
-		printAllItems(items)
-	end
+	-- if DB.logging then
+	-- 	DB.log("items after ordering=====================")
+	-- 	printAllItems(items)
+	-- end
 
 	return items
 end
@@ -100,16 +100,17 @@ end
 local function isItemConsidered(item, stackActionArgs, stackType, Types)
 	if stackType == Keys.CONSTANT_KEYS.Options.StackType.Place then
 		---@cast stackActionArgs PlaceStacksArgs
-		if not stackActionArgs.depositEquipped then
-			return not isItemEquipped(item, stackActionArgs.player, Types)
+		if not stackActionArgs.depositEquipped and isItemEquipped(item, stackActionArgs.player, Types) then
+			return false
 		end
-		if not stackActionArgs.depositMoney then
-			return not isItemMoney(item)
+		if not stackActionArgs.depositMoney and isItemMoney(item) then
+			return false
 		end
 	else
 		---@cast stackActionArgs TakeStacksArgs
 		return true
 	end
+	return true
 end
 
 function M.getStartingContainerCapacity(container, Types)
@@ -144,12 +145,16 @@ local function itemFitsCapacity(capacity, item)
 	-- 			.. capacity
 	-- 			.. "} >= "
 	-- 			.. "item weight {"
-	-- 			.. getItemWeight(item)
+	-- 			.. M.getItemWeight(item)
 	-- 			.. "}: "
-	-- 			.. tostring(capacity >= getItemWeight(item))
+	-- 			.. tostring(capacity >= M.getItemWeight(item))
 	-- 	)
 	-- end
-	return capacity >= getItemWeight(item)
+	return capacity >= M.getItemWeight(item)
+end
+
+local function itemStackFitsCapacity(capacity, item)
+	return capacity >= (M.getItemWeight(item) * item.count)
 end
 
 ---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
@@ -166,7 +171,7 @@ local function filterUserDataItemsIntoTable(tbl, userDataItems, stackActionArgs,
 				-- else
 				-- 	DB.log("item not transferable: ", M.getItemName(item))
 			end
-			M.updateNotificationStruct(notificationStruct, item, stackActionArgs)
+			M.updateNotificationStructConsidered(notificationStruct, item, stackActionArgs)
 		end
 	end
 	return tbl
@@ -174,23 +179,43 @@ end
 
 ---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
 ---@param notificationStruct NotificationStruct
-function M.updateNotificationStruct(notificationStruct, item, stackActionArgs, stackSize)
+function M.updateNotificationStructConsidered(notificationStruct, item, stackActionArgs, stackSize)
 	stackSize = stackSize or item.count
 
-	if stackActionArgs.notifyTypesNotAllTransferred then
-		notificationStruct.tableOfNotAllTransferredTypes[getItemType(item)] = true
-	end
 	if stackActionArgs.notifyCountTransferred then
 		notificationStruct.totalConsidered.count = notificationStruct.totalConsidered.count + stackSize
 	end
 	if stackActionArgs.notifyValueTransferred then
 		notificationStruct.totalConsidered.value = notificationStruct.totalConsidered.value
-			+ getItemValue(item) * stackSize
+			+ M.getItemValue(item) * stackSize
 	end
-
+	if stackActionArgs.notifyTypesNotAllTransferred then
+		notificationStruct.tableOfNotAllTransferredTypes[M.getItemType(item)] = true
+	end
 	-- weight value is used regardless of weight notifications setting
 	notificationStruct.totalConsidered.weight = notificationStruct.totalConsidered.weight
-		+ getItemWeight(item) * stackSize
+		+ M.getItemWeight(item) * stackSize
+end
+
+---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
+---@param notificationStruct NotificationStruct
+function M.updateNotificationStructTransferred(notificationStruct, item, stackActionArgs, movedCount)
+	if stackActionArgs.notifyCountTransferred then
+		notificationStruct.totalTransferred.count = notificationStruct.totalTransferred.count + movedCount
+	end
+	if stackActionArgs.notifyValueTransferred then
+		notificationStruct.totalTransferred.value = notificationStruct.totalTransferred.value
+			+ movedCount * M.getItemValue(item)
+	end
+	if stackActionArgs.notifyWeightTransferred then
+		notificationStruct.totalTransferred.weight = notificationStruct.totalTransferred.weight
+			+ movedCount * PerformerHelpers.getItemWeight(item)
+	end
+	if stackActionArgs.notifyTypesNotAllTransferred then
+		if not movedCount == item.count then -- if not whole stack moved, not all transferred
+			notificationStruct.tableOfNotAllTransferredTypes[PerformerHelpers.getItemType(item)] = true
+		end
+	end
 end
 
 ---@param stackActionArgs PlaceStacksArgs | TakeStacksArgs
@@ -247,7 +272,6 @@ function M.getCleanNotificationStruct(notificationStruct)
 				weight = 0,
 			},
 			tableOfNotAllTransferredTypes = {},
-			listOfNotAllTransferredTypes = {},
 		}
 	else
 		---@cast notificationStruct NotificationStruct
@@ -260,7 +284,6 @@ function M.getCleanNotificationStruct(notificationStruct)
 		notificationStruct.totalTransferred.weight = 0
 
 		notificationStruct.tableOfNotAllTransferredTypes = {}
-		notificationStruct.listOfNotAllTransferredTypes = {}
 	end
 	return notificationStruct
 end
@@ -269,14 +292,15 @@ function M.getRemainingCapacity(capacity, weight)
 	return capacity - weight
 end
 
-function M.getMoveableItemsCountFromStack(item, capacity)
-	local itemWeight = item.type.record(item).weight
-	local moveableItemCount = math.floor(capacity / itemWeight) -- how many items of this weight can fit into this container?
-	moveableItemCount = math.max(moveableItemCount, 0)
-	if moveableItemCount >= item.count then -- all items in item stack can fit
-		moveableItemCount = item.count
+function M.getMoveableItemCountFromStack(capacity, item)
+	if itemStackFitsCapacity(capacity, item) then
+		return item.count
+	else
+		local stackWeight = PerformerHelpers.getItemWeight(item) * item.count
+		local moveableItemCount = math.floor(capacity / stackWeight)
+		moveableItemCount = math.max(moveableItemCount, 0)
+		return moveableItemCount
 	end
-	return moveableItemCount
 end
 
 function M.performAutoClose()

@@ -77,19 +77,33 @@ local function stackAction(stackType)
 		-- transfer all items
 		for _, item in pairs(stackActionArgs.items) do
 			DB.log("transfering item: ", PerformerHelpers.getItemName(item))
-			---@diagnostic disable-next-line: undefined-field
-			item:moveInto(targetInventory)
+			item:moveInto(targetInventory) ---@diagnostic disable-line: undefined-field
 		end
 		NotificationStruct.totalTransferred.count = NotificationStruct.totalConsidered.count
 		NotificationStruct.totalTransferred.value = NotificationStruct.totalConsidered.value
 		NotificationStruct.totalTransferred.weight = NotificationStruct.totalConsidered.weight
-		NotificationStruct.listOfNotAllTransferredTypes = {}
+		NotificationStruct.tableOfNotAllTransferredTypes = {}
 		return
 	end
 	-- Transfer items until weight is reached
 	DB.log("all items cant transfer (must sort)")
 	stackActionArgs.items =
 		PerformerHelpers.sortItemsIntoTransferOrder(stackActionArgs.items, stackActionArgs.transferOrder)
+	local workingCapacity = stackActionArgs.startingTargetCapacity
+
+	for _, item in ipairs(stackActionArgs.items) do
+		local moveableItemCount = PerformerHelpers.getMoveableItemCountFromStack(workingCapacity, item)
+		workingCapacity = workingCapacity - PerformerHelpers.getItemWeight(item) * moveableItemCount
+		if moveableItemCount > 0 then
+			item:split(moveableItemCount):moveInto(targetInventory) ---@diagnostic disable-line: undefined-field
+			PerformerHelpers.updateNotificationStructTransferred(
+				NotificationStruct,
+				item,
+				stackActionArgs,
+				moveableItemCount
+			)
+		end
+	end
 end
 
 local function performStackAction(args, stackType)
@@ -108,6 +122,10 @@ local function performStackAction(args, stackType)
 	stackAction(stackType)
 	-- performPlaceStacksNotification()
 	-- PerformerHelpers.performAutoClose()
+	player:sendEvent("NotifyAndAutoClose", {
+		NotificationStruct,
+		stackType,
+	})
 	PlaceStacksGlobals:set("CurrentStackType", Keys.CONSTANT_KEYS.Options.StackType.None)
 end
 

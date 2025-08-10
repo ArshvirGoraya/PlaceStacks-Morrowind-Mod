@@ -8,6 +8,7 @@ Input = require("openmw.input")
 Storage = require("openmw.storage")
 local player = require("openmw.self")
 local async = require("openmw.async")
+local ui = require("openmw.ui")
 --
 PlaceStacksGlobals = Storage.globalSection("PlaceStacksGlobals")
 -- Custom API Globals
@@ -102,9 +103,50 @@ local UIModeChanged = function(data) --@ ENTRY
 	end
 end
 
+local function notify(stackActionSettings, notificationStruct, stackType)
+	local notificationString =
+		DetectorHelpers.buildNotificationString(stackActionSettings, notificationStruct, stackType)
+	ui.showMessage(notificationString)
+end
+
+local function closeContainer()
+	I.UI.setMode() -- set all ui to nothing
+end
+
+local function refreshContainer()
+	I.UI.setMode("Container", { target = FocusedContainer }) -- will call uiModeChanged!
+end
+
+---@param notificationStruct NotificationStruct
+local function autoClose(commonSettings, notificationStruct)
+	if commonSettings.AutoClose == Keys.LOCALIZED_KEYS.Options.AutoClose.Never then
+		refreshContainer()
+	elseif commonSettings.AutoClose == Keys.LOCALIZED_KEYS.Options.AutoClose.Always then
+		closeContainer()
+	elseif commonSettings.AutoClose == Keys.LOCALIZED_KEYS.Options.AutoClose.Fit then
+		local allTransferred = notificationStruct.totalTransferred.count == notificationStruct.totalConsidered.count
+		if allTransferred then
+			closeContainer()
+		else
+			refreshContainer()
+		end
+	end
+end
+
+local function notifyAndAutoClose(args)
+	local notificationStruct, stackType = table.unpack(args)
+
+	local stackActionSettings = settingsTableTakeStacks
+	if stackType == Keys.CONSTANT_KEYS.Options.StackType.Place then
+		stackActionSettings = settingsTablePlaceStacks
+	end
+	notify(stackActionSettings, notificationStruct, stackType)
+	autoClose(settingsTableCommonBehavior, notificationStruct)
+end
+
 --
 local M = {
-	eventHandlers = { UiModeChanged = UIModeChanged },
+	eventHandlers = { UiModeChanged = UIModeChanged, NotifyAndAutoClose = notifyAndAutoClose },
 	engineHandlers = { onFrame = onFrame, onKeyPress = onKeyPress },
 }
 return M

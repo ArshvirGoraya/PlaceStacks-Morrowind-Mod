@@ -45,4 +45,76 @@ function M.cancelDetectionThisFrame(focusedContainer, Types, uiMode, currentStac
 	return false
 end
 
+---@param notificationStruct NotificationStruct
+function M.buildNotificationString(stackActionSettings, notificationStruct, stackType)
+	local allTransferred = notificationStruct.totalTransferred.count == notificationStruct.totalConsidered.count
+
+	if notificationStruct.totalConsidered.count == 0 then
+		return Keys.getLocalizedNotification(
+			Keys.CONSTANT_KEYS.Options.Notification.Count,
+			notificationStruct,
+			stackType,
+			allTransferred
+		)
+	end
+
+	local stringsTable = {}
+
+	if stackActionSettings.NotifyCountTransferred then
+		table.insert(
+			stringsTable,
+			Keys.getLocalizedNotification(
+				Keys.CONSTANT_KEYS.Options.Notification.Count,
+				notificationStruct,
+				stackType,
+				allTransferred
+			)
+		)
+	end
+	if stackActionSettings.NotifyValueTransferred then
+		table.insert(
+			stringsTable,
+			Keys.getLocalizedNotification(
+				Keys.CONSTANT_KEYS.Options.Notification.Value,
+				notificationStruct,
+				stackType,
+				allTransferred
+			)
+		)
+	end
+	if stackActionSettings.NotifyWeightTransferred then
+		table.insert(
+			stringsTable,
+			Keys.getLocalizedNotification(
+				Keys.CONSTANT_KEYS.Options.Notification.Weight,
+				notificationStruct,
+				stackType,
+				allTransferred
+			)
+		)
+	end
+
+	local stringNotification
+
+	if allTransferred then
+		stringNotification = table.concat(stringsTable, ", ")
+	else
+		stringNotification = table.concat(stringsTable, "\n")
+
+		if stackActionSettings.NotifyTypesNotAllTransferred then
+			local notAllTransferredString = Keys.getLocalizedNotification(
+				Keys.CONSTANT_KEYS.Options.Notification.NotAllTransferred,
+				notificationStruct,
+				stackType,
+				allTransferred
+			)
+			if notAllTransferredString ~= "" then
+				stringNotification = stringNotification .. "\n" .. notAllTransferredString
+			end
+		end
+	end
+
+	return stringNotification
+end
+
 return M

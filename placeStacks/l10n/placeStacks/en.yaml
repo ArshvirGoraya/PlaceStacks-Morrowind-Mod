@@ -149,3 +149,25 @@ SettingsDescription_ModifierSetting: |-
 ModifierSetting_Default: "Default"
 ModifierSetting_Invert: "Invert"
 ModifierSetting_Disable: "Disable"
+
+Notification_Count_Take_All: |-
+  Taken: {transferred}
+Notification_Count_Place_All: |-
+  Placed: {transferred}
+Notification_Value_All: |-
+  ${transferred}
+Notification_Weight_All: |-
+  {transferred}kg
+
+Notification_Count_Take: |-
+  Taken: {transferred}/{considered}
+Notification_Count_Place: |-
+  Placed: {transferred}/{considered}
+Notification_Value: |-
+  ${transferred}/${considered}
+Notification_Weight: |-
+  {transferred}kg/{considered}kg
+Notification_NotAllTransferredPrepend_Take: |-
+  No fit:
+Notification_NotAllTransferredPrepend_Place: |-
+  No fit:

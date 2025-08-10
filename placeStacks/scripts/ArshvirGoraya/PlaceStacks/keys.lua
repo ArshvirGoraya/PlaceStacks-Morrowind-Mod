@@ -42,12 +42,21 @@ M.CONSTANT_KEYS = {
 	},
 	Options = {
 		StackType = { None = "None", Place = "Place", Take = "Take" },
+		Notification = {
+			Count = "Count",
+			Value = "Value",
+			Weight = "Weight",
+			NotAllTransferred = "NotAllTransferred",
+		},
 	},
 	RecordIDs = {
 		gold = "gold_001",
 	},
+	Notifications = {
+		-- MAX_NOTIFICATION_STRING_SIZE = 40, -- can do 46 but adding 6 space for character width differences for different languages maybe
+		MAX_NOTIFICATION_STRING_SIZE = 46,
+	},
 }
-
 M.LOCALIZED_KEYS = {
 	ModName = localized("ModName"),
 	ModDescription = localized("ModDescription"),
@@ -205,5 +214,71 @@ M.LOCALIZED_KEYS = {
 		},
 	},
 }
+
+---@param notificationStruct NotificationStruct
+function M.getLocalizedNotification(notificationType, notificationStruct, stackType, allTransferred)
+	if notificationType == M.CONSTANT_KEYS.Options.Notification.Count then
+		if stackType == M.CONSTANT_KEYS.Options.StackType.Place then
+			if allTransferred then
+				return localized(
+					"Notification_Count_Place_All",
+					{ transferred = notificationStruct.totalTransferred.count }
+				)
+			end
+			return localized("Notification_Count_Place", {
+				transferred = notificationStruct.totalTransferred.count,
+				considered = notificationStruct.totalConsidered.count,
+			})
+		else
+			if allTransferred then
+				return localized(
+					"Notification_Count_Take_All",
+					{ transferred = notificationStruct.totalTransferred.count }
+				)
+			end
+			return localized("Notification_Count_Take", {
+				transferred = notificationStruct.totalTransferred.count,
+				considered = notificationStruct.totalConsidered.count,
+			})
+		end
+	elseif notificationType == M.CONSTANT_KEYS.Options.Notification.Value then
+		if allTransferred then
+			return localized("Notification_Value_All", { transferred = notificationStruct.totalTransferred.value })
+		end
+		return localized("Notification_Value", {
+			transferred = notificationStruct.totalTransferred.value,
+			considered = notificationStruct.totalConsidered.value,
+		})
+	elseif notificationType == M.CONSTANT_KEYS.Options.Notification.Weight then
+		if allTransferred then
+			return localized("Notification_Weight_All", { transferred = notificationStruct.totalTransferred.weight })
+		end
+		return localized("Notification_Weight", {
+			transferred = notificationStruct.totalTransferred.weight,
+			considered = notificationStruct.totalConsidered.weight,
+		})
+	elseif notificationType == M.CONSTANT_KEYS.Options.Notification.NotAllTransferred then
+		local maxListStringsize = M.CONSTANT_KEYS.Notifications.MAX_NOTIFICATION_STRING_SIZE
+		local typesList = Helpers.tableKeysToList(notificationStruct.tableOfNotAllTransferredTypes)
+
+		local typesString = table.concat(typesList, ", ")
+
+		local prependString = localized("Notification_NotAllTransferredPrepend_Take")
+		if stackType == M.CONSTANT_KEYS.Options.StackType.Place then
+			prependString = localized("Notification_NotAllTransferredPrepend_Place")
+		end
+
+		local listString = ""
+		if #typesList == 1 then
+			maxListStringsize = maxListStringsize - (#prependString + 1) -- 1 = space
+			listString = prependString .. " " .. Helpers.elipseListString(typesString, maxListStringsize)
+		else
+			maxListStringsize = maxListStringsize - (#prependString + 3) -- 3 = space and surrounding [ ]
+			listString = prependString .. " [" .. Helpers.elipseListString(typesString, maxListStringsize) .. "]"
+		end
+		DB.log("listString Size: ", #listString)
+		return listString
+	end
+end
 
 return M

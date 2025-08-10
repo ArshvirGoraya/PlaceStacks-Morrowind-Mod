@@ -9,14 +9,9 @@ function M.canPerformStackAction(focusedContainer, types, uiMode, currentStackTy
 	end
 
 	if currentStackType ~= Keys.CONSTANT_KEYS.Options.StackType.None then
-		-- if DB.logging then
-		-- 	DB.log(
-		-- 		"attempt to do stack action"
-		-- 			.. " stacks while "
-		-- 			.. currentStackType
-		-- 			.. " stacks is already running"
-		-- 	)
-		-- end
+		if DB.logging then
+			DB.log("attempt to do stack action" .. " stacks while " .. currentStackType .. " stacks is already running")
+		end
 		return false
 	end
 	return true
@@ -45,6 +40,62 @@ function M.isContainerValid(container, types)
 	end
 
 	return true
+end
+
+function M.convertTableKeyListToMaxLengthString(tbl, maxStringLength, wordCutOffLength)
+	local elpises = "..."
+	local comma = ", "
+	local stringList = {}
+	local remainingStringLength = maxStringLength
+
+	local workingString = ""
+	for key, _ in pairs(tbl) do
+		DB.log("remainingStringLength: ", remainingStringLength)
+		if remainingStringLength >= #key + #comma + wordCutOffLength + #elpises then
+			workingString = key .. comma
+			table.insert(stringList, workingString)
+			remainingStringLength = remainingStringLength - (#key + #comma)
+		elseif remainingStringLength >= wordCutOffLength + #elpises then
+			workingString = string.sub(key, 0, wordCutOffLength) .. elpises
+			table.insert(stringList, workingString)
+			remainingStringLength = remainingStringLength - (wordCutOffLength + #elpises)
+			break
+		end
+	end
+
+	if DB.logging then
+		local finishedString = table.concat(stringList)
+		DB.log("string length: ", #finishedString)
+		return finishedString
+	end
+
+	return table.concat(stringList)
+end
+
+function M.elipseListString(str, maxSize)
+	if #str <= maxSize then
+		return str
+	else
+		local elipses = "..."
+		str = string.sub(str, 0, maxSize - #elipses)
+
+		DB.log("ends with: " .. string.sub(str, -2))
+		if string.sub(str, -1) == "," then
+			str = string.sub(str, 0, -2)
+		elseif string.sub(str, -2) == ", " then
+			str = string.sub(str, 0, -3)
+		end
+		return str .. elipses
+	end
+end
+
+function M.tableKeysToList(tbl)
+	local list = {}
+	-- table.sort(tbl)
+	for k, _ in pairs(tbl) do
+		table.insert(list, k)
+	end
+	return list
 end
 
 return M
