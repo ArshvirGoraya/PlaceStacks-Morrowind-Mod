@@ -1,6 +1,6 @@
 local M = {}
 
----@class TakeStacksArgs
+---@class StackActionArgs
 ---@field sourceContainer userdata
 ---@field targetContainer userdata
 ---@field player userdata
@@ -12,36 +12,30 @@ local M = {}
 ---@field notifyWeightTransferred boolean
 ---@field notifyTypesNotAllTransferred boolean
 ---@field items userdata[]
+
+---@class TakeStacksArgs: StackActionArgs
 ---@field allowOverEncumbrance boolean
 
----@class PlaceStacksArgs
----@field sourceContainer userdata
----@field targetContainer userdata
----@field player userdata
----@field performOnAllItems boolean
----@field transferOrder TransferOrder
----@field startingTargetCapacity number
----@field notifyCountTransferred boolean
----@field notifyValueTransferred boolean
----@field notifyWeightTransferred boolean
----@field notifyTypesNotAllTransferred boolean
----@field items userdata[]
+---@class PlaceStacksArgs: StackActionArgs
 ---@field depositMoney boolean
 ---@field depositEquipped boolean
 
 local stackActionArgs = {}
 ---@ cast stackActionArgs PlaceStacksArgs | TakeStacksArgs
 
+---@param stackActionSettings SettingsPlaceStacks | SettingsTakeStacks
 local function preparePlaceStacksArgs(focusedContainer, player, performOnAllItems, stackActionSettings, stackType)
 	if stackType == Keys.CONSTANT_KEYS.Options.StackType.Place then
-		---@ cast stackActionArgs PlaceStacksArgs
+		---@cast stackActionArgs PlaceStacksArgs
+		---@cast stackActionSettings SettingsPlaceStacks
 		stackActionArgs.depositMoney = stackActionSettings.DepositMoney
 		stackActionArgs.depositEquipped = stackActionSettings.DepositEquipped
 		--
 		stackActionArgs.sourceContainer = player
 		stackActionArgs.targetContainer = focusedContainer
 	else
-		---@ cast stackActionArgs TakeStacksArgs
+		---@cast stackActionArgs TakeStacksArgs
+		---@cast stackActionSettings SettingsTakeStacks
 		stackActionArgs.allowOverEncumbrance = stackActionSettings.AllowOverEncumbrance
 		--
 		stackActionArgs.sourceContainer = focusedContainer
@@ -107,8 +101,7 @@ local function stackAction(stackType)
 end
 
 local function performStackAction(args, stackType)
-	local focusedContainer, player, uiMode, performOnAllItems, settingsCommonBehavior, stackActionSettings =
-		table.unpack(args)
+	local focusedContainer, player, uiMode, performOnAllItems, stackActionSettings = table.unpack(args)
 	if
 		not Helpers.canPerformStackAction(focusedContainer, Types, uiMode, PlaceStacksGlobals:get("CurrentStackType"))
 	then

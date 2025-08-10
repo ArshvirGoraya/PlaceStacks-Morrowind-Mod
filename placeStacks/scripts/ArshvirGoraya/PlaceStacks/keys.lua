@@ -201,16 +201,19 @@ M.LOCALIZED_KEYS = {
 			Cheapest = localized("TransferOrder_Cheapest"),
 			Heaviest = localized("TransferOrder_Heaviest"),
 		},
+		---@class AutoClose
 		AutoClose = {
 			Never = localized("AutoClose_Never"),
 			Always = localized("AutoClose_Always"),
 			Fit = localized("AutoClose_Fit"),
 		},
+		---@class ModifierSetting
 		ModifierSetting = {
 			Default = localized("ModifierSetting_Default"),
 			Invert = localized("ModifierSetting_Invert"),
 			Disable = localized("ModifierSetting_Disable"),
 		},
+		---@class Modifier
 		Modifier = {
 			Shift = localized("Modifier_Shift"),
 			Ctrl = localized("Modifier_Ctrl"),

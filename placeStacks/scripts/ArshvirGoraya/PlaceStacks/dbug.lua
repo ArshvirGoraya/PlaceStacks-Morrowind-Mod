@@ -1,6 +1,6 @@
 local util = require("openmw_aux.util")
 local textColor = "\27[36m" -- cyan
-local defaultColor = "\27[0m"
+-- local defaultColor = "\27[0m"
 
 local M = {}
 
@@ -22,7 +22,7 @@ function M.log(...)
 	end
 
 	table.insert(args, 1, textColor)
-	table.insert(args, defaultColor)
+	-- table.insert(args, defaultColor)
 	print(table.unpack(args))
 end
 

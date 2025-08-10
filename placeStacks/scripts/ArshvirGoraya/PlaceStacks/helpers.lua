@@ -1,6 +1,21 @@
 local M = {}
 
 -- used in both performer and detector
+local warningColor = "\27[38;5;180m"
+-- local defaultColor = "\27[0m"
+
+local function insertAfterNewlines(str, insertText)
+	return str:gsub("(\n)", "%1" .. insertText)
+end
+
+function M.warningPrint(...)
+	local args = { ... }
+	for i, v in ipairs(args) do
+		args[i] = insertAfterNewlines(tostring(v), warningColor)
+	end
+	table.insert(args, 1, warningColor)
+	print(table.unpack(args))
+end
 
 function M.canPerformStackAction(focusedContainer, types, uiMode, currentStackType)
 	if not M.isValidContainerOpen(focusedContainer, types, uiMode) then
@@ -42,6 +57,15 @@ function M.isContainerValid(container, types)
 	end
 
 	return true
+end
+
+function M.listHasValue(list, value)
+	for _, v in ipairs(list) do
+		if v == value then
+			return true
+		end
+	end
+	return false
 end
 
 function M.convertTableKeyListToMaxLengthString(tbl, maxStringLength, wordCutOffLength)

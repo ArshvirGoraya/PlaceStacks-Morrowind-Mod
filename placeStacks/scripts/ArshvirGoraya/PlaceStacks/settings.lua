@@ -9,6 +9,26 @@ settings.registerPage({
 	description = Keys.LOCALIZED_KEYS.ModDescription,
 })
 
+---@class SettingsCommonBehavior
+---@field AutoClose string
+---@field Modifier string
+
+---@class SettingsStackAction
+---@field KeyBind string
+---@field TransferOrder string
+---@field ModifierSetting string
+---@field NotifyCountTransferred boolean
+---@field NotifyValueTransferred boolean
+---@field NotifyWeightTransferred boolean
+---@field NotifyTypesNotAllTransferred boolean
+
+---@class SettingsTakeStacks: SettingsStackAction
+---@field AllowOverEncumbrance boolean
+
+---@class SettingsPlaceStacks: SettingsStackAction
+---@field DepositEquipped boolean
+---@field DepositMoney boolean
+
 local settingsDefinitions = {
 	settingsCommonBehavior = {
 		key = Keys.CONSTANT_KEYS.Sections.CommonBehavior,
@@ -18,6 +38,13 @@ local settingsDefinitions = {
 		description = Keys.LOCALIZED_KEYS.Sections.CommonBehavior.Description,
 		permanentStorage = true, -- false = placed in individual saves
 		settings = {
+			---@class SettingSelectDefinition
+			---@field key string
+			---@field name string
+			---@field description string
+			---@field default string
+			---@field renderer string
+			---@field argument {items: string[], l10n: string}
 			{
 				key = Keys.CONSTANT_KEYS.CommonBehavior.AutoCloseKey,
 				name = Keys.LOCALIZED_KEYS.Settings.AutoClose.Name,
@@ -288,6 +315,54 @@ M.subscribeAndBuildTableSettings = function(async)
 	end
 	-- DB.printTable(tableSettings, 2)
 	return tableSettings
+end
+
+local function validateSectionsSelectSettings(ui, storageSection, settingsDefinitionSection, sectionName)
+	for _, s in ipairs(settingsDefinitionSection.settings) do
+		---@cast s SettingSelectDefinition
+		if s.renderer == "select" then
+			if not Helpers.listHasValue(s.argument.items, storageSection:get(s.key)) then
+				storageSection:set(s.key, s.default)
+				--
+				local warningString = "Place Stacks Warning: "
+					.. s.name
+					.. " reset to default ("
+					.. s.default
+					.. ") in section "
+					.. sectionName
+
+				DB.log("attempt to warn print")
+				ui.showMessage(warningString)
+				Helpers.warningPrint(warningString)
+			end
+		end
+	end
+end
+
+function M.validateAllSelectSettings(ui)
+	for key, _ in pairs(Keys.CONSTANT_KEYS.Sections) do
+		validateSectionsSelectSettings(
+			ui,
+			Storage.playerSection(Keys.CONSTANT_KEYS.Sections[key]),
+			settingsDefinitions["settings" .. key],
+			Keys.LOCALIZED_KEYS.Sections[key].Name
+		)
+	end
+	-- validateSectionsSelectSettings(
+	-- 	ui,
+	-- 	Storage.playerSection(Keys.CONSTANT_KEYS.Sections.CommonBehavior),
+	-- 	settingsDefinitions.settingsCommonBehavior
+	-- )
+	-- validateSectionsSelectSettings(
+	-- 	ui,
+	-- 	Storage.playerSection(Keys.CONSTANT_KEYS.Sections.TakeStacks),
+	-- 	settingsDefinitions.settingsTakeStacks
+	-- )
+	-- validateSectionsSelectSettings(
+	-- 	ui,
+	-- 	Storage.playerSection(Keys.CONSTANT_KEYS.Sections.PlaceStacks),
+	-- 	settingsDefinitions.settingsPlaceStacks
+	-- )
 end
 
 return M
