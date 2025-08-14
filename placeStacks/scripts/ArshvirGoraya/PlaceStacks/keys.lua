@@ -52,6 +52,7 @@ M.CONSTANT_KEYS = {
 			NotAllTransferred = "NotAllTransferred",
 		},
 	},
+	-- misc:
 	RecordIDs = {
 		gold = "gold_001",
 	},
@@ -59,6 +60,8 @@ M.CONSTANT_KEYS = {
 		-- MAX_NOTIFICATION_STRING_SIZE = 40, -- can do 46 but adding 6 space for character width differences for different languages maybe
 		MAX_NOTIFICATION_STRING_SIZE = 46,
 	},
+	-- Should be used when comparing the size of a single item with the container (not stacks)
+	ContainerSizeEpsilon = 0.001, -- https://gitlab.com/OpenMW/openmw/-/merge_requests/4776
 }
 M.LOCALIZED_KEYS = {
 	ModName = localized("ModName"),

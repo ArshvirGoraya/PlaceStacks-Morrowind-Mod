@@ -138,7 +138,10 @@ end
 local function notifyAndAutoClose(args)
 	local notificationStruct, stackType = table.unpack(args)
 
-	local stackActionSettings = settingsTableTakeStacks
+	---@type SettingsStackAction
+	local stackActionSettings
+	stackActionSettings = settingsTableTakeStacks
+
 	if stackType == Keys.CONSTANT_KEYS.Options.StackType.Place then
 		stackActionSettings = settingsTablePlaceStacks
 	end

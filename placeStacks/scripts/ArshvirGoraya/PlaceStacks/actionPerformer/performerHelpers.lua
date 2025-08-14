@@ -150,10 +150,13 @@ local function itemFitsCapacity(capacity, item)
 	-- 			.. tostring(capacity >= M.getItemWeight(item))
 	-- 	)
 	-- end
-	return capacity >= M.getItemWeight(item)
+	return capacity + Keys.CONSTANT_KEYS.ContainerSizeEpsilon >= M.getItemWeight(item)
 end
 
 local function itemStackFitsCapacity(capacity, item)
+	if item.count == 1 then
+		return itemFitsCapacity(capacity, item) -- adds epsilon for single item caparisons
+	end
 	return capacity >= (M.getItemWeight(item) * item.count)
 end
 
@@ -312,7 +315,7 @@ function M.getMoveableItemCountFromStack(capacity, item)
 	else
 		local moveableItemCount = math.floor(capacity / PerformerHelpers.getItemWeight(item))
 		moveableItemCount = math.min(item.count, moveableItemCount)
-		moveableItemCount = math.max(moveableItemCount, 0) -- just in case the capacity is negative?
+		moveableItemCount = math.max(moveableItemCount, 0) -- just in case the capacity is negative.
 		return moveableItemCount
 	end
 end

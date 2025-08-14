@@ -5,7 +5,7 @@ local M = {}
 ---@field targetContainer userdata
 ---@field player userdata
 ---@field performOnAllItems boolean
----@field transferOrder TransferOrder
+---@field transferOrder string
 ---@field startingTargetCapacity number
 ---@field notifyCountTransferred boolean
 ---@field notifyValueTransferred boolean

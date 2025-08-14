@@ -52,8 +52,6 @@ end
 
 M.startDetectingPlaceStacksHoldIfEnabled = function(settingsHoldMS)
 	local settingsPlaceStacksHoldEnabled = settingsHoldMS > 0
-	DB.log("placeStacksHoldEnabled: ", settingsPlaceStacksHoldEnabled)
-
 	if settingsPlaceStacksHoldEnabled then
 		if not Helpers.isContainerValid(FocusedContainer, Types) then
 			return

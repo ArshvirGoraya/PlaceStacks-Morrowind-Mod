@@ -12,12 +12,15 @@ local function insertAfterNewlines(str, insertText)
 end
 
 function M.log(...)
-	local args = { ... }
 	if not M.logging then
 		return
 	end
+	local args = { ... }
 
 	for i, v in ipairs(args) do
+		if type(v) == "table" then
+			v = util.deepToString(v, 2)
+		end
 		args[i] = insertAfterNewlines(tostring(v), textColor)
 	end
 

@@ -26,6 +26,7 @@ settings.registerPage({
 ---@field AllowOverEncumbrance boolean
 
 ---@class SettingsPlaceStacks: SettingsStackAction
+---@field HoldMS number
 ---@field DepositEquipped boolean
 ---@field DepositMoney boolean
 
@@ -49,7 +50,7 @@ local settingsDefinitions = {
 				key = Keys.CONSTANT_KEYS.CommonBehavior.AutoCloseKey,
 				name = Keys.LOCALIZED_KEYS.Settings.AutoClose.Name,
 				description = Keys.LOCALIZED_KEYS.Settings.AutoClose.Description,
-				default = Keys.LOCALIZED_KEYS.Options.AutoClose.Fit,
+				default = Keys.LOCALIZED_KEYS.Options.AutoClose.Never,
 				renderer = "select",
 				argument = {
 					items = Keys.LOCALIZED_KEYS.Settings.AutoClose.List,
@@ -60,7 +61,7 @@ local settingsDefinitions = {
 				key = Keys.CONSTANT_KEYS.CommonBehavior.ModifierKey,
 				name = Keys.LOCALIZED_KEYS.Settings.Modifier.Name,
 				description = Keys.LOCALIZED_KEYS.Settings.Modifier.Description,
-				default = Keys.LOCALIZED_KEYS.Options.Modifier.Alt,
+				default = Keys.LOCALIZED_KEYS.Options.Modifier.Shift,
 				renderer = "select",
 				argument = {
 					items = Keys.LOCALIZED_KEYS.Settings.Modifier.List,
@@ -309,7 +310,11 @@ M.subscribeAndBuildTableSettings = function(async)
 	for _, section in pairs(settingsDefinitions) do
 		local storageSection = Storage.playerSection(section.key)
 		-- Convert settings to tables when changed (so they can pass in events to global script -> which cant access playersection storage)
+		-- can use storageSection:asTable() but that will include keys that may be in older versions of the mod! So potentially bigger table which i don't like
 		tableSettings[section.key] = getSettingSectionAsTable(settingsDefinitions[section.key], storageSection)
+		-- DB.log("table section: ", tableSettings[section.key])
+		-- DB.log("table section alternative: ", storageSection:asTable())
+
 		-- Subscribe to changed to settings (to update the tables)
 		storageSection:subscribe(async:callback(settingsChanged))
 	end
