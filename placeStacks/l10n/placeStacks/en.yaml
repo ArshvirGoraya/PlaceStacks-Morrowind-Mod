@@ -154,19 +154,22 @@ ModifierSetting_Default: "Default"
 ModifierSetting_Invert: "Invert"
 ModifierSetting_Disable: "Disable"
 
+Notification_Title_Place: "Placed: "
+Notification_Title_Take: "Taken: "
+
 Notification_Count_Take_All: |-
-  Taken: {transferred}
+  {transferred}
 Notification_Count_Place_All: |-
-  Placed: {transferred}
+  {transferred}
 Notification_Value_All: |-
   ${transferred}
 Notification_Weight_All: |-
   {transferred}kg
 
 Notification_Count_Take: |-
-  Taken: {transferred}/{considered}
+  {transferred}/{considered}
 Notification_Count_Place: |-
-  Placed: {transferred}/{considered}
+  {transferred}/{considered}
 Notification_Value: |-
   ${transferred}/${considered}
 Notification_Weight: |-

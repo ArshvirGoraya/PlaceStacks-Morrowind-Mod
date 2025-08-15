@@ -108,6 +108,9 @@ end
 local function notify(stackActionSettings, notificationStruct, stackType)
 	local notificationString =
 		DetectorHelpers.buildNotificationString(stackActionSettings, notificationStruct, stackType)
+	if notificationString == "" then
+		return
+	end
 	ui.showMessage(notificationString)
 end
 

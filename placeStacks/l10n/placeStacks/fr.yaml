@@ -155,19 +155,23 @@ ModifierSetting_Default: "Défaut"
 ModifierSetting_Invert: "Inverser"
 ModifierSetting_Disable: "Désactiver"
 
+Notification_Title_Place: "Mis: "
+Notification_Title_Take: "Pris: "
+
+
 Notification_Count_Take_All: |-
-  Pris: {transferred}
+  {transferred}
 Notification_Count_Place_All: |-
-  Mis: {transferred}
+  {transferred}
 Notification_Value_All: |-
   ${transferred}
 Notification_Weight_All: |-
   {transferred}kg
 
 Notification_Count_Take: |-
-  Pris: {transferred}/{considered}
+  {transferred}/{considered}
 Notification_Count_Place: |-
-  Mis: {transferred}/{considered}
+  {transferred}/{considered}
 Notification_Value: |-
   ${transferred}/${considered}
 Notification_Weight: |-

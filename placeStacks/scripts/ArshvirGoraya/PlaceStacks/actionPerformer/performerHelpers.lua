@@ -199,9 +199,6 @@ end
 function M.updateNotificationStructConsidered(notificationStruct, item, stackActionArgs, stackSize)
 	stackSize = stackSize or item.count
 
-	if stackActionArgs.notifyCountTransferred then
-		notificationStruct.totalConsidered.count = notificationStruct.totalConsidered.count + stackSize
-	end
 	if stackActionArgs.notifyValueTransferred then
 		notificationStruct.totalConsidered.value = notificationStruct.totalConsidered.value
 			+ M.getItemValue(item) * stackSize
@@ -209,7 +206,8 @@ function M.updateNotificationStructConsidered(notificationStruct, item, stackAct
 	if stackActionArgs.notifyTypesNotAllTransferred then
 		notificationStruct.tableOfNotAllTransferredTypes[M.getItemType(item)] = true
 	end
-	-- weight value is used regardless of weight notifications setting
+	-- count/weight value is used regardless of weight notifications setting
+	notificationStruct.totalConsidered.count = notificationStruct.totalConsidered.count + stackSize
 	notificationStruct.totalConsidered.weight = notificationStruct.totalConsidered.weight
 		+ M.getItemWeight(item) * stackSize
 end

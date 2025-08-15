@@ -227,56 +227,78 @@ M.LOCALIZED_KEYS = {
 }
 
 ---@param notificationStruct NotificationStruct
-function M.getLocalizedNotification(notificationType, notificationStruct, stackType, allTransferred)
+function M.getLocalizedNotification(notificationType, notificationStruct, stackType, allTransferred, prependTitle)
+	local notifString = nil
+	local prependTitleString = ""
+	if prependTitle then
+		if stackType == M.CONSTANT_KEYS.Options.StackType.Place then
+			prependTitleString = localized("Notification_Title_Place")
+		else
+			prependTitleString = localized("Notification_Title_Take")
+		end
+	end
+
 	if notificationType == M.CONSTANT_KEYS.Options.Notification.Count then
 		if stackType == M.CONSTANT_KEYS.Options.StackType.Place then
 			if allTransferred then
-				return localized(
+				notifString = localized(
 					"Notification_Count_Place_All",
 					{ transferred = notificationStruct.totalTransferred.count }
 				)
+			else
+				notifString = localized("Notification_Count_Place", {
+					transferred = notificationStruct.totalTransferred.count,
+					considered = notificationStruct.totalConsidered.count,
+				})
 			end
-			return localized("Notification_Count_Place", {
-				transferred = notificationStruct.totalTransferred.count,
-				considered = notificationStruct.totalConsidered.count,
-			})
+			return prependTitleString .. notifString
 		else
 			if allTransferred then
-				return localized(
+				notifString = localized(
 					"Notification_Count_Take_All",
 					{ transferred = notificationStruct.totalTransferred.count }
 				)
+			else
+				notifString = localized("Notification_Count_Take", {
+					transferred = notificationStruct.totalTransferred.count,
+					considered = notificationStruct.totalConsidered.count,
+				})
 			end
-			return localized("Notification_Count_Take", {
-				transferred = notificationStruct.totalTransferred.count,
-				considered = notificationStruct.totalConsidered.count,
-			})
+			return prependTitleString .. notifString
 		end
 	elseif notificationType == M.CONSTANT_KEYS.Options.Notification.Value then
 		if allTransferred then
-			return localized("Notification_Value_All", { transferred = notificationStruct.totalTransferred.value })
+			notifString =
+				localized("Notification_Value_All", { transferred = notificationStruct.totalTransferred.value })
+		else
+			notifString = localized("Notification_Value", {
+				transferred = notificationStruct.totalTransferred.value,
+				considered = notificationStruct.totalConsidered.value,
+			})
 		end
-		return localized("Notification_Value", {
-			transferred = notificationStruct.totalTransferred.value,
-			considered = notificationStruct.totalConsidered.value,
-		})
+		return prependTitleString .. notifString
 	elseif notificationType == M.CONSTANT_KEYS.Options.Notification.Weight then
 		if allTransferred then
-			return localized("Notification_Weight_All", { transferred = notificationStruct.totalTransferred.weight })
+			notifString =
+				localized("Notification_Weight_All", { transferred = notificationStruct.totalTransferred.weight })
+		else
+			notifString = localized("Notification_Weight", {
+				transferred = notificationStruct.totalTransferred.weight,
+				considered = notificationStruct.totalConsidered.weight,
+			})
 		end
-		return localized("Notification_Weight", {
-			transferred = notificationStruct.totalTransferred.weight,
-			considered = notificationStruct.totalConsidered.weight,
-		})
+		return prependTitleString .. notifString
 	elseif notificationType == M.CONSTANT_KEYS.Options.Notification.NotAllTransferred then
 		local maxListStringsize = M.CONSTANT_KEYS.Notifications.MAX_NOTIFICATION_STRING_SIZE
 		local typesList = Helpers.tableKeysToList(notificationStruct.tableOfNotAllTransferredTypes)
 
 		local typesString = table.concat(typesList, ", ")
 
-		local prependString = localized("Notification_NotAllTransferredPrepend_Take")
+		local prependString = nil
 		if stackType == M.CONSTANT_KEYS.Options.StackType.Place then
 			prependString = localized("Notification_NotAllTransferredPrepend_Place")
+		else
+			prependString = localized("Notification_NotAllTransferredPrepend_Take")
 		end
 
 		local listString = ""
@@ -288,7 +310,11 @@ function M.getLocalizedNotification(notificationType, notificationStruct, stackT
 			listString = prependString .. " [" .. Helpers.elipseListString(typesString, maxListStringsize) .. "]"
 		end
 		DB.log("listString Size: ", #listString)
-		return listString
+		if prependTitle then
+			return prependTitleString .. "\n" .. listString
+		else
+			return listString
+		end
 	end
 end
 

@@ -49,16 +49,10 @@ end
 function M.buildNotificationString(stackActionSettings, notificationStruct, stackType)
 	local allTransferred = notificationStruct.totalTransferred.count == notificationStruct.totalConsidered.count
 
-	if notificationStruct.totalConsidered.count == 0 then
-		return Keys.getLocalizedNotification(
-			Keys.CONSTANT_KEYS.Options.Notification.Count,
-			notificationStruct,
-			stackType,
-			allTransferred
-		)
-	end
+	DB.log("total considered: ", notificationStruct.totalConsidered.count)
 
 	local stringsTable = {}
+	local prependString = true
 
 	if stackActionSettings.NotifyCountTransferred then
 		table.insert(
@@ -67,9 +61,11 @@ function M.buildNotificationString(stackActionSettings, notificationStruct, stac
 				Keys.CONSTANT_KEYS.Options.Notification.Count,
 				notificationStruct,
 				stackType,
-				allTransferred
+				allTransferred,
+				prependString
 			)
 		)
+		prependString = false
 	end
 	if stackActionSettings.NotifyValueTransferred then
 		table.insert(
@@ -78,9 +74,11 @@ function M.buildNotificationString(stackActionSettings, notificationStruct, stac
 				Keys.CONSTANT_KEYS.Options.Notification.Value,
 				notificationStruct,
 				stackType,
-				allTransferred
+				allTransferred,
+				prependString
 			)
 		)
+		prependString = false
 	end
 	if stackActionSettings.NotifyWeightTransferred then
 		table.insert(
@@ -89,12 +87,16 @@ function M.buildNotificationString(stackActionSettings, notificationStruct, stac
 				Keys.CONSTANT_KEYS.Options.Notification.Weight,
 				notificationStruct,
 				stackType,
-				allTransferred
+				allTransferred,
+				prependString
 			)
 		)
+		prependString = false
 	end
 
 	local stringNotification
+
+	DB.log("all transfered: ", allTransferred)
 
 	if allTransferred then
 		stringNotification = table.concat(stringsTable, ", ")
@@ -106,10 +108,17 @@ function M.buildNotificationString(stackActionSettings, notificationStruct, stac
 				Keys.CONSTANT_KEYS.Options.Notification.NotAllTransferred,
 				notificationStruct,
 				stackType,
-				allTransferred
+				allTransferred,
+				prependString
 			)
+			prependString = false
+			DB.log("not all transfered string")
 			if notAllTransferredString ~= "" then
-				stringNotification = stringNotification .. "\n" .. notAllTransferredString
+				if stringNotification == "" then
+					stringNotification = notAllTransferredString
+				else
+					stringNotification = stringNotification .. "\n" .. notAllTransferredString
+				end
 			end
 		end
 	end
