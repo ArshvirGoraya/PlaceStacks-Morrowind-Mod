@@ -5,7 +5,7 @@ local textColor = "\27[36m" -- cyan
 local M = {}
 
 M.logging = false
-M.logging = true -- comment this out in production builds!
+-- M.logging = true -- comment this out in production builds!
 
 local function insertAfterNewlines(str, insertText)
 	return str:gsub("(\n)", "%1" .. insertText)

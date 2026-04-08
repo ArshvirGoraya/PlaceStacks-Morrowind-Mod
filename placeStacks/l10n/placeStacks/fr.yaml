@@ -55,24 +55,20 @@ KeysDescription_PlaceStacksKeyBind: |-
 SettingsNames_TransferOrder_Take: "Prendre la commande"
 SettingsDescription_TransferOrder_Take: |-
   Contrôle l'ordre de prise des objets:
-  - Valeur : les objets les plus précieux en premier.
-  - ValeurParPoids : le rapport valeur/poids le plus élevé en premier.
-    - Ensemble d'objets de plus grande valeur que l'option « Valeur ».
-  - Moins cher : les objets les moins chers en premier.
-  - Plus lourd : le moins d'objets possible en prenant d'abord les objets les plus lourds.
-  - Plus léger : le plus d'objets possible en prenant d'abord les objets les plus légers.
-    - Ensemble d'objets plus lourd que l'option « Plus lourd ».
+  - Valeur : Les objets les plus précieux en premier.
+  - Rapport valeur/poids : Les objets présentant le meilleur rapport valeur/poids en premier.
+  - Prix les plus bas : Les objets les moins chers en premier.
+  - Poids les plus lourds : Les objets les plus lourds en premier.
+  - Poids les plus légers : Les objets les plus légers en premier.
 
 SettingsNames_TransferOrder_Place: "Passer une commande"
 SettingsDescription_TransferOrder_Place: |-
   Contrôle l'ordre de placement des objets :
-  - Valeur : les objets les plus précieux en premier.
-  - ValeurParPoids : le rapport valeur/poids le plus élevé en premier.
-    - L'ensemble d'objets aura une valeur supérieure à celle de l'option « Valeur ».
-  - Moins cher : les objets les moins chers en premier.
-  - Plus lourd : le moins d'objets possible en commençant par les plus lourds.
-  - Plus léger : le plus d'objets possible en commençant par les plus légers.
-    - L'ensemble d'objets aura une valeur supérieure à celle de l'option « Plus lourd ».
+  - Valeur : Les objets les plus précieux en premier.
+  - Rapport valeur/poids : Les objets présentant le meilleur rapport valeur/poids en premier.
+  - Prix les plus bas : Les objets les moins chers en premier.
+  - Poids les plus lourds : Les objets les plus lourds en premier.
+  - Poids les plus légers : Les objets les plus légers en premier.
 
 TransferOrder_Any: "N'importe lequel"
 TransferOrder_Valuable: "Précieux"
@@ -128,7 +124,6 @@ SectionDescription_PlaceStacks: "Contrôler le comportement de l'action de pile 
 SettingsNames_HoldMS: "Les piles de lieux contiennent des millisecondes"
 SettingsDescription_HoldMS: |-
   - Maintenez la touche « Activer » enfoncée au-dessus du conteneur pour que Microsoft déclenche l'action de placement de la pile.
-  - Appuyez sur le bouton de modification à côté pour déclencher l'action de modification de placement de la pile.
   - Réglez sur 0 pour désactiver.
 
 SettingsNames_DepositEquipped: "Déposer des objets équipés"
@@ -141,15 +136,11 @@ SettingsDescription_DepositMoney: |-
 
 SettingsNames_ModifierSetting: "Réglage du modificateur"
 SettingsDescription_ModifierSetting: |-
-  Contrôle l'action de la touche de modification lorsqu'elle est maintenue enfoncée en même temps que la touche d'action.
-  - Par défaut :
-    - Appuyer avec la touche de modification = prendre/placer TOUS les éléments
-    - Appuyer sans la touche de modification = prendre/placer les éléments correspondants
-  - Inverser : Inverse la valeur par défaut
-    - Appuyer avec la touche de modification = prendre/placer les éléments correspondants
-    - Appuyer sans la touche de modification = prendre/placer TOUS les éléments
-  - Désactivé : La touche de modification ne fait rien
-  - Toujours prendre/placer les éléments correspondants
+  Contrôlez l'action de la touche de modification lorsqu'elle est maintenue enfoncée lors des actions de placement/déplacement.
+    - Par défaut : place/déplace tous les objets.
+    - Inverser : place/déplace les objets correspondants.
+    - Remplace l'action de placement par défaut par la prise/le placement de tous les objets.
+    - Désactivé : la touche de modification est inactive.
 
 ModifierSetting_Default: "Défaut"
 ModifierSetting_Invert: "Inverser"

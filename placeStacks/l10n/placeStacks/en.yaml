@@ -1,3 +1,4 @@
+
 ---
 
 ModName: "Place Stacks"
@@ -52,26 +53,24 @@ KeyDescription_PlaceStacksKeyBind: |-
   Place action
 
 SettingsNames_TransferOrder_Take: "Take Order"
+
+
 SettingsDescription_TransferOrder_Take: |-
   Controls the order in which items are taken:
-  - Valuable: most valuable items first.
-  - ValuableByWeight: largest value-weight ratio first.
-    - Will be a more valuable item set than the "Valuable" option.
-  - Cheapest: cheapest items first.
-  - Heaviest: As few items as possible by taking the heaviest items first.
-  - Lightest: As many items as possible by taking the lightest items first.
-    - Will be a heavier item set than the "Heaviest" option.
+  - Valuable: Most valuable items first.
+  - ValuableByWeight: Greatest value-weight ratio first.
+  - Cheapest: Cheapest items first.
+  - Heaviest: Heaviest items first.
+  - Lightest: Lightest items first.
 
 SettingsNames_TransferOrder_Place: "Place Order"
 SettingsDescription_TransferOrder_Place: |-
   Controls the order in which items are placed:
-  - Valuable: most valuable items first.
-  - ValuableByWeight: largest value-weight ratio first.
-    - Will be a more valuable item set than the "Valuable" option.
-  - Cheapest: cheapest items first.
-  - Heaviest: as few items as possible by taking the heaviest items first.
-  - Lightest: as many items as possible by taking the lightest items first.
-    - Will be a heavier item set than the "Heaviest" option.
+  - Valuable: Most valuable items first.
+  - ValuableByWeight: Greatest value-weight ratio first.
+  - Cheapest: Cheapest items first.
+  - Heaviest: Heaviest items first.
+  - Lightest: Lightest items first.
 
 TransferOrder_Any: "Any"
 TransferOrder_Valuable: "Valuable"
@@ -127,7 +126,6 @@ SectionDescription_PlaceStacks: "Control behavior of the place stack action."
 SettingsNames_HoldMS: "Place Stacks Hold Milliseconds"
 SettingsDescription_HoldMS: |-
   - Hold "activate" key over container for MS to trigger place stack action.
-  - Can press modifier along side this to trigger place stack modifier action.
   - Set to 0 to disable.
 
 SettingsNames_DepositEquipped: "Deposit Equipped Items"
@@ -140,15 +138,11 @@ SettingsDescription_DepositMoney: |-
 
 SettingsNames_ModifierSetting: "Modifier Setting"
 SettingsDescription_ModifierSetting: |-
-  Control what the modifier key does when held along with place/take action key.
-  - Default:
-    - Press with modifier = take/place ALL items
-    - Press without = take/place MATCHING items
-  - Invert: Reverse of default
-    - Press with modifier = take/place MATCHING items
-    - Press without = take/place ALL items
-  - Disabled: Modifier key does nothing
-    - Always take/place MATCHING items
+  Control what the modifier key does when held along with place/take action.
+  - Default: take/place ALL items when held
+  - Invert: take/place MATCHING items
+    - Changes normal take/place action to take/place ALL items
+  - Disabled: modifier does nothing
 
 ModifierSetting_Default: "Default"
 ModifierSetting_Invert: "Invert"
